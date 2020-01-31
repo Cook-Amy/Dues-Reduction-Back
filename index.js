@@ -15,6 +15,8 @@ const venueController = require("./controllers/venueController");
 // Routes
 app.get('/venues', venueController.getVenues);
 
+app.post('/oneVenue', venueController.getOneVenue);
+
 // Create port
 const port = process.env.PORT || 4000;
 app.listen(port, () => {

@@ -1,18 +1,18 @@
 var mysql = require('mysql');
 var pool = mysql.createPool({
   // deploy connection
-  connectionLimit: 5,
-  host: 'database-1.cc9faes6cfe1.us-east-2.rds.amazonaws.com',
-  user: 'admin',
-  password: 'db2020drapp',
-  database: 'DR-app'
+  // connectionLimit: 5,
+  // host: 'database-1.cc9faes6cfe1.us-east-2.rds.amazonaws.com',
+  // user: 'admin',
+  // password: 'db2020drapp',
+  // database: 'DR-app'
 
   // local connection
-  // connectionLimit: 5,
-  // host: 'localhost',
-  // user: 'root',
-  // password: 'root',
-  // database: 'dues_red'
+  connectionLimit: 5,
+  host: 'localhost',
+  user: 'root',
+  password: 'root',
+  database: 'dues_red'
 })
 
 pool.getConnection((err, connection) => {
