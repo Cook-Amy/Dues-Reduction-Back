@@ -11,11 +11,13 @@ app.use(bodyParser.json())
 
 // Controller pages
 const venueController = require("./controllers/venueController");
+const loginController = require("./controllers/loginController");
 
 // Routes
 app.get('/venues', venueController.getVenues);
 
 app.post('/oneVenue', venueController.getOneVenue);
+app.post('/login', loginController.loginUser);
 
 // Create port
 const port = process.env.PORT || 4000;

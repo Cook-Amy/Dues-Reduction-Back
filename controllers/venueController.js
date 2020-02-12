@@ -1,7 +1,7 @@
 const venueModel = require('../model/venueModel');
 
 function getVenues(req, res, next) {
-  // console.log("getVenues function called");
+  console.log("getVenues function called");
 
   venueModel.getVenuesFromDB(function getVenueCallback(error, result) {
     if(error) {
@@ -9,7 +9,7 @@ function getVenues(req, res, next) {
       console.log(error);
     }
     else {
-      res.json(result);
+      res.status(200).json({message: result});
       res.end();
     }
   });
