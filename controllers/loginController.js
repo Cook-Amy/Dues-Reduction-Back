@@ -26,12 +26,8 @@ function loginUser(req, res, next) {
         res.status(200).json(result);
         res.end();
       }
-
     }
   });
-
-  // res.status(200).json({message: 'Response from loginUser'});
-  // res.end();
 }
 
 

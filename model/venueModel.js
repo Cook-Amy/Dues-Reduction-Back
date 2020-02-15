@@ -20,7 +20,7 @@ function getVenuesFromDB (callback) {
 }
 
 function getOneVenueFromDB(id, callback) {
-  console.log('getOneVenueFromDB function called');
+  // console.log('getOneVenueFromDB function called');
 
   var queryDB = "SELECT name FROM venue WHERE idvenue = " + id;
   pool.query(queryDB, (error, results) => {
@@ -30,7 +30,7 @@ function getOneVenueFromDB(id, callback) {
     }
     else {
       console.log("Results back from DB: ");
-      console.log(results);
+      // console.log(results);
       callback(null, results);
     }
   })

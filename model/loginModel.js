@@ -9,7 +9,7 @@ function getUserFromDB(email, password, callback) {
     if(error) {
       console.log('Error getting results from DB: ');
       console.log(error);
-      res.status(500).json({status: 'error'});
+      // res.status(500).json({status: 'error'});
     }
     if(results.length == 0) {
       console.log("User of " + email + " is not found in DB");
