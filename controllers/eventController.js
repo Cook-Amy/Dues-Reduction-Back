@@ -5,7 +5,7 @@ function getEvents(req, res, next) {
   // const venueID = 1;
   const venueID = req.query.venueID;
   const seasonID = req.query.seasonID;
-  console.log("seasonID: " + seasonID + ", venueID: " + venueID);
+  // console.log("seasonID: " + seasonID + ", venueID: " + venueID);
 
   eventModel.getEventsFromDB(venueID, seasonID, function getEventCallback(error, result) {
     if(error) {

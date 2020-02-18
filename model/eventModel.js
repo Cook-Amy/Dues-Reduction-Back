@@ -1,8 +1,14 @@
 var pool = require('../database/db');
 
 function getEventsFromDB (venueID, seasonID, callback) {
-  var queryDB = "SELECT * FROM event WHERE venueID = ? AND seasonID = ?";
-  var params = [venueID, seasonID];
+  if(seasonID == 999) {
+    var queryDB = "SELECT * FROM event WHERE venueID = ?";
+    var params = [venueID];
+  }
+  else {
+    var queryDB = "SELECT * FROM event WHERE venueID = ? AND seasonID = ?";
+    var params = [venueID, seasonID];
+  }
 
   pool.query(queryDB, params, (error, results) => {
     if(error) {
