@@ -14,11 +14,18 @@ const venueController = require("./controllers/venueController");
 const loginController = require("./controllers/loginController");
 const seasonController = require("./controllers/seasonController");
 const eventController = require("./controllers/eventController");
+const eventPncController = require("./controllers/eventPncController");
+const eventWcController = require("./controllers/eventWcController");
+const eventCfController = require("./controllers/eventCfController");
 
 // Routes
 app.get('/venues', venueController.getVenues);
 app.get('/getSeasons', seasonController.getSeasons);
 app.get('/getEvents', eventController.getEvents);
+app.get('/getEventsPNC', eventPncController.getEvents);
+app.get('/getEventsWC', eventWcController.getEvents);
+app.get('/getEventsCF', eventCfController.getEvents);
+app.get('/getStaffForEvent', eventController.getStaffForEvent);
 
 app.post('/oneVenue', venueController.getOneVenue);
 app.post('/login', loginController.loginUser);
