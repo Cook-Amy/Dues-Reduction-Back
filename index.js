@@ -38,6 +38,7 @@ app.get('/getAllCfStaff', staffCfController.getAllCfStaff);
 
 app.post('/oneVenue', venueController.getOneVenue);
 app.post('/login', loginController.loginUser);
+app.post('/setNewPncEvent', eventPncController.setNewPncEvent);
 
 // Create port
 const port = process.env.PORT || 4000;

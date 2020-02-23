@@ -33,13 +33,75 @@ function getAllPncEventsFromDB(seasonID, callback) {
       callback(null, results);
     }
     else {
-      // console.log("Events found in DB: ");
-      // console.log(results);
+      callback(null, results);
+    }
+  });
+}
+
+function setNewEventInDB(newEvent, callback) {
+  var queryDB = "INSERT INTO event (seasonID, venueID, Date, Title, " +
+                                    "compensated, location, venueBonus, estimatedCheck, estimatedProfit, " +
+                                    "actualCheck, payout, discrepancy, actualProfit, tacPct, " +
+                                    "tacCut, drCut, eventNotes, closed, eventcol) " +
+                        "VALUES   (?, 1, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 0)";
+  var params = [
+    newEvent.season,
+    newEvent.Date,
+    newEvent.Title,
+    newEvent.compensated,
+    newEvent.location,
+    newEvent.venueBonus,
+    newEvent.estimatedCheck,
+    newEvent.estimatedProfit,
+    newEvent.actualCheck,
+    newEvent.payout,
+    newEvent.discrepancy,
+    newEvent.actualProfit,
+    newEvent.tacPct,
+    newEvent.tacCut,
+    newEvent.drCut,
+    newEvent.eventNotes,
+    newEvent.closed
+  ];
+
+  pool.query(queryDB, params, (error, results) => {
+    if(error) {
+      console.log("Error setting new event into DB: ");
+      console.log(error);
+    }
+    else {
+      setNewPncEventInDB(results.insertId, newEvent, callback);
+    }
+  });
+}
+
+function setNewPncEventInDB(id, newEvent, callback) {
+  var queryDB = " INSERT INTO event_pnc (eventID, metCommissionBonus, guarantee, totalSales, " +
+                                        "alcSales, coordinatorAdminAmt, eventCountsTowardsTotal) " +
+                        "VALUES (" + id + ", ?, ?, ?, ?, ?, ?)";
+  var params = [
+    newEvent.metCommissionBonus,
+    newEvent.guarantee,
+    newEvent.totalSales,
+    newEvent.alcSales,
+    newEvent.coordinatorAdminAmount,
+    newEvent.eventCountsTowardsTotal
+  ];
+
+  pool.query(queryDB, params, (error, results) => {
+    if(error) {
+      console.log("Error setting new event into DB: ");
+      console.log(error);
+    }
+    else {
       callback(null, results);
     }
   });
 }
 
 module.exports = {
-  getAllPncEventsFromDB: getAllPncEventsFromDB
+  getAllPncEventsFromDB: getAllPncEventsFromDB,
+  setNewEventInDB: setNewEventInDB,
+  setNewPncEventInDB: setNewPncEventInDB
 }
+
