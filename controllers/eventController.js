@@ -24,10 +24,10 @@ function getEvents(req, res, next) {
   });
 }
 
-function getStaffForEvent(req, res, next) {
+function getTimesheetForEvent(req, res, next) {
   const eventID = req.query.eventID;
 
-  eventModel.getStaffForEventFromDB(eventID, (error, result) => {
+  eventModel.getTimesheetForEventFromDB(eventID, (error, result) => {
     if(error) {
       console.log('Error in staff callback');
       console.log(error);
@@ -46,5 +46,5 @@ function getStaffForEvent(req, res, next) {
 
 module.exports = {
   getEvents: getEvents,
-  getStaffForEvent: getStaffForEvent
+  getTimesheetForEvent: getTimesheetForEvent
 }

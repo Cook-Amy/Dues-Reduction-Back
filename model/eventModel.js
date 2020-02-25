@@ -25,7 +25,7 @@ function getEventsFromDB (venueID, seasonID, callback) {
   });
 }
 
-function getStaffForEventFromDB (eventID, callback) {
+function getTimesheetForEventFromDB (eventID, callback) {
   var queryDB = "SELECT t.idtimesheet, p.firstName, p.lastName, j.jobName, t.scheduledArrivalTime, t.hourlyRate, t.timeIn, t.timeOut, t.hoursWorked, t.shuttleBonus, t.eventBonus, t.hourlyBonus, t.creditCardTips, t.creditAmount " +
                 "FROM timesheet t, person p, jobs j " +
                 "WHERE t.eventID = ? " +
@@ -53,5 +53,5 @@ function getStaffForEventFromDB (eventID, callback) {
 
 module.exports = {
   getEventsFromDB: getEventsFromDB,
-  getStaffForEventFromDB: getStaffForEventFromDB
+  getTimesheetForEventFromDB: getTimesheetForEventFromDB
 }
