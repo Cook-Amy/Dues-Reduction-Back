@@ -1,6 +1,13 @@
 var pool = require('../database/db');
 
+
+/*********************************************************
+ * 
+ * Get all events for PNC
+ * 
+ ********************************************************/
 function getAllPncEventsFromDB(seasonID, callback) {
+  console.log("getAllPncEventsFromDB called: " + seasonID);
   if(seasonID == 999) {
     var queryDB = "SELECT e.idevent, e.Date, e.Title, e.compensated, e.location, " + 
                   "e.venueBonus, e.estimatedCheck, e.estimatedProfit, e.actualCheck, e.payout, " + 
@@ -38,6 +45,12 @@ function getAllPncEventsFromDB(seasonID, callback) {
   });
 }
 
+
+/*********************************************************
+ * 
+ * Insert a new event for PNC
+ * 
+ ********************************************************/
 function setNewEventInDB(newEvent, callback) {
   var queryDB = "INSERT INTO event (seasonID, venueID, Date, Title, " +
                                     "compensated, location, venueBonus, estimatedCheck, estimatedProfit, " +
@@ -84,7 +97,7 @@ function setNewPncEventInDB(id, newEvent, callback) {
     newEvent.guarantee,
     newEvent.totalSales,
     newEvent.alcSales,
-    newEvent.coordinatorAdminAmount,
+    newEvent.coordinatorAdminAmt,
     newEvent.eventCountsTowardsTotal
   ];
 
@@ -99,9 +112,133 @@ function setNewPncEventInDB(id, newEvent, callback) {
   });
 }
 
+
+/*********************************************************
+ * 
+ * Edit an event for PNC
+ * 
+ ********************************************************/
+function editEventinDB(editEvent, callback) {
+  var queryDB = "UPDATE event " +
+                "SET Date = ?, Title = ?, compensated = ?, location = ?, " +
+                    "venueBonus = ?, estimatedCheck = ?, estimatedProfit = ?, actualCheck = ?, " +
+                    "payout = ?, discrepancy = ?, actualProfit = ?, tacPct = ?, " +
+                    "tacCut = ?, drCut = ?, eventNotes = ?, closed = ? " +
+                "WHERE idevent = ?";
+  var params = [
+    editEvent.Date,
+    editEvent.Title,
+    editEvent.compensated,
+    editEvent.location,
+    editEvent.venueBonus,
+    editEvent.estimatedCheck,
+    editEvent.estimatedProfit,
+    editEvent.actualCheck,
+    editEvent.payout,
+    editEvent.discrepancy,
+    editEvent.actualProfit,
+    editEvent.tacPct,
+    editEvent.tacCut,
+    editEvent.drCut,
+    editEvent.eventNotes,
+    editEvent.closed,
+    editEvent.idevent
+  ];
+
+  pool.query(queryDB, params, (error, results) => {
+    if(error) {
+      console.log("Error setting new event into DB: ");
+      console.log(error);
+    }
+    else {
+      editPncEventinDB(editEvent, callback);
+    }
+  });
+}
+
+function editPncEventinDB(editEvent, callback) {
+  var queryDB = "UPDATE event_pnc " +
+                "SET metCommissionBonus = ?, guarantee = ?, totalSales = ?, " +
+                    "alcSales = ?, coordinatorAdminAmt = ?, eventCountsTowardsTotal = ? " +
+                "WHERE eventID = ?";
+  var params = [
+    editEvent.metCommissionBonus,
+    editEvent.guarantee,
+    editEvent.totalSales,
+    editEvent.alcSales,
+    editEvent.coordinatorAdminAmt,
+    editEvent.eventCountsTowardsTotal,
+    editEvent.idevent
+  ];
+
+  pool.query(queryDB, params, (error, results) => {
+    if(error) {
+      console.log("Error setting new event into DB: ");
+      console.log(error);
+    }
+    else {
+      callback(null, results);
+    }
+  });
+}
+
+
+/*********************************************************
+ * 
+ * Delete an event for PNC
+ * 
+ ********************************************************/
+function deletePncEventFromDB(eventID, callback) {
+  var queryDB = "DELETE FROM event_pnc WHERE eventID = ?";
+  var params = [eventID];
+
+  pool.query(queryDB, params, (error, results) => {
+    if(error) {
+      console.log("Error setting new event into DB: ");
+      console.log(error);
+    }
+    else {
+      deleteTimesheetFromDB(eventID, callback);
+    }
+  });
+}
+
+function deleteTimesheetFromDB(eventID, callback) {
+  var queryDB = "DELETE FROM timesheet WHERE eventID = ?";
+  var params = [eventID];
+
+  pool.query(queryDB, params, (error, results) => {
+    if(error) {
+      console.log("Error setting new event into DB: ");
+      console.log(error);
+    }
+    else {
+      deleteEventFromDB(eventID, callback);
+    }
+  });
+}
+
+function deleteEventFromDB(eventID, callback) {
+  var queryDB = "DELETE FROM event WHERE idevent = ?";
+  var params = [eventID];
+
+  pool.query(queryDB, params, (error, results) => {
+    if(error) {
+      console.log("Error setting new event into DB: ");
+      console.log(error);
+    }
+    else {
+      callback(null, results);
+    }
+  });
+}
+
+
+
 module.exports = {
   getAllPncEventsFromDB: getAllPncEventsFromDB,
   setNewEventInDB: setNewEventInDB,
-  setNewPncEventInDB: setNewPncEventInDB
+  editEventinDB: editEventinDB,
+  deletePncEventFromDB: deletePncEventFromDB
 }
 

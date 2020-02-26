@@ -21,7 +21,7 @@
 //   var guarantee;
 //   var totalSales;
 //   var alcSales;
-//   var coordinatorAdminAmount;
+//   var coordinatorAdminAmt;
 //   var eventCountsTowardsTotal;
 
 //   constructor(
@@ -47,7 +47,7 @@
 //      guarantee,
 //      totalSales,
 //      alcSales,
-//      coordinatorAdminAmount,
+//      coordinatorAdminAmt,
 //      eventCountsTowardsTotal
 //   ) {
 //     this.idevent = idevent;
@@ -72,7 +72,7 @@
 //     this.guarantee = guarantee;
 //     this.totalSales = totalSales;
 //     this.alcSales = alcSales;
-//     this.coordinatorAdminAmount = coordinatorAdminAmount;
+//     this.coordinatorAdminAmt = coordinatorAdminAmt;
 //     this.eventCountsTowardsTotal = eventCountsTowardsTotal;
 //   }
 // }
