@@ -9,7 +9,7 @@ var pool = require('../database/db');
 function getAllPncEventsFromDB(seasonID, callback) {
   console.log("getAllPncEventsFromDB called: " + seasonID);
   if(seasonID == 999) {
-    var queryDB = "SELECT e.idevent, e.Date, e.Title, e.compensated, e.location, " + 
+    var queryDB = "SELECT e.idevent, e.eventDateTime AS Date, e.Title, e.compensated, e.location, " + 
                   "e.venueBonus, e.estimatedCheck, e.estimatedProfit, e.actualCheck, e.payout, " + 
                   "e.discrepancy, e.actualProfit, e.tacPct, e.tacCut, e.drCut, e.eventNotes, " +  
                   "e.closed, e.eventcol, p.metCommissionBonus, p.guarantee, p.totalSales, " + 
@@ -19,7 +19,7 @@ function getAllPncEventsFromDB(seasonID, callback) {
     var params = [];
   }
   else {
-    var queryDB = "SELECT e.idevent, e.Date, e.Title, e.compensated, e.location, " + 
+    var queryDB = "SELECT e.idevent, e.eventDateTime AS Date, e.Title, e.compensated, e.location, " + 
                   "e.venueBonus, e.estimatedCheck, e.estimatedProfit, e.actualCheck, e.payout, " + 
                   "e.discrepancy, e.actualProfit, e.tacPct, e.tacCut, e.drCut, e.eventNotes, " +  
                   "e.closed, e.eventcol, p.metCommissionBonus, p.guarantee, p.totalSales, " + 
@@ -52,7 +52,7 @@ function getAllPncEventsFromDB(seasonID, callback) {
  * 
  ********************************************************/
 function setNewEventInDB(newEvent, callback) {
-  var queryDB = "INSERT INTO event (seasonID, venueID, Date, Title, " +
+  var queryDB = "INSERT INTO event (seasonID, venueID, eventDateTime, Title, " +
                                     "compensated, location, venueBonus, estimatedCheck, estimatedProfit, " +
                                     "actualCheck, payout, discrepancy, actualProfit, tacPct, " +
                                     "tacCut, drCut, eventNotes, closed, eventcol) " +
@@ -91,7 +91,7 @@ function setNewEventInDB(newEvent, callback) {
 function setNewPncEventInDB(id, newEvent, callback) {
   var queryDB = " INSERT INTO event_pnc (eventID, metCommissionBonus, guarantee, totalSales, " +
                                         "alcSales, coordinatorAdminAmt, eventCountsTowardsTotal) " +
-                        "VALUES (" + id + ", ?, ?, ?, ?, ?, ?)";
+                        "VALUES (" + id + ", ?, ?, ?, ?, ?, ?, ?)";
   var params = [
     newEvent.metCommissionBonus,
     newEvent.guarantee,
@@ -120,7 +120,7 @@ function setNewPncEventInDB(id, newEvent, callback) {
  ********************************************************/
 function editEventinDB(editEvent, callback) {
   var queryDB = "UPDATE event " +
-                "SET Date = ?, Title = ?, compensated = ?, location = ?, " +
+                "SET eventDateTime = ?, Title = ?, compensated = ?, location = ?, " +
                     "venueBonus = ?, estimatedCheck = ?, estimatedProfit = ?, actualCheck = ?, " +
                     "payout = ?, discrepancy = ?, actualProfit = ?, tacPct = ?, " +
                     "tacCut = ?, drCut = ?, eventNotes = ?, closed = ? " +

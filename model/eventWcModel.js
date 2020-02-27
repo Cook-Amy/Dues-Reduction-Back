@@ -2,7 +2,7 @@ var pool = require('../database/db');
 
 function getAllWcEventsFromDB(seasonID, callback) {
   if(seasonID == 999) {
-    var queryDB = "SELECT e.idevent, e.Date, e.Title, e.compensated, e.location, " + 
+    var queryDB = "SELECT e.idevent, e.eventDateTime AS Date, e.Title, e.compensated, e.location, " + 
                   "e.venueBonus, e.estimatedCheck, e.estimatedProfit, e.actualCheck, e.payout, " + 
                   "e.discrepancy, e.actualProfit, e.tacPct, e.tacCut, e.drCut, e.eventNotes, " +  
                   "e.closed, e.eventcol, w.shuttleBonusBool, w.shuttleBonusAmount, w.creditCardTips,  " + 
@@ -12,7 +12,7 @@ function getAllWcEventsFromDB(seasonID, callback) {
     var params = [];
   }
   else {
-    var queryDB = "SELECT e.idevent, e.Date, e.Title, e.compensated, e.location, " + 
+    var queryDB = "SELECT e.idevent, e.eventDateTime AS Date, e.Title, e.compensated, e.location, " + 
                   "e.venueBonus, e.estimatedCheck, e.estimatedProfit, e.actualCheck, e.payout, " + 
                   "e.discrepancy, e.actualProfit, e.tacPct, e.tacCut, e.drCut, e.eventNotes, " +  
                   "e.closed, e.eventcol, w.shuttleBonusBool, w.shuttleBonusAmount, w.creditCardTips,  " + 
