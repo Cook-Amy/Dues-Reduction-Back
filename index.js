@@ -4,8 +4,8 @@ const cors = require('cors');
 const app = express();
 
 // Set up app
-app.use(bodyParser.json())
-  .use(bodyParser.urlencoded({extended: false}))
+app.use(bodyParser.json({limit: '50mb', extended: true}))
+  .use(bodyParser.urlencoded({limit: '50mb', extended: true}))
   .use(cors());
 
 
@@ -21,6 +21,7 @@ const staffController = require("./controllers/staffController");
 const staffPncController = require("./controllers/staffPncController");
 const staffWcController = require("./controllers/staffWcController");
 const staffCfController = require("./controllers/staffCfController");
+const emailController = require("./controllers/emailController");
 
 // Routes
 app.get('/venues', venueController.getVenues);
@@ -42,6 +43,7 @@ app.post('/login', loginController.loginUser);
 app.post('/setNewPncEvent', eventPncController.setNewPncEvent);
 app.post('/editPncEvent', eventPncController.editPncEvent);
 app.post('/deletePncEvent', eventPncController.deletePncEvent);
+app.post('/sendGateList', emailController.sendGateList);
 
 // Create port
 const port = process.env.PORT || 4000;

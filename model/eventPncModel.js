@@ -7,7 +7,6 @@ var pool = require('../database/db');
  * 
  ********************************************************/
 function getAllPncEventsFromDB(seasonID, callback) {
-  console.log("getAllPncEventsFromDB called: " + seasonID);
   if(seasonID == 999) {
     var queryDB = "SELECT e.idevent, e.eventDateTime AS Date, e.Title, e.compensated, e.location, " + 
                   "e.venueBonus, e.estimatedCheck, e.estimatedProfit, e.actualCheck, e.payout, " + 
