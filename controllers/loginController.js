@@ -1,9 +1,10 @@
 const loginModel = require('../model/loginModel');
 const bcrypt = require('bcryptjs');
+const jwt = require('jsonwebtoken');
 const saltRounds = 10;
 
 function loginUser(req, res, next) {
-  console.log("loginUser function called");
+  // console.log("loginUser function called");
 
   const email = req.body.email;
   const password = req.body.password;
@@ -22,8 +23,10 @@ function loginUser(req, res, next) {
         res.end();
       }
       else {
-        console.log("User info correct. Returning to front.");
-        res.status(200).json(result);
+        // console.log("User info correct. Returning to front.");
+        const user = result;
+        const token = jwt.sign({email: user.userName, userID: user.userID}, 'secret-long');
+        res.status(200).json({token: token, user: user});
         res.end();
       }
     }

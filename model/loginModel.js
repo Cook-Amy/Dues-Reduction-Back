@@ -2,7 +2,7 @@ var pool = require('../database/db');
 const bcrypt = require('bcryptjs');
 
 function getUserFromDB(email, password, callback) {
-  var query = "SELECT idsite_user, userName, password, permission FROM site_user WHERE userName = ?";
+  var query = "SELECT idsite_user AS userID, userName, password, firstName, lastName, phone, permission FROM site_user WHERE userName = ?";
   var params = [email]
 
   pool.query(query, params, (error, results) => {
@@ -16,8 +16,8 @@ function getUserFromDB(email, password, callback) {
       callback(null, results);
     }
     else {
-      console.log("Results back from DB:");
-      console.log(results);
+      // console.log("Results back from DB:");
+      // console.log(results);
       checkPassword(password, results, callback);
     }
   });
@@ -28,7 +28,12 @@ function checkPassword(password, results, callback) {
   bcrypt.compare(password, pwd, function(err, res) {
     if(res == true) {
       console.log("passwords match");
-      var userJson = [{email: results[0].userName, permission: results[0].permission}];
+      var userJson = [{userID: results[0].userID, 
+                      userName: results[0].userName, 
+                      firstName: results[0].firstName,
+                      lastName: results[0].lastName,
+                      phone: results[0].phone,
+                      permission: results[0].permission}];
       callback(null, userJson);
     }
     else {
