@@ -9,7 +9,7 @@ function getAllSeasonsFromDB (callback) {
     if(error) {
       console.log('Error getting results from DB: ');
       console.log(error);
-      res.status(500).json({status: 'error'});
+      // res.status(500).json({status: 'error'});
     }
     else {
       callback(null, results);

@@ -23,16 +23,15 @@ function getEvents(req, res, next) {
 }
 
 function setNewPncEvent(req, res, next) {
-  var date = req.body.Date;
-  var convertDate = date.substring(0, date.length - 1);
+  var date = new Date(req.body.Date);
 
   var newEvent = {
     idevent: req.body.idevent,
-    Date: convertDate,
+    Date: date,
     Title: req.body.Title,
     compensated: req.body.compensated,
     location: req.body.location,
-    venueBonue: req.body.venueBonus,
+    venueBonus: req.body.venueBonus,
     estimatedCheck: req.body.estimatedCheck,
     estimatedProfit: req.body.estimatedProfit,
     actualCheck: req.body.actualCheck,
@@ -67,16 +66,15 @@ function setNewPncEvent(req, res, next) {
 }
 
 function editPncEvent(req, res, next) {
-  var date = req.body.Date;
-  var convertDate = date.substring(0, date.length - 1);
+  var date = new Date(req.body.Date);
 
   var editEvent = {
     idevent: req.body.idevent,
-    Date: convertDate,
+    Date: date,
     Title: req.body.Title,
     compensated: req.body.compensated,
     location: req.body.location,
-    venueBonue: req.body.venueBonus,
+    venueBonus: req.body.venueBonus,
     estimatedCheck: req.body.estimatedCheck,
     estimatedProfit: req.body.estimatedProfit,
     actualCheck: req.body.actualCheck,
@@ -124,9 +122,27 @@ function deletePncEvent(req, res, next) {
   });
 }
 
+function getContractPnc(req, res, next) {
+  var seasonID = req.query.seasonID;
+  // console.log("seasonID: " + seasonID);
+
+  eventsPncModel.getContractPncFromDB(seasonID, function contractCallback(error, result) {
+    if(error) {
+      console.log('Error in contract callback');
+      console.log(error);
+    }
+    else {
+      // console.log(json(result));
+      res.status(200).json(result);
+      res.end();
+    }
+  });
+}
+
 module.exports = {
   getEvents: getEvents,
   setNewPncEvent: setNewPncEvent,
   editPncEvent: editPncEvent,
-  deletePncEvent: deletePncEvent
+  deletePncEvent: deletePncEvent,
+  getContractPnc: getContractPnc
 }

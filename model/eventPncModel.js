@@ -90,7 +90,7 @@ function setNewEventInDB(newEvent, callback) {
 function setNewPncEventInDB(id, newEvent, callback) {
   var queryDB = " INSERT INTO event_pnc (eventID, metCommissionBonus, guarantee, totalSales, " +
                                         "alcSales, coordinatorAdminAmt, eventCountsTowardsTotal) " +
-                        "VALUES (" + id + ", ?, ?, ?, ?, ?, ?, ?)";
+                        "VALUES (" + id + ", ?, ?, ?, ?, ?, ? )";
   var params = [
     newEvent.metCommissionBonus,
     newEvent.guarantee,
@@ -233,11 +233,37 @@ function deleteEventFromDB(eventID, callback) {
 }
 
 
+/*********************************************************
+ * 
+ * Get season contract for PNC
+ * 
+ ********************************************************/
+function getContractPncFromDB(seasonID, callback) {
+  var queryDB = "SELECT idcontract_pnc, seasonID, pncFoodCommission, " + 
+                "pncFoodCommissionAfterIncrease, pncAlcoholCommission, pncAlcoholCommissionAfterIncrease, " + 
+                "pncFoodTaxRate, pncAlcoholTaxRate, pncMemberGuarantee, pncEventCountForCommissionIncrease " +
+                "FROM contract_pnc " +
+                "WHERE seasonID = ?";
+  var params = [seasonID];  
+  
+  pool.query(queryDB, params, (error, results) => {
+    if(error) {
+      console.log("Error getting contract from DB: ");
+      console.log(error);
+    }
+    else {
+      // console.log(results);
+      callback(null, results);
+    }
+  });
+}
+
 
 module.exports = {
   getAllPncEventsFromDB: getAllPncEventsFromDB,
   setNewEventInDB: setNewEventInDB,
   editEventinDB: editEventinDB,
-  deletePncEventFromDB: deletePncEventFromDB
+  deletePncEventFromDB: deletePncEventFromDB,
+  getContractPncFromDB: getContractPncFromDB
 }
 

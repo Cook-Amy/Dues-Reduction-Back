@@ -2,10 +2,10 @@ var mysql = require('mysql');
 var pool = mysql.createPool({
   // deploy connection
   // connectionLimit: 5,
-  // host: 'database-1.cc9faes6cfe1.us-east-2.rds.amazonaws.com',
+  // host: 'drdatabase-1.clp3eqbbr1hl.us-east-2.rds.amazonaws.com',
   // user: 'admin',
-  // password: 'db2020drapp',
-  // database: 'DR-app'
+  // password: 'drwebhost2020',
+  // database: 'dues_red'
 
   // local connection
   connectionLimit: 5,
@@ -16,6 +16,7 @@ var pool = mysql.createPool({
 })
 
 pool.getConnection((err, connection) => {
+  // console.log("Attempting to connect to DB ... ");
 
   if(err) {
     if (err.code === 'PROTOCOL_CONNECTION_LOST') {

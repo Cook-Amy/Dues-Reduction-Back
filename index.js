@@ -36,6 +36,7 @@ app.get('/getStaffForEvent', staffController.getStaffForEvent);
 app.get('/getAllPncStaff', staffPncController.getAllPncStaff);
 app.get('/getAllWcStaff', staffWcController.getAllWcStaff);
 app.get('/getAllCfStaff', staffCfController.getAllCfStaff);
+app.get('/getContractPnc', eventPncController.getContractPnc);
 
 
 app.post('/oneVenue', venueController.getOneVenue);
@@ -47,6 +48,9 @@ app.post('/sendGateList', emailController.sendGateList);
 
 // Create port
 const port = process.env.PORT || 4000;
+
+// const port = 8081;
+
 app.listen(port, () => {
   console.log('Connected to port ' + port);
 });
