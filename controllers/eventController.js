@@ -44,7 +44,23 @@ function getTimesheetForEvent(req, res, next) {
   });
 }
 
+function updateTimesheet(req, res, next) {
+  const timesheet = req.body.timesheet;
+
+  eventModel.updateTimesheetInDB(timesheet, (error, result) => {
+    if(error) {
+      console.log('Error in timesheet callback');
+      console.log(error);
+    }
+    else {
+      res.status(200).json(result);
+      res.end();
+    }
+  });
+}
+
 module.exports = {
   getEvents: getEvents,
-  getTimesheetForEvent: getTimesheetForEvent
+  getTimesheetForEvent: getTimesheetForEvent,
+  updateTimesheet: updateTimesheet
 }

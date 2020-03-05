@@ -258,12 +258,30 @@ function getContractPncFromDB(seasonID, callback) {
   });
 }
 
+function getPncJobsFromDB(callback) {
+  var queryDB = "SELECT idjobs AS jobID, jobName, hourlyRate, isGuarantee, minutesBeforeOpen, venuePay " +
+                "FROM jobs " +
+                "WHERE venueID = 1";
+  
+  pool.query(queryDB, (error, results) => {
+    if(error) {
+      console.log("Error getting jobs from DB: ");
+      console.log(error);
+    }
+    else {
+      // console.log(results);
+      callback(null, results);
+    }
+  });
+}
+
 
 module.exports = {
   getAllPncEventsFromDB: getAllPncEventsFromDB,
   setNewEventInDB: setNewEventInDB,
   editEventinDB: editEventinDB,
   deletePncEventFromDB: deletePncEventFromDB,
-  getContractPncFromDB: getContractPncFromDB
+  getContractPncFromDB: getContractPncFromDB,
+  getPncJobsFromDB: getPncJobsFromDB
 }
 

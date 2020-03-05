@@ -139,10 +139,25 @@ function getContractPnc(req, res, next) {
   });
 }
 
+function getPncJobs(req, res, next) {
+  eventsPncModel.getPncJobsFromDB(function jobCallback(error, result) {
+    if(error) {
+      console.log('Error in contract callback');
+      console.log(error);
+    }
+    else {
+      // console.log(json(result));
+      res.status(200).json(result);
+      res.end();
+    }
+  })
+}
+
 module.exports = {
   getEvents: getEvents,
   setNewPncEvent: setNewPncEvent,
   editPncEvent: editPncEvent,
   deletePncEvent: deletePncEvent,
-  getContractPnc: getContractPnc
+  getContractPnc: getContractPnc,
+  getPncJobs: getPncJobs
 }
