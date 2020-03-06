@@ -34,6 +34,7 @@ app.get('/getTimesheetForEvent', eventController.getTimesheetForEvent);
 app.get('/getStaffForEvent', staffController.getStaffForEvent);
 // app.get('/getAllStaff', staffController.getAllStaff);
 app.get('/getAllPncStaff', staffPncController.getAllPncStaff);
+app.get('/getActivePncStaff', staffPncController.getActivePncStaff);
 app.get('/getAllWcStaff', staffWcController.getAllWcStaff);
 app.get('/getAllCfStaff', staffCfController.getAllCfStaff);
 app.get('/getContractPnc', eventPncController.getContractPnc);
@@ -47,6 +48,8 @@ app.post('/editPncEvent', eventPncController.editPncEvent);
 app.post('/deletePncEvent', eventPncController.deletePncEvent);
 app.post('/sendGateList', emailController.sendGateList);
 app.post('/updateOneTimesheet', eventController.updateTimesheet);
+app.post('/addTimesheet', eventController.addTimesheet);
+app.post('/updateAllTimesheets', eventController.updateAllTimesheets);
 
 // Create port
 const port = process.env.PORT || 4000;

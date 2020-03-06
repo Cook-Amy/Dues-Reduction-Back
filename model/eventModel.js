@@ -58,6 +58,7 @@ function updateTimesheetInDB(timesheet, callback) {
                     "creditCardTips = ?, creditAmount = ? " +
                 "WHERE idtimesheet = ?";
   var date = new Date(timesheet.scheduledArrivalTime);
+
   var timeIn = null;
   var timeOut = null;
   if(timesheet.timeIn){
@@ -92,8 +93,100 @@ function updateTimesheetInDB(timesheet, callback) {
   });
 }
 
+function addTimesheetInDB(timesheet, eventID, callback) {
+  var queryDB = "INSERT INTO timesheet " +
+                  "(eventID, personID, jobID, " +
+                  "scheduledArrivalTime, hourlyRate, timeIn, timeOut, " +
+                  "hoursWorked, shuttleBonus, eventBonus, hourlyBonus, " +
+                  "creditCardTips, creditAmount) " +
+                "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+  var date = new Date(timesheet.scheduledArrivalTime);
+  var timeIn = null;
+  var timeOut = null;
+  if(timesheet.timeIn){
+    timeIn = new Date(timesheet.timeIn);
+  }
+  if(timesheet.timeOut) {
+    timeOut = new Date(timesheet.timeOut);
+  }
+  var params = [
+    eventID,
+    timesheet.personID,
+    timesheet.jobID,
+    date,
+    timesheet.hourlyRate,
+    timeIn,
+    timeOut,
+    timesheet.hoursWorked,
+    timesheet.shuttleBonus,
+    timesheet.eventBonus,
+    timesheet.hourlyBonus,
+    timesheet.creditCardTips,
+    timesheet.creditAmount
+  ];
+
+  pool.query(queryDB, params, (error, results) => {
+    if(error) {
+      console.log("Error setting timesheet in DB: ");
+      console.log(error);
+    }
+    else {
+      callback(null, results.insertId);
+    }
+  });
+}
+
+function updateAllTimesheetsInDB(timesheets, callback) {
+  var queryDB = "";
+  var params = [];
+
+  timesheets.forEach(ts => {
+    queryDB += "UPDATE timesheet " +
+                "SET jobID = ?, scheduledArrivalTime = ?, hourlyRate = ?, " +
+                    "timeIn = ?, timeOut = ?, hoursWorked = ?, " +
+                    "shuttleBonus = ?, eventBonus = ?, hourlyBonus = ?, "+
+                    "creditCardTips = ?, creditAmount = ? " +
+                "WHERE idtimesheet = ?; ";
+    var date = new Date(ts.scheduledArrivalTime);
+    var timeIn = null;
+    var timeOut = null;
+    if(ts.timeIn){
+      timeIn = new Date(ts.timeIn);
+    }
+    if(ts.timeOut) {
+      timeOut = new Date(ts.timeOut);
+    }
+    params.push(
+      ts.jobID,
+      date,
+      ts.hourlyRate,
+      timeIn,
+      timeOut,
+      ts.hoursWorked,
+      ts.shuttleBonus,
+      ts.eventBonus,
+      ts.hourlyBonus,
+      ts.creditCardTips,
+      ts.creditAmount,
+      ts.idtimesheet
+    );
+  });
+
+  pool.query(queryDB, params, (error, results) => {
+    if(error) {
+      console.log("Error setting timesheet in DB: ");
+      console.log(error);
+    }
+    else {
+      callback(null, results);
+    }
+  });
+}
+
 module.exports = {
   getEventsFromDB: getEventsFromDB,
   getTimesheetForEventFromDB: getTimesheetForEventFromDB,
-  updateTimesheetInDB: updateTimesheetInDB
+  updateTimesheetInDB: updateTimesheetInDB,
+  addTimesheetInDB: addTimesheetInDB,
+  updateAllTimesheetsInDB: updateAllTimesheetsInDB
 }

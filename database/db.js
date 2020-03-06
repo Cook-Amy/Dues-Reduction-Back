@@ -5,14 +5,16 @@ var pool = mysql.createPool({
   // host: 'drdatabase-1.clp3eqbbr1hl.us-east-2.rds.amazonaws.com',
   // user: 'admin',
   // password: 'drwebhost2020',
-  // database: 'dues_red'
+  // database: 'dues_red',
+  // multipleStatements: true
 
   // local connection
   connectionLimit: 5,
   host: 'localhost',
   user: 'root',
   password: 'root',
-  database: 'dues_red'
+  database: 'dues_red',
+  multipleStatements: true
 })
 
 pool.getConnection((err, connection) => {

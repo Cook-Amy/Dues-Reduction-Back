@@ -59,8 +59,41 @@ function updateTimesheet(req, res, next) {
   });
 }
 
+function addTimesheet(req, res, next) {
+  const timesheet = req.body.timesheet;
+  const eventID = req.body.eventID;
+
+  eventModel.addTimesheetInDB(timesheet, eventID, (error, result) => {
+    if(error) {
+      console.log('Error in timesheet callback');
+      console.log(error);
+    }
+    else {
+      res.status(200).json(result);
+      res.end();
+    }
+  });
+}
+
+function updateAllTimesheets(req, res, next) {
+  const timesheets = req.body.timesheets;
+
+  eventModel.updateAllTimesheetsInDB(timesheets, (error, result) => {
+    if(error) {
+      console.log('Error in timesheet callback');
+      console.log(error);
+    }
+    else {
+      res.status(200).json(result);
+      res.end();
+    }
+  });
+}
+
 module.exports = {
   getEvents: getEvents,
   getTimesheetForEvent: getTimesheetForEvent,
-  updateTimesheet: updateTimesheet
+  updateTimesheet: updateTimesheet,
+  addTimesheet: addTimesheet,
+  updateAllTimesheets: updateAllTimesheets
 }
