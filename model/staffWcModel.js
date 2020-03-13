@@ -33,15 +33,42 @@ function getAllWcStaffFromDB(callback) {
       callback(null, results);
     }
     else {
-      // console.log("Events found in DB: ");
-      // console.log(results);
-      // console.log("Results returned for WC staff: " + results.length);
+      callback(null, results);
+    }
+  });
+}
 
+function getActiveWcStaffFromDB(callback) {
+  var queryDB = "SELECT per.idperson, per.firstName, per.lastName, " +
+                        "CONCAT(per.lastName, ', ', per.firstName) AS Name, " +
+                        "per.email AS Email, per.phone As Phone, " + 
+                        "tu.accountName, " +
+                        "perwc.wcTeamTraining " +
+                    "FROM person per, tu_account tu, person_participation perpar, person_wc_paperwork perwc " +
+                    "WHERE per.isTeamMember = 1 " +
+                    "AND idtu_account = per.tuAccountID " +
+                    "AND perpar.personID = per.idperson " +
+                    "AND perpar.venueID = 1 " +
+                    "AND perwc.personID = per.idperson " + 
+                    "AND perpar.participationID = 1";
+                    
+
+  pool.query(queryDB, (error, results) => {
+    if(error) {
+      console.log("Error getting results from DB: ");
+      console.log(error);
+    }
+    else if(results.length == 0) {
+      console.log("Staff not found in DB");
+      callback(null, results);
+    }
+    else {
       callback(null, results);
     }
   });
 }
 
 module.exports = {
-  getAllWcStaffFromDB: getAllWcStaffFromDB
+  getAllWcStaffFromDB: getAllWcStaffFromDB,
+  getActiveWcStaffFromDB: getActiveWcStaffFromDB
 }

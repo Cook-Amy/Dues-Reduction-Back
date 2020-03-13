@@ -1,5 +1,23 @@
 const staffModel = require('../model/staffModel');
 
+function getAllStaff(req, res, next) {
+  staffModel.getAllStaffFromDB(function getStaffCallback(error, result) {
+    if(error) {
+      console.log('Error in staff callback');
+      console.log(error);
+    }
+    else if(result.length == 0) {
+      console.log("No staff info found in DB. Returning with null.");
+      res.status(204).json(null);
+      res.end();
+    }
+    else {
+      res.status(200).json(result);
+      res.end();
+    }
+  });
+}
+
 function getStaffForEvent(req, res, next) {
   const eventID = req.query.eventID;
 
@@ -20,6 +38,40 @@ function getStaffForEvent(req, res, next) {
   });
 }
 
+function addOneStaff(req, res, next) {
+  const newStaff = req.body.staff;
+
+  staffModel.addOneStaffToDB(newStaff, function getStaffCallback(error, result, id) {
+    if(error) {
+      console.log('Error in staff callback');
+      console.log(error);
+    }
+    else {
+      console.log("id: " + id);
+      res.status(200).json(id);
+      res.end();
+    }
+  });
+}
+
+function updateOneStaff(req, res, next) {
+  const newStaff = req.body.staff;
+
+  staffModel.updateOneStaffInDB(newStaff, function getStaffCallback(error, result) {
+    if(error) {
+      console.log('Error in staff callback');
+      console.log(error);
+    }
+    else {
+      res.status(200).json(result);
+      res.end();
+    }
+  });
+}
+
 module.exports = {
-  getStaffForEvent: getStaffForEvent
+  getAllStaff: getAllStaff,
+  getStaffForEvent: getStaffForEvent,
+  addOneStaff: addOneStaff,
+  updateOneStaff: updateOneStaff
 }

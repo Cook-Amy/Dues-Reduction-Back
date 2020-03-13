@@ -1,23 +1,129 @@
 var pool = require('../database/db');
 
-function getEventsFromDB (venueID, seasonID, callback) {
-  if(seasonID == 999) {
-    var queryDB = "SELECT * FROM event WHERE venueID = ?";
-    var params = [venueID];
-  }
-  else {
-    var queryDB = "SELECT * FROM event WHERE venueID = ? AND seasonID = ?";
-    var params = [venueID, seasonID];
-  }
+/*********************************************************
+ * 
+ * Get all events
+ * 
+ ********************************************************/
+function getEventsFromDB (seasonID, callback) {
+  var queryDB = "SELECT e.idevent, e.seasonID, e.venueID, e.eventDateTime AS Date, e.Title, e.compensated, e.location, " + 
+                  "e.venueBonus, e.estimatedCheck, e.estimatedProfit, e.actualCheck, e.payout, " + 
+                  "e.discrepancy, e.actualProfit, e.tacPct, e.tacCut, e.drCut, e.eventNotes, " +  
+                  "e.closed, e.coordinatorAdminAmt, " +
+                  "p.totalSales AS totalSalesPnc, p.metCommissionBonus, p.guarantee, p.alcSales, p.eventCountsTowardsTotal " +
+                "FROM event_all e, event_pnc p " + 
+                "WHERE e.idevent = p.eventID " +
+                "AND e.seasonID = ?";
+var params = [seasonID];
 
   pool.query(queryDB, params, (error, results) => {
     if(error) {
       console.log("Error getting results from DB: ");
       console.log(error);
     }
-    else if(results.length == 0) {
+    else {
+      getEventsFromDB2(results, seasonID, callback);
+    }
+  });
+}
+
+function getEventsFromDB2 (pncEvent, seasonID, callback) {
+  var queryDB = "SELECT e.idevent, e.seasonID, e.venueID, e.eventDateTime AS Date, e.Title, e.compensated, e.location, " + 
+                  "e.venueBonus, e.estimatedCheck, e.estimatedProfit, e.actualCheck, e.payout, " + 
+                  "e.discrepancy, e.actualProfit, e.tacPct, e.tacCut, e.drCut, e.eventNotes, " +  
+                  "e.closed, e.coordinatorAdminAmt, " +
+                  "w.creditCardTips, w.maxCreditCardTipAmount, w.shuttleBonusBool, w.shuttleBonusAmount " +
+                "FROM event_all e, event_wc w " + 
+                "WHERE e.idevent = w.eventID " + 
+                "AND e.seasonID = ?";
+var params = [seasonID];
+
+  pool.query(queryDB, params, (error, results) => {
+    if(error) {
+      console.log("Error getting results from DB: ");
+      console.log(error);
+    }
+    else {
+      let eventResults = pncEvent.concat(results);
+      getEventsFromDB3(eventResults, seasonID, callback);
+    }
+  });
+}
+
+function getEventsFromDB3 (eventResults, seasonID, callback) {
+  var queryDB = "SELECT e.idevent, e.seasonID, e.venueID, e.eventDateTime AS Date, e.Title, e.compensated, e.location, " + 
+                  "e.venueBonus, e.estimatedCheck, e.estimatedProfit, e.actualCheck, e.payout, " + 
+                  "e.discrepancy, e.actualProfit, e.tacPct, e.tacCut, e.drCut, e.eventNotes, " +  
+                  "e.closed, e.coordinatorAdminAmt, " +
+                  "c.totalSales AS totalSalesCf, c.shuttleBonusBool, c.shuttleBonusAmount, c.shuttleLocation " +
+                "FROM event_all e, event_cf c " + 
+                "WHERE e.idevent = c.eventID " +
+                "AND e.seasonID = ?";
+var params = [seasonID];
+
+  pool.query(queryDB, params, (error, results) => {
+    if(error) {
+      console.log("Error getting results from DB: ");
+      console.log(error);
+    }
+    else if(results.length == 0 && eventResults.length == 0) {
       console.log("Events not found in DB");
       callback(null, results);
+    }
+    else {
+      let events = eventResults.concat(results);
+      callback(null, events);
+    }
+  });
+}
+
+
+/*********************************************************
+ * 
+ * Delete an event
+ * 
+ ********************************************************/
+function deleteOneEventFromDB(eventID, callback) {
+  var queryDB = "DELETE FROM event_pnc WHERE eventID = ?; " +
+                "DELETE FROM event_wc WHERE eventID = ?; " +
+                "DELETE FROM event_cf WHERE eventID = ?; ";
+  var params = [eventID, eventID, eventID];
+
+  pool.query(queryDB, params, (error, results) => {
+    if(error) {
+      console.log("Error setting new event into DB: ");
+      console.log(error);
+    }
+    else {
+      deleteTimesheetsForEventFromDB(eventID, callback);
+    }
+  });
+}
+
+function deleteTimesheetsForEventFromDB(eventID, callback) {
+  var queryDB = "DELETE FROM timesheet WHERE eventID = ?";
+  var params = [eventID];
+
+  pool.query(queryDB, params, (error, results) => {
+    if(error) {
+      console.log("Error setting new event into DB: ");
+      console.log(error);
+    }
+    else {
+      deleteEventFromDB(eventID, callback);
+    }
+  });
+}
+
+
+function deleteEventFromDB(eventID, callback) {
+  var queryDB = "DELETE FROM event_all WHERE idevent = ?";
+  var params = [eventID];
+
+  pool.query(queryDB, params, (error, results) => {
+    if(error) {
+      console.log("Error setting new event into DB: ");
+      console.log(error);
     }
     else {
       callback(null, results);
@@ -25,6 +131,196 @@ function getEventsFromDB (venueID, seasonID, callback) {
   });
 }
 
+/*********************************************************
+ * 
+ * Edit an event
+ * 
+ ********************************************************/
+function editOneEventinDB(event, callback) {
+  var queryDB = "UPDATE event_all " +
+                "SET eventDateTime = ?, Title = ?, compensated = ?, location = ?, " +
+                    "venueBonus = ?, estimatedCheck = ?, estimatedProfit = ?, actualCheck = ?, " +
+                    "payout = ?, discrepancy = ?, actualProfit = ?, tacPct = ?, " +
+                    "tacCut = ?, drCut = ?, eventNotes = ?, closed = ?, coordinatorAdminAmt = ? " +
+                "WHERE idevent = ?";
+
+  var newDate = new Date(event.Date);
+
+  var params = [
+    newDate,
+    event.Title,
+    event.compensated,
+    event.location,
+    event.venueBonus,
+    event.estimatedCheck,
+    event.estimatedProfit,
+    event.actualCheck,
+    event.payout,
+    event.discrepancy,
+    event.actualProfit,
+    event.tacPct,
+    event.tacCut,
+    event.drCut,
+    event.eventNotes,
+    event.closed,
+    event.coordinatorAdminAmt,
+    event.idevent
+  ];
+
+  pool.query(queryDB, params, (error, results) => {
+    if(error) {
+      console.log("Error setting new event into DB: ");
+      console.log(error);
+    }
+    else {
+      editVenueEventinDB(event, callback);
+    }
+  });
+}
+
+function editVenueEventinDB(event, callback) {
+  var queryDB = "UPDATE event_pnc " +
+                  "SET totalSales = ?, metCommissionBonus = ?, guarantee = ?, " +
+                      "alcSales = ?, eventCountsTowardsTotal = ? " +
+                  "WHERE eventID = ?; "
+                "UPDATE event_wc " +
+                  "SET creditCardTips = ?, maxCreditCardTips = ?, " +
+                      "shuttleBonusBool = ?, shuttleBonusAmount = ? " +
+                  "WHERE eventID = ?; " +
+                "UPDATE event_cf " +
+                  "SET totalSales = ?, shuttleBonusBool = ?, " +
+                      "shuttleBonusAmount = ?, shuttleLocation = ? " +
+                  "WHERE eventID = ?;";
+  var params = [
+    event.totalSalesPnc,
+    event.metCommissionBonus,
+    event.guarantee,
+    event.alcSales,
+    event.eventCountsTowardsTotal,
+    event.idevent,
+    
+    event.creditCardTips,
+    event.maxCreditCardTips,
+    event.shuttleBonusBoolWc, 
+    event.shuttleBonusAmountWc,
+    event.idevent,
+
+    event.totalSalesCf,
+    event.shuttleBonusBoolCf,
+    event.shuttleBonusAmountCf,
+    event.idevent
+  ];
+
+  pool.query(queryDB, params, (error, results) => {
+    if(error) {
+      console.log("Error setting new event into DB: ");
+      console.log(error);
+    }
+    else {
+      callback(null, results);
+    }
+  });
+}
+
+/*********************************************************
+ * 
+ * Insert a new event
+ * 
+ ********************************************************/
+function setNewEventInDB(newEvent, callback) {
+  var queryDB = "INSERT INTO event_all (seasonID, venueID, eventDateTime, Title, " +
+                                    "compensated, location, venueBonus, estimatedCheck, estimatedProfit, " +
+                                    "actualCheck, payout, discrepancy, actualProfit, tacPct, " +
+                                    "tacCut, drCut, eventNotes, closed, coordinatorAdminAmt) " +
+                        "VALUES   (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+  
+  var newDate = new Date(newEvent.Date);
+   var params = [
+    newEvent.seasonID,
+    newEvent.venueID,
+    newDate,
+    newEvent.Title,
+    newEvent.compensated,
+    newEvent.location,
+    newEvent.venueBonus,
+    newEvent.estimatedCheck,
+    newEvent.estimatedProfit,
+    newEvent.actualCheck,
+    newEvent.payout,
+    newEvent.discrepancy,
+    newEvent.actualProfit,
+    newEvent.tacPct,
+    newEvent.tacCut,
+    newEvent.drCut,
+    newEvent.eventNotes,
+    newEvent.closed,
+    newEvent.coordinatorAdminAmt
+  ];
+
+  pool.query(queryDB, params, (error, results) => {
+    if(error) {
+      console.log("Error setting new event into DB: ");
+      console.log(error);
+    }
+    else {
+      setNewVenueEventInDB(results.insertId, newEvent, callback);
+    }
+  });
+}
+
+function setNewVenueEventInDB(id, newEvent, callback) {
+  var queryDB = "";
+  var params = [];
+  if(newEvent.venueID == 1) {
+    queryDB = " INSERT INTO event_pnc (eventID, metCommissionBonus, guarantee, totalSales, " +
+                          "alcSales, eventCountsTowardsTotal) " +
+                "VALUES (" + id + ", ?, ?, ?, ?, ?, ? )";
+
+    params.push(newEvent.metCommissionBonus);
+    params.push(newEvent.guarantee);
+    params.push(newEvent.totalSalesPnc);
+    params.push(newEvent.alcSales);
+    params.push(newEvent.eventCountsTowardsTotal);
+  }
+
+  else if(newEvent.venueID == 2) {
+    queryDB = " INSERT INTO event_wc (eventID, shuttleBonusBool, shuttleBonusAmount, creditCardTips, maxCreditCardTipAmount) " +
+              "VALUES (" + id + ", ?, ?, ?, ? )";
+
+    params.push(newEvent.shuttleBonusBoolWc);
+    params.push(newEvent.shuttleBonusAmountWc);
+    params.push(newEvent.creditCardTips);
+    params.push(newEvent.maxCreditCardAmount);
+  }
+
+  else if(newEvent.venueID == 3) {
+    queryDB = " INSERT INTO event_cf (eventID, shuttleBonusBool, shuttleBonusAmount, shuttleLocation, totalSales) " +
+                "VALUES (" + id + ", ?, ?, ?, ? )";
+
+    params.push(newEvent.shuttleBonusBoolCf);
+    params.push(newEvent.shuttleBonusAmountCf);
+    params.push(newEvent.shuttleLocation);
+    params.push(newEvent.totalSalesCf);
+
+  }
+
+  pool.query(queryDB, params, (error, results) => {
+    if(error) {
+      console.log("Error setting new event into DB: ");
+      console.log(error);
+    }
+    else {
+      callback(null, results);
+    }
+  });
+}
+
+
+/*********************************************************
+ * 
+ * TIMESHEETS
+ * 
+ ********************************************************/
 function getTimesheetForEventFromDB (eventID, callback) {
   var queryDB = "SELECT t.idtimesheet, p.firstName, p.lastName, t.personID, j.jobName, t.jobID, t.scheduledArrivalTime, t.hourlyRate, t.timeIn, t.timeOut, t.hoursWorked, t.shuttleBonus, t.eventBonus, t.hourlyBonus, t.creditCardTips, t.creditAmount, j.isGuarantee, j.venuePay " +
                 "FROM timesheet t, person p, jobs j " +
@@ -183,10 +479,29 @@ function updateAllTimesheetsInDB(timesheets, callback) {
   });
 }
 
+function deleteOneTimesheetInDB(id, callback) {
+  var queryDB = "DELETE FROM timesheet WHERE idtimesheet = ?";
+  var params = [id];
+
+  pool.query(queryDB, params, (error, results) => {
+    if(error) {
+      console.log("Error setting timesheet in DB: ");
+      console.log(error);
+    }
+    else {
+      callback(null, results);
+    }
+  });
+}
+
 module.exports = {
   getEventsFromDB: getEventsFromDB,
+  deleteOneEventFromDB: deleteOneEventFromDB,
   getTimesheetForEventFromDB: getTimesheetForEventFromDB,
   updateTimesheetInDB: updateTimesheetInDB,
   addTimesheetInDB: addTimesheetInDB,
-  updateAllTimesheetsInDB: updateAllTimesheetsInDB
+  updateAllTimesheetsInDB: updateAllTimesheetsInDB,
+  deleteOneTimesheetInDB: deleteOneTimesheetInDB,
+  editOneEventinDB: editOneEventinDB,
+  setNewEventInDB: setNewEventInDB
 }

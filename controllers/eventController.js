@@ -1,13 +1,9 @@
 const eventModel = require('../model/eventModel');
 
 function getEvents(req, res, next) {
-
-  // const venueID = 1;
-  const venueID = req.query.venueID;
   const seasonID = req.query.seasonID;
-  // console.log("seasonID: " + seasonID + ", venueID: " + venueID);
 
-  eventModel.getEventsFromDB(venueID, seasonID, function getEventCallback(error, result) {
+  eventModel.getEventsFromDB(seasonID, function getEventCallback(error, result) {
     if(error) {
       console.log('Error in event callback');
       console.log(error);
@@ -90,10 +86,75 @@ function updateAllTimesheets(req, res, next) {
   });
 }
 
+function deleteOneTimesheet(req, res, next) {
+  const timesheetID = req.body.id;
+
+  eventModel.deleteOneTimesheetInDB(timesheetID, (error, result) => {
+    if(error) {
+      console.log('Error in timesheet callback');
+      console.log(error);
+    }
+    else {
+      res.status(200).json(result);
+      res.end();
+    }
+  })
+}
+
+function deleteOneEvent(req, res, next) {
+  var eventID = req.body.idevent;
+
+  eventModel.deleteOneEventFromDB(eventID, function deleteCallback(error, result) {
+    if(error) {
+      console.log('Error in editEvent callback');
+      console.log(error);
+    }
+    else {
+      res.status(200).json(result);
+      res.end();
+    }
+  });
+}
+
+function editOneEvent(req, res, next) {
+  var event = req.body.event;
+
+  eventModel.editOneEventinDB(event, function setEventCallback(error, result) {
+    if(error) {
+      console.log('Error in editEvent callback');
+      console.log(error);
+    }
+    else {
+      res.status(200).json(result);
+      res.end();
+    }
+  });
+}
+
+
+function setNewEvent(req, res, next) {
+  var newEvent = req.body.event;
+
+  eventModel.setNewEventInDB(newEvent, function setEventCallback(error, result) {
+    if(error) {
+      console.log('Error in setEvent callback');
+      console.log(error);
+    }
+    else {
+      res.status(200).json(result);
+      res.end();
+    }
+  });
+}
+
 module.exports = {
   getEvents: getEvents,
   getTimesheetForEvent: getTimesheetForEvent,
   updateTimesheet: updateTimesheet,
   addTimesheet: addTimesheet,
-  updateAllTimesheets: updateAllTimesheets
+  updateAllTimesheets: updateAllTimesheets,
+  deleteOneTimesheet: deleteOneTimesheet,
+  deleteOneEvent: deleteOneEvent,
+  editOneEvent: editOneEvent,
+  setNewEvent: setNewEvent
 }
