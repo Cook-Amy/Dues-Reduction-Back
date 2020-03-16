@@ -69,9 +69,26 @@ function updateOneStaff(req, res, next) {
   });
 }
 
+function removeStaff(req, res, next) {
+  console.log("removeStaff called");
+  const staff = req.body.staff;
+
+  staffModel.removeStaffinDB(staff, function staffCallback(error, result) {
+    if(error) {
+      console.log('Error in staff callback');
+      console.log(error);
+    }
+    else {
+      res.status(200).json(result);
+      res.end();
+    }
+  });
+}
+
 module.exports = {
   getAllStaff: getAllStaff,
   getStaffForEvent: getStaffForEvent,
   addOneStaff: addOneStaff,
-  updateOneStaff: updateOneStaff
+  updateOneStaff: updateOneStaff,
+  removeStaff: removeStaff
 }

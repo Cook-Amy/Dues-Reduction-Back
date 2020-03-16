@@ -21,7 +21,7 @@ const staffController = require("./controllers/staffController");
 const staffPncController = require("./controllers/staffPncController");
 const staffWcController = require("./controllers/staffWcController");
 const staffCfController = require("./controllers/staffCfController");
-const emailController = require("./controllers/emailController");
+const gateListController = require("./controllers/gateListController");
 
 // Routes
 app.get('/venues', venueController.getVenues);
@@ -30,6 +30,7 @@ app.get('/getEvents', eventController.getEvents);
 app.get('/getTimesheetForEvent', eventController.getTimesheetForEvent);
 app.get('/getStaffForEvent', staffController.getStaffForEvent);
 app.get('/getAllStaff', staffController.getAllStaff);
+app.get('/getCalendarEvents', eventController.getCalendarEvents);
 
 app.get('/getEventsPNC', eventPncController.getEvents);
 app.get('/getAllPncStaff', staffPncController.getAllPncStaff);
@@ -53,7 +54,6 @@ app.get('/getCfJobs', eventCfController.getCfJobs);
 
 app.post('/login', loginController.loginUser);
 app.post('/oneVenue', venueController.getOneVenue);
-app.post('/sendGateList', emailController.sendGateList);
 app.post('/updateOneTimesheet', eventController.updateTimesheet);
 app.post('/addTimesheet', eventController.addTimesheet);
 app.post('/updateAllTimesheets', eventController.updateAllTimesheets);
@@ -63,14 +63,17 @@ app.post('/updateStaff', staffController.updateOneStaff);
 app.post('/deleteEvent', eventController.deleteOneEvent);
 app.post('/editEvent', eventController.editOneEvent);
 app.post('/setNewEvent', eventController.setNewEvent);
+app.post('/removeStaff', staffController.removeStaff);
 
 app.post('/setNewPncEvent', eventPncController.setNewPncEvent);
 app.post('/editPncEvent', eventPncController.editPncEvent);
 app.post('/deletePncEvent', eventPncController.deletePncEvent);
+app.post('/sendPncGateList', gateListController.sendPncGateList);
 
 app.post('/setNewWcEvent', eventWcController.setNewWcEvent);
 app.post('/editWcEvent', eventWcController.editWcEvent);
 app.post('/deleteWcEvent', eventWcController.deleteWcEvent);
+app.post('/sendWcGateList', gateListController.sendWcGateList);
 
 app.post('/setNewCfEvent', eventCfController.setNewCfEvent);
 app.post('/editCfEvent', eventCfController.editCfEvent);

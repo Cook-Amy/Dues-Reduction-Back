@@ -494,6 +494,26 @@ function deleteOneTimesheetInDB(id, callback) {
   });
 }
 
+/*********************************************************
+ * 
+ * Get all events for calendar
+ * 
+ ********************************************************/
+function getCalendarEventsFromDB (callback) {
+  var queryDB = "SELECT idevent, venueID, eventDateTime AS date, Title AS title "+
+                "FROM event_all";
+
+  pool.query(queryDB, (error, results) => {
+    if(error) {
+      console.log("Error getting results from DB: ");
+      console.log(error);
+    }
+    else {
+      callback(null, results);
+    }
+  });
+}
+
 module.exports = {
   getEventsFromDB: getEventsFromDB,
   deleteOneEventFromDB: deleteOneEventFromDB,
@@ -503,5 +523,6 @@ module.exports = {
   updateAllTimesheetsInDB: updateAllTimesheetsInDB,
   deleteOneTimesheetInDB: deleteOneTimesheetInDB,
   editOneEventinDB: editOneEventinDB,
-  setNewEventInDB: setNewEventInDB
+  setNewEventInDB: setNewEventInDB,
+  getCalendarEventsFromDB: getCalendarEventsFromDB
 }

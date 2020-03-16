@@ -256,9 +256,6 @@ function updateParticipationInDB(newStaff, callback) {
                 "SET participationID = ? " +
                 "WHERE personID = ? AND venueID = 3; ";
   var params = [];
-  // console.log("PNC participation: " + newStaff.pncActive + " , " + newStaff.pncInactive + " , " + newStaff.pncInterested);
-  // console.log("WC participation: " + newStaff.wcActive + " , " + newStaff.wcInactive + " , " + newStaff.wcInterested);
-  // console.log("CF participation: " + newStaff.cfActive + " , " + newStaff.cfInactive + " , " + newStaff.cfInterested);
 
   if(newStaff.pncActive) {
     params.push(1);
@@ -342,9 +339,27 @@ function updatePaperworkInDB(newStaff, callback) {
   });
 }
 
+function removeStaffinDB(staff, callback) {
+  console.log("removeStaffinDB called");
+
+  var queryDB = "UPDATE person SET isTeamMember = 0 WHERE idperson = ?";
+  var params = [staff.idperson];
+
+  pool.query(queryDB, params, (error, results) => {
+    if(error) {
+      console.log("Error getting results from DB: ");
+      console.log(error);
+    }
+    else {
+      callback(error, results);
+    }
+  });
+}
+
 module.exports = {
   getAllStaffFromDB: getAllStaffFromDB,
   getStaffForEventFromDB: getStaffForEventFromDB,
   addOneStaffToDB: addOneStaffToDB,
-  updateOneStaffInDB: updateOneStaffInDB
+  updateOneStaffInDB: updateOneStaffInDB,
+  removeStaffinDB: removeStaffinDB
 }

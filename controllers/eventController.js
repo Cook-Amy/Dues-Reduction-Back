@@ -147,6 +147,24 @@ function setNewEvent(req, res, next) {
   });
 }
 
+function getCalendarEvents(req, res, next) {
+  eventModel.getCalendarEventsFromDB(function calendarCallback(error, result) {
+    if(error) {
+      console.log('Error in event callback');
+      console.log(error);
+    }
+    else if(result.length == 0) {
+      console.log("No event info found in DB. Returning with null.");
+      res.status(204).json(null);
+      res.end();
+    }
+    else {
+      res.status(200).json(result);
+      res.end();
+    }
+  });
+}
+
 module.exports = {
   getEvents: getEvents,
   getTimesheetForEvent: getTimesheetForEvent,
@@ -156,5 +174,6 @@ module.exports = {
   deleteOneTimesheet: deleteOneTimesheet,
   deleteOneEvent: deleteOneEvent,
   editOneEvent: editOneEvent,
-  setNewEvent: setNewEvent
+  setNewEvent: setNewEvent,
+  getCalendarEvents: getCalendarEvents
 }
