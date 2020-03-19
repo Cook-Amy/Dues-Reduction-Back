@@ -24,6 +24,7 @@ const staffCfController = require("./controllers/staffCfController");
 const gateListController = require("./controllers/gateListController");
 const reminderController = require("./controllers/reminderController");
 const creditSummaryController = require("./controllers/creditSummaryController");
+const monthReportController = require('./controllers/monthReportController');
 
 // Routes
 app.get('/venues', venueController.getVenues);
@@ -70,6 +71,7 @@ app.post('/sendPncReminderEmail', reminderController.sendPncReminder);
 app.post('/sendWcReminderEmail', reminderController.sendWcReminder);
 app.post('/sendCfReminderEmail', reminderController.sendCfReminder);
 app.post('/generateCreditSummary', creditSummaryController.createSummary);
+app.post('/getMonthReportData', monthReportController.createReport);
 
 
 app.post('/setNewPncEvent', eventPncController.setNewPncEvent);
