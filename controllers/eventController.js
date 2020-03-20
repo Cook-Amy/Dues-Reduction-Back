@@ -2,6 +2,7 @@ const eventModel = require('../model/eventModel');
 
 function getEvents(req, res, next) {
   const seasonID = req.query.seasonID;
+  console.log("seasonID: " + seasonID);
 
   eventModel.getEventsFromDB(seasonID, function getEventCallback(error, result) {
     if(error) {
@@ -102,7 +103,7 @@ function deleteOneTimesheet(req, res, next) {
 }
 
 function deleteOneEvent(req, res, next) {
-  var eventID = req.body.idevent;
+  var eventID = req.body.eventID;
 
   eventModel.deleteOneEventFromDB(eventID, function deleteCallback(error, result) {
     if(error) {
@@ -118,8 +119,9 @@ function deleteOneEvent(req, res, next) {
 
 function editOneEvent(req, res, next) {
   var event = req.body.event;
+  var eventID = req.body.eventID;
 
-  eventModel.editOneEventinDB(event, function setEventCallback(error, result) {
+  eventModel.editOneEventinDB(event, eventID, function setEventCallback(error, result) {
     if(error) {
       console.log('Error in editEvent callback');
       console.log(error);

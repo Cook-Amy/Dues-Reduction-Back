@@ -16,6 +16,8 @@ function sendPncReminder(req, res, next) {
     }
     else {
 
+      // TODO: send reminders to correct email addresses
+      
       if(result.length == 1) {
         var eventDate = returnDateStr(result[0].eventDateTime);
         var eventTime = returnTimeStr(result[0].scheduledArrivalTime);

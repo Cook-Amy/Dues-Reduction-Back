@@ -339,8 +339,11 @@ function updatePaperworkInDB(newStaff, callback) {
   });
 }
 
+
+/***********************************************************************
+ * REMOVE STAFF
+ **********************************************************************/
 function removeStaffinDB(staff, callback) {
-  console.log("removeStaffinDB called");
 
   var queryDB = "UPDATE person SET isTeamMember = 0 WHERE idperson = ?";
   var params = [staff.idperson];

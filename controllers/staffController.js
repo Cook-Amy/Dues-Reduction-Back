@@ -70,7 +70,6 @@ function updateOneStaff(req, res, next) {
 }
 
 function removeStaff(req, res, next) {
-  console.log("removeStaff called");
   const staff = req.body.staff;
 
   staffModel.removeStaffinDB(staff, function staffCallback(error, result) {

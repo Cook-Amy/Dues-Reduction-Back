@@ -11,8 +11,8 @@ function sendPncGateList(req, res) {
   var staff = req.body.staff;
   var data = setDataPnc(staff);
 
-  var email = false;
-  var download = true;
+  var email = true;
+  var download = false;
   
   var workbook = new ExcelJS.Workbook();
   var filename = "./savedFiles/TemplateGateListPnc.xlsx";
@@ -62,7 +62,7 @@ function sendPncGateList(req, res) {
           }
           else {
             console.log("Email has been sent.");
-            // res.send(info);
+            res.send(info);
           }
         });
       }
@@ -191,6 +191,8 @@ function fillWorksheet(worksheet, event, data) {
   eventCell.value = event.Title;
   var standCell = worksheet.getCell('D4');
   standCell.value = event.location;
+
+  // TODO: How to distinguish between stand and cart
 
   // ROW OF VOLUNTEERS
   var nameCell = ['A11', 'A12', 'A13', 'A14', 'A15', 'A16', 'A17', 'A18', 'A19', 'A20', 'A21', 'A22', 'A23', 'A24', 'A25', 'A26', 'A27', 'A28', 'A29', 'A30'];

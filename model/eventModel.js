@@ -6,15 +6,29 @@ var pool = require('../database/db');
  * 
  ********************************************************/
 function getEventsFromDB (seasonID, callback) {
-  var queryDB = "SELECT e.idevent, e.seasonID, e.venueID, e.eventDateTime AS Date, e.Title, e.compensated, e.location, " + 
-                  "e.venueBonus, e.estimatedCheck, e.estimatedProfit, e.actualCheck, e.payout, " + 
-                  "e.discrepancy, e.actualProfit, e.tacPct, e.tacCut, e.drCut, e.eventNotes, " +  
-                  "e.closed, e.coordinatorAdminAmt, " +
-                  "p.totalSales AS totalSalesPnc, p.metCommissionBonus, p.guarantee, p.alcSales, p.eventCountsTowardsTotal " +
-                "FROM event_all e, event_pnc p " + 
-                "WHERE e.idevent = p.eventID " +
-                "AND e.seasonID = ?";
-var params = [seasonID];
+  var queryDB = "";
+  var params = [];
+
+  if(seasonID == 999) {
+    queryDB = "SELECT e.idevent, e.seasonID, e.venueID, e.eventDateTime AS Date, e.Title, e.compensated, e.location, " + 
+                    "e.venueBonus, e.estimatedCheck, e.estimatedProfit, e.actualCheck, e.payout, " + 
+                    "e.discrepancy, e.actualProfit, e.tacPct, e.tacCut, e.drCut, e.eventNotes, " +  
+                    "e.closed, e.coordinatorAdminAmt, " +
+                    "p.totalSales AS totalSalesPnc, p.metCommissionBonus, p.guarantee, p.alcSales, p.eventCountsTowardsTotal " +
+                  "FROM event_all e, event_pnc p " + 
+                  "WHERE e.idevent = p.eventID ";
+  }
+  else {
+    queryDB = "SELECT e.idevent, e.seasonID, e.venueID, e.eventDateTime AS Date, e.Title, e.compensated, e.location, " + 
+                    "e.venueBonus, e.estimatedCheck, e.estimatedProfit, e.actualCheck, e.payout, " + 
+                    "e.discrepancy, e.actualProfit, e.tacPct, e.tacCut, e.drCut, e.eventNotes, " +  
+                    "e.closed, e.coordinatorAdminAmt, " +
+                    "p.totalSales AS totalSalesPnc, p.metCommissionBonus, p.guarantee, p.alcSales, p.eventCountsTowardsTotal " +
+                  "FROM event_all e, event_pnc p " + 
+                  "WHERE e.idevent = p.eventID " +
+                  "AND e.seasonID = ?";
+    params.push(seasonID);
+  }
 
   pool.query(queryDB, params, (error, results) => {
     if(error) {
@@ -28,15 +42,29 @@ var params = [seasonID];
 }
 
 function getEventsFromDB2 (pncEvent, seasonID, callback) {
-  var queryDB = "SELECT e.idevent, e.seasonID, e.venueID, e.eventDateTime AS Date, e.Title, e.compensated, e.location, " + 
-                  "e.venueBonus, e.estimatedCheck, e.estimatedProfit, e.actualCheck, e.payout, " + 
-                  "e.discrepancy, e.actualProfit, e.tacPct, e.tacCut, e.drCut, e.eventNotes, " +  
-                  "e.closed, e.coordinatorAdminAmt, " +
-                  "w.creditCardTips, w.maxCreditCardTipAmount, w.shuttleBonusBool, w.shuttleBonusAmount " +
-                "FROM event_all e, event_wc w " + 
-                "WHERE e.idevent = w.eventID " + 
-                "AND e.seasonID = ?";
-var params = [seasonID];
+  var queryDB = "";
+  var params = [];
+  
+  if(seasonID == 999) {
+    queryDB = "SELECT e.idevent, e.seasonID, e.venueID, e.eventDateTime AS Date, e.Title, e.compensated, e.location, " + 
+                    "e.venueBonus, e.estimatedCheck, e.estimatedProfit, e.actualCheck, e.payout, " + 
+                    "e.discrepancy, e.actualProfit, e.tacPct, e.tacCut, e.drCut, e.eventNotes, " +  
+                    "e.closed, e.coordinatorAdminAmt, " +
+                    "w.creditCardTips, w.maxCreditCardTipAmount, w.shuttleBonusBool, w.shuttleBonusAmount " +
+                  "FROM event_all e, event_wc w " + 
+                  "WHERE e.idevent = w.eventID ";
+  }
+  else {
+    queryDB = "SELECT e.idevent, e.seasonID, e.venueID, e.eventDateTime AS Date, e.Title, e.compensated, e.location, " + 
+                    "e.venueBonus, e.estimatedCheck, e.estimatedProfit, e.actualCheck, e.payout, " + 
+                    "e.discrepancy, e.actualProfit, e.tacPct, e.tacCut, e.drCut, e.eventNotes, " +  
+                    "e.closed, e.coordinatorAdminAmt, " +
+                    "w.creditCardTips, w.maxCreditCardTipAmount, w.shuttleBonusBool, w.shuttleBonusAmount " +
+                  "FROM event_all e, event_wc w " + 
+                  "WHERE e.idevent = w.eventID " + 
+                  "AND e.seasonID = ?";
+    params.push(seasonID);
+  }
 
   pool.query(queryDB, params, (error, results) => {
     if(error) {
@@ -51,15 +79,29 @@ var params = [seasonID];
 }
 
 function getEventsFromDB3 (eventResults, seasonID, callback) {
-  var queryDB = "SELECT e.idevent, e.seasonID, e.venueID, e.eventDateTime AS Date, e.Title, e.compensated, e.location, " + 
-                  "e.venueBonus, e.estimatedCheck, e.estimatedProfit, e.actualCheck, e.payout, " + 
-                  "e.discrepancy, e.actualProfit, e.tacPct, e.tacCut, e.drCut, e.eventNotes, " +  
-                  "e.closed, e.coordinatorAdminAmt, " +
-                  "c.totalSales AS totalSalesCf, c.shuttleBonusBool, c.shuttleBonusAmount, c.shuttleLocation " +
-                "FROM event_all e, event_cf c " + 
-                "WHERE e.idevent = c.eventID " +
-                "AND e.seasonID = ?";
-var params = [seasonID];
+  var queryDB = "";
+  var params = [];
+  
+  if(seasonID == 999){
+    queryDB = "SELECT e.idevent, e.seasonID, e.venueID, e.eventDateTime AS Date, e.Title, e.compensated, e.location, " + 
+                "e.venueBonus, e.estimatedCheck, e.estimatedProfit, e.actualCheck, e.payout, " + 
+                "e.discrepancy, e.actualProfit, e.tacPct, e.tacCut, e.drCut, e.eventNotes, " +  
+                "e.closed, e.coordinatorAdminAmt, " +
+                "c.totalSales AS totalSalesCf, c.shuttleBonusBool, c.shuttleBonusAmount, c.shuttleLocation " +
+              "FROM event_all e, event_cf c " + 
+              "WHERE e.idevent = c.eventID ";
+  }
+  else {
+    queryDB = "SELECT e.idevent, e.seasonID, e.venueID, e.eventDateTime AS Date, e.Title, e.compensated, e.location, " + 
+                "e.venueBonus, e.estimatedCheck, e.estimatedProfit, e.actualCheck, e.payout, " + 
+                "e.discrepancy, e.actualProfit, e.tacPct, e.tacCut, e.drCut, e.eventNotes, " +  
+                "e.closed, e.coordinatorAdminAmt, " +
+                "c.totalSales AS totalSalesCf, c.shuttleBonusBool, c.shuttleBonusAmount, c.shuttleLocation " +
+              "FROM event_all e, event_cf c " + 
+              "WHERE e.idevent = c.eventID " +
+              "AND e.seasonID = ?";
+  params.push(seasonID);
+  }
 
   pool.query(queryDB, params, (error, results) => {
     if(error) {
@@ -136,7 +178,7 @@ function deleteEventFromDB(eventID, callback) {
  * Edit an event
  * 
  ********************************************************/
-function editOneEventinDB(event, callback) {
+function editOneEventinDB(event, eventID, callback) {
   var queryDB = "UPDATE event_all " +
                 "SET eventDateTime = ?, Title = ?, compensated = ?, location = ?, " +
                     "venueBonus = ?, estimatedCheck = ?, estimatedProfit = ?, actualCheck = ?, " +
@@ -173,43 +215,69 @@ function editOneEventinDB(event, callback) {
       console.log(error);
     }
     else {
-      editVenueEventinDB(event, callback);
+      editVenueEventinDB(event, eventID, callback);
     }
   });
 }
 
-function editVenueEventinDB(event, callback) {
-  var queryDB = "UPDATE event_pnc " +
-                  "SET totalSales = ?, metCommissionBonus = ?, guarantee = ?, " +
-                      "alcSales = ?, eventCountsTowardsTotal = ? " +
-                  "WHERE eventID = ?; "
-                "UPDATE event_wc " +
-                  "SET creditCardTips = ?, maxCreditCardTipAmount = ?, " +
-                      "shuttleBonusBool = ?, shuttleBonusAmount = ? " +
-                  "WHERE eventID = ?; " +
-                "UPDATE event_cf " +
+function editVenueEventinDB(event, eventID, callback) {
+  var queryDB = "";
+  var params = [];
+
+  if(eventID == 1) {
+    queryDB = "UPDATE event_pnc " +
+                "SET totalSales = ?, metCommissionBonus = ?, guarantee = ?, " +
+                     "alcSales = ?, eventCountsTowardsTotal = ? " +
+                "WHERE eventID = ? ";
+  
+    params.push(event.totalSalesPnc),
+    params.push(event.metCommissionBonus),
+    params.push(event.guarantee),
+    params.push(event.alcSales),
+    params.push(event.eventCountsTowardsTotal),
+    params.push(event.idevent)
+  }
+  else if(eventID == 2) {
+    var shuttleBool = false;
+    var shuttleAmount = 0;
+    if(event.shuttleBonusBoolWc) {
+      shuttleBool = event.shuttleBonusBoolWc;
+    }
+    if(event.shuttleBonusAmountWc) {
+      shuttleAmount = event.shuttleBonusAmountWc;
+    }
+
+    queryDB = "UPDATE event_wc " +
+              "SET creditCardTips = ?, maxCreditCardTipAmount = ?, " +
+                  "shuttleBonusBool = ?, shuttleBonusAmount = ? " +
+              "WHERE eventID = ? ";
+
+    params.push(event.creditCardTips),
+    params.push(event.maxCreditCardTipAmount),
+    params.push(shuttleBool), 
+    params.push(shuttleAmount),
+    params.push(event.idevent)
+  }
+  else if(eventID == 3) {
+    var shuttleBool = false;
+    var shuttleAmount = 0;
+    if(event.shuttleBonusBoolCf) {
+      shuttleBool = event.shuttleBonusBoolCf;
+    }
+    if(event.shuttleBonusAmountCf) {
+      shuttleAmount = event.shuttleBonusAmountCf;
+    }
+    var queryDB = "UPDATE event_cf " +
                   "SET totalSales = ?, shuttleBonusBool = ?, " +
                       "shuttleBonusAmount = ?, shuttleLocation = ? " +
                   "WHERE eventID = ?;";
-  var params = [
-    event.totalSalesPnc,
-    event.metCommissionBonus,
-    event.guarantee,
-    event.alcSales,
-    event.eventCountsTowardsTotal,
-    event.idevent,
-    
-    event.creditCardTips,
-    event.maxCreditCardTipAmount,
-    event.shuttleBonusBoolWc, 
-    event.shuttleBonusAmountWc,
-    event.idevent,
 
-    event.totalSalesCf,
-    event.shuttleBonusBoolCf,
-    event.shuttleBonusAmountCf,
-    event.idevent
-  ];
+    params.push(event.totalSalesCf),
+    params.push(shuttleBool),
+    params.push(shuttleAmount),
+    params.push(''),
+    params.push(event.idevent)
+  }  
 
   pool.query(queryDB, params, (error, results) => {
     if(error) {
@@ -273,34 +341,50 @@ function setNewVenueEventInDB(id, newEvent, callback) {
   var params = [];
   if(newEvent.venueID == 1) {
     queryDB = " INSERT INTO event_pnc (eventID, metCommissionBonus, guarantee, totalSales, " +
-                          "alcSales, eventCountsTowardsTotal) " +
-                "VALUES (" + id + ", ?, ?, ?, ?, ?, ?, ? )";
+                          "alcSales, eventCountsTowardsTotal, coordinatorAdminAmt) " +
+                "VALUES (" + id + ", ?, ?, ?, ?, ?, ? )";
 
     params.push(newEvent.metCommissionBonus);
     params.push(newEvent.guarantee);
     params.push(newEvent.totalSalesPnc);
     params.push(newEvent.alcSales);
     params.push(newEvent.eventCountsTowardsTotal);
-    params.push(newEvet.coordinatorAdminAmt);
+    params.push(newEvent.coordinatorAdminAmt);
   }
 
   else if(newEvent.venueID == 2) {
+    var shuttleBool = false;
+    var shuttleAmount = 0;
+    if(newEvent.shuttleBonusBoolWc) {
+      shuttleBool = newEvent.shuttleBonusBoolWc;
+    }
+    if(newEvent.shuttleBonusAmountWc) {
+      shuttleAmount = newEvent.shuttleBonusAmountWc;
+    }
     queryDB = " INSERT INTO event_wc (eventID, shuttleBonusBool, shuttleBonusAmount, creditCardTips, maxCreditCardTipAmount, coordinatorAdminAmt) " +
               "VALUES (" + id + ", ?, ?, ?, ?, ? )";
 
-    params.push(newEvent.shuttleBonusBoolWc);
-    params.push(newEvent.shuttleBonusAmountWc);
+    params.push(shuttleBool);
+    params.push(shuttleAmount);
     params.push(newEvent.creditCardTips);
     params.push(newEvent.maxCreditCardTipAmount);
     params.push(newEvent.coordinatorAdminAmt);
   }
 
   else if(newEvent.venueID == 3) {
+    var shuttleBool = false;
+    var shuttleAmount = 0;
+    if(newEvent.shuttleBonusBoolCf) {
+      shuttleBool = newEvent.shuttleBonusBoolCf;
+    }
+    if(newEvent.shuttleBonusAmountCf) {
+      shuttleAmount = newEvent.shuttleBonusAmountCf;
+    }
     queryDB = " INSERT INTO event_cf (eventID, shuttleBonusBool, shuttleBonusAmount, shuttleLocation, totalSales, coordinatorAdminAmt) " +
                 "VALUES (" + id + ", ?, ?, ?, ?, ? )";
 
-    params.push(newEvent.shuttleBonusBoolCf);
-    params.push(newEvent.shuttleBonusAmountCf);
+    params.push(shuttleBool);
+    params.push(shuttleAmount);
     params.push(newEvent.shuttleLocation);
     params.push(newEvent.totalSalesCf);
     params.push(newEvent.coordinatorAdminAmt);
@@ -341,8 +425,6 @@ function getTimesheetForEventFromDB (eventID, callback) {
       callback(null, results);
     }
     else {
-      // console.log("Staff for event: ");
-      // console.log(results);
       callback(null, results);
     }
   });
