@@ -184,7 +184,7 @@ function editVenueEventinDB(event, callback) {
                       "alcSales = ?, eventCountsTowardsTotal = ? " +
                   "WHERE eventID = ?; "
                 "UPDATE event_wc " +
-                  "SET creditCardTips = ?, maxCreditCardTips = ?, " +
+                  "SET creditCardTips = ?, maxCreditCardTipAmount = ?, " +
                       "shuttleBonusBool = ?, shuttleBonusAmount = ? " +
                   "WHERE eventID = ?; " +
                 "UPDATE event_cf " +
@@ -200,7 +200,7 @@ function editVenueEventinDB(event, callback) {
     event.idevent,
     
     event.creditCardTips,
-    event.maxCreditCardTips,
+    event.maxCreditCardTipAmount,
     event.shuttleBonusBoolWc, 
     event.shuttleBonusAmountWc,
     event.idevent,
@@ -274,34 +274,36 @@ function setNewVenueEventInDB(id, newEvent, callback) {
   if(newEvent.venueID == 1) {
     queryDB = " INSERT INTO event_pnc (eventID, metCommissionBonus, guarantee, totalSales, " +
                           "alcSales, eventCountsTowardsTotal) " +
-                "VALUES (" + id + ", ?, ?, ?, ?, ?, ? )";
+                "VALUES (" + id + ", ?, ?, ?, ?, ?, ?, ? )";
 
     params.push(newEvent.metCommissionBonus);
     params.push(newEvent.guarantee);
     params.push(newEvent.totalSalesPnc);
     params.push(newEvent.alcSales);
     params.push(newEvent.eventCountsTowardsTotal);
+    params.push(newEvet.coordinatorAdminAmt);
   }
 
   else if(newEvent.venueID == 2) {
-    queryDB = " INSERT INTO event_wc (eventID, shuttleBonusBool, shuttleBonusAmount, creditCardTips, maxCreditCardTipAmount) " +
-              "VALUES (" + id + ", ?, ?, ?, ? )";
+    queryDB = " INSERT INTO event_wc (eventID, shuttleBonusBool, shuttleBonusAmount, creditCardTips, maxCreditCardTipAmount, coordinatorAdminAmt) " +
+              "VALUES (" + id + ", ?, ?, ?, ?, ? )";
 
     params.push(newEvent.shuttleBonusBoolWc);
     params.push(newEvent.shuttleBonusAmountWc);
     params.push(newEvent.creditCardTips);
-    params.push(newEvent.maxCreditCardAmount);
+    params.push(newEvent.maxCreditCardTipAmount);
+    params.push(newEvent.coordinatorAdminAmt);
   }
 
   else if(newEvent.venueID == 3) {
-    queryDB = " INSERT INTO event_cf (eventID, shuttleBonusBool, shuttleBonusAmount, shuttleLocation, totalSales) " +
-                "VALUES (" + id + ", ?, ?, ?, ? )";
+    queryDB = " INSERT INTO event_cf (eventID, shuttleBonusBool, shuttleBonusAmount, shuttleLocation, totalSales, coordinatorAdminAmt) " +
+                "VALUES (" + id + ", ?, ?, ?, ?, ? )";
 
     params.push(newEvent.shuttleBonusBoolCf);
     params.push(newEvent.shuttleBonusAmountCf);
     params.push(newEvent.shuttleLocation);
     params.push(newEvent.totalSalesCf);
-
+    params.push(newEvent.coordinatorAdminAmt);
   }
 
   pool.query(queryDB, params, (error, results) => {

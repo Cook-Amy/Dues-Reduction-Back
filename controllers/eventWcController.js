@@ -46,7 +46,7 @@ function setNewWcEvent(req, res, next) {
     shuttleBonusBool: req.body.shuttleBonusBool,
     shuttleBonusAmount: req.body.shuttleBonusAmount,
     creditCardTips: req.body.creditCardTips,
-    maxCreditCardAmount: req.body.maxCreditCardAmount,
+    maxCreditCardTipAmount: req.body.maxCreditCardTipAmount,
     coordinatorAdminAmt: req.body.coordinatorAdminAmt,
     season: req.body.season
   };
@@ -89,7 +89,7 @@ function editWcEvent(req, res, next) {
     shuttleBonusBool: req.body.shuttleBonusBool,
     shuttleBonusAmount: req.body.shuttleBonusAmount,
     creditCardTips: req.body.creditCardTips,
-    maxCreditCardAmount: req.body.maxCreditCardAmount,
+    maxCreditCardTipAmount: req.body.maxCreditCardTipAmount,
     coordinatorAdminAmt: req.body.coordinatorAdminAmt,
     season: req.body.season
   };

@@ -13,7 +13,7 @@ function getAllPncEventsFromDB(seasonID, callback) {
                   "e.discrepancy, e.actualProfit, e.tacPct, e.tacCut, e.drCut, e.eventNotes, " +  
                   "e.closed, e.coordinatorAdminAmt, " +
                   "p.totalSalesPnc, p.metCommissionBonus, p.guarantee, p.alcSales, p.eventCountsTowardsTotal, " +
-                  "w.creditCardTips, w.maxCreditCardTips, w.shuttleBonusBool, w.shuttleBonusAmount, " +
+                  "w.creditCardTips, w.maxCreditCardTipAmount, w.shuttleBonusBool, w.shuttleBonusAmount, " +
                   "c.totalSalesCf, c.shuttleBonusBool, c.shuttleBonusAmount, c.shuttleLocation " +
                 "FROM event_all e, event_pnc p, event_wc w, event_cf c " + 
                 "WHERE e.idevent = p.eventID " +

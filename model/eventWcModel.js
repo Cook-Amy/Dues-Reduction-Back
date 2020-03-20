@@ -1,28 +1,28 @@
 var pool = require('../database/db');
 
 /*********************************************************
- * 
+ *
  * Get all events for WC
- * 
+ *
  ********************************************************/
 function getAllWcEventsFromDB(seasonID, callback) {
   if(seasonID == 999) {
-    var queryDB = "SELECT e.idevent, e.eventDateTime AS Date, e.Title, e.compensated, e.location, " + 
-                  "e.venueBonus, e.estimatedCheck, e.estimatedProfit, e.actualCheck, e.payout, " + 
-                  "e.discrepancy, e.actualProfit, e.tacPct, e.tacCut, e.drCut, e.eventNotes, " +  
-                  "e.closed, e.eventcol, w.shuttleBonusBool, w.shuttleBonusAmount, w.creditCardTips,  " + 
+    var queryDB = "SELECT e.idevent, e.eventDateTime AS Date, e.Title, e.compensated, e.location, " +
+                  "e.venueBonus, e.estimatedCheck, e.estimatedProfit, e.actualCheck, e.payout, " +
+                  "e.discrepancy, e.actualProfit, e.tacPct, e.tacCut, e.drCut, e.eventNotes, " +
+                  "e.closed, e.eventcol, w.shuttleBonusBool, w.shuttleBonusAmount, w.creditCardTips,  " +
                   "w.maxCreditCardTipAmount, w.coordinatorAdminAmt " +
-                  "FROM event_all e, event_wc w " + 
+                  "FROM event_all e, event_wc w " +
                   "WHERE e.idevent = w.eventID ";
     var params = [];
   }
   else {
-    var queryDB = "SELECT e.idevent, e.eventDateTime AS Date, e.Title, e.compensated, e.location, " + 
-                  "e.venueBonus, e.estimatedCheck, e.estimatedProfit, e.actualCheck, e.payout, " + 
-                  "e.discrepancy, e.actualProfit, e.tacPct, e.tacCut, e.drCut, e.eventNotes, " +  
-                  "e.closed, e.eventcol, w.shuttleBonusBool, w.shuttleBonusAmount, w.creditCardTips,  " + 
+    var queryDB = "SELECT e.idevent, e.eventDateTime AS Date, e.Title, e.compensated, e.location, " +
+                  "e.venueBonus, e.estimatedCheck, e.estimatedProfit, e.actualCheck, e.payout, " +
+                  "e.discrepancy, e.actualProfit, e.tacPct, e.tacCut, e.drCut, e.eventNotes, " +
+                  "e.closed, e.eventcol, w.shuttleBonusBool, w.shuttleBonusAmount, w.creditCardTips,  " +
                   "w.maxCreditCardTipAmount, w.coordinatorAdminAmt " +
-                  "FROM event_all e, event_wc w " + 
+                  "FROM event_all e, event_wc w " +
                   "WHERE e.idevent = w.eventID " +
                   "AND e.seasonID = ?";
     var params = [seasonID];
@@ -46,9 +46,9 @@ function getAllWcEventsFromDB(seasonID, callback) {
 }
 
 /*********************************************************
- * 
+ *
  * Insert a new event for WC
- * 
+ *
  ********************************************************/
 function setNewEventInDB(newEvent, callback) {
   var queryDB = "INSERT INTO event_all (seasonID, venueID, eventDateTime, Title, " +
@@ -91,11 +91,13 @@ function setNewWcEventInDB(id, newEvent, callback) {
   var queryDB = " INSERT INTO event_wc (eventID, shuttleBonusBool, shuttleBonusAmount, creditCardTips, " +
                                         "maxCreditCardTipAmount, coordinatorAdminAmt) " +
                         "VALUES (" + id + ", ?, ?, ?, ?, ? )";
+
+  console.log("queryDB: " + queryDB);
   var params = [
     newEvent.shuttleBonusBool,
     newEvent.shuttleBonusAmount,
     newEvent.creditCardTips,
-    newEvent.maxCreditCardAmount,
+    newEvent.maxCreditCardTipAmount,
     newEvent.coordinatorAdminAmt
   ];
 
@@ -112,9 +114,9 @@ function setNewWcEventInDB(id, newEvent, callback) {
 
 
 /*********************************************************
- * 
+ *
  * Edit an event for WC
- * 
+ *
  ********************************************************/
 function editEventinDB(editEvent, callback) {
   var queryDB = "UPDATE event_all " +
@@ -163,7 +165,7 @@ function editWcEventinDB(editEvent, callback) {
     editEvent.shuttleBonusBool,
     editEvent.shuttleBonusAmount,
     editEvent.creditCardTips,
-    editEvent.maxCreditCardAmount,
+    editEvent.maxCreditCardTipAmount,
     editEvent.coordinatorAdminAmt,
     editEvent.idevent
   ];
@@ -181,9 +183,9 @@ function editWcEventinDB(editEvent, callback) {
 
 
 /*********************************************************
- * 
+ *
  * Delete an event for WC
- * 
+ *
  ********************************************************/
 function deleteWcEventFromDB(eventID, callback) {
   var queryDB = "DELETE FROM event_wc WHERE eventID = ?";
@@ -232,18 +234,18 @@ function deleteEventFromDB(eventID, callback) {
 
 
 /*********************************************************
- * 
+ *
  * Get season contract for WC
- * 
+ *
  ********************************************************/
 function getContractWcFromDB(seasonID, callback) {
-  var queryDB = "SELECT idcontract_wc, seasonID, wcFoodCommission, " + 
-                "wcAlcoholCommission, wcMaxCreditCardTipAmountDefault, " + 
+  var queryDB = "SELECT idcontract_wc, seasonID, wcFoodCommission, " +
+                "wcAlcoholCommission, wcMaxCreditCardTipAmountDefault, " +
                 "wcShuttleBonusAmountDefault " +
                 "FROM contract_wc " +
                 "WHERE seasonID = ?";
-  var params = [seasonID];  
-  
+  var params = [seasonID];
+
   pool.query(queryDB, params, (error, results) => {
     if(error) {
       console.log("Error getting contract from DB: ");
@@ -260,7 +262,7 @@ function getWcJobsFromDB(callback) {
   var queryDB = "SELECT idjobs AS jobID, jobName, hourlyRate, isGuarantee, minutesBeforeOpen, venuePay " +
                 "FROM jobs " +
                 "WHERE venueID = 2";
-  
+
   pool.query(queryDB, (error, results) => {
     if(error) {
       console.log("Error getting jobs from DB: ");
