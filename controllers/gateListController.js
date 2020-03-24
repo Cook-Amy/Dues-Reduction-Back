@@ -11,8 +11,10 @@ function sendPncGateList(req, res) {
   var staff = req.body.staff;
   var data = setDataPnc(staff);
 
-  var email = true;
-  var download = false;
+  var email = req.body.email;
+  var download = req.body.download;
+
+  //TODO: get email addresses from DB
   
   var workbook = new ExcelJS.Workbook();
   var filename = "./savedFiles/TemplateGateListPnc.xlsx";
@@ -25,34 +27,36 @@ function sendPncGateList(req, res) {
     worksheet = fillWorksheet(worksheet, event, data);
 
     //Finally creating XLSX file
-    var savedFileName = "./savedFiles/GateList_PNC_" + event.Title +".xlsx";
-    workbook.xlsx.writeFile(savedFileName).then(() => {
-
+    var savedFilePath = "./savedFiles/GateList_PNC_" + event.Title +".xlsx";
+    var savedFileName = "GateList_PNC_" + event.Title + ".xlsx";
+    workbook.xlsx.writeFile(savedFilePath).then(() => {
         console.log("File saved");
 
+      // send report by email
       if(email) {
         var transport = nodemailer.createTransport({
           host: "smtp.gmail.com",
           port: 587,
           secure: false,
           auth: {
+            // TODO: insert correct info
             user: "titanscfcoordinator@gmail.com",
             pass: "fltozdphmjwdwbpw"
           }
         });
   
         const mailOptions = {
+          // TODO: insert correct info
           from: '"Amy Cook", "titanscfcoordinator@gmail.com"',
           to: 'coo17045@byui.edu',
           subject: "Gate List - " + event.Title,
           html: "<h1>This is a test email.</h1>",
           attachments: [
             {
-              filename: 'GateList_' + event.Title + '.xlsx',
-              path: './savedFiles/GateList_PNC_' + event.Title + '.xlsx'
+              filename: savedFileName,
+              path: savedFilePath
             }
           ]
-          
         };
     
         transport.sendMail(mailOptions, (error, info) => {
@@ -62,27 +66,28 @@ function sendPncGateList(req, res) {
           }
           else {
             console.log("Email has been sent.");
-            res.send(info);
+            // download report
+            if(download) {
+              res.download(savedFilePath, savedFileName, (err) => {
+                if(err) { console.log(err); }
+                else { res.end(); }
+              });
+            }
+            // don't download report
+            else {
+              res.send(info);
+              res.end();
+            }
           }
         });
       }
 
-      if(download) {
-        var oldpath = "./savedFiles/GateList_PNC_" + event.Title + ".xlsx";
-        var newpath = "C:/Users/Amy/Downloads/GateList_PNC_" + event.Title + ".xlsx";
-        var fileName = "GateList_PNC_" + event.Title + ".xlsx";
-
-// try this tutorial
-// https://www.twilio.com/blog/transfer-files-data-javascript-applications-angular-node-js
-
-        // res.end();
-
-        //  this works but gives an error in the browser
-        // fs.rename(oldpath, newpath, function(err) {
-        //   if(err) { throw err;}
-        //   res.write("File uploaded");
-        //   res.end();
-        // });
+      // only download report; no email sent
+      else{
+        res.download(savedFilePath, savedFileName, (err) => {
+          if(err) { console.log(err); }
+          else { res.end(); }
+        });
       }
 
       // TODO: Delete file from here after done
@@ -240,6 +245,10 @@ function fillWorksheet(worksheet, event, data) {
 function sendWcGateList(req, res) {
   var event = req.body.event;
   var staff = req.body.staff;
+  var email = req.body.email;
+  var download = req.body.download;
+
+  //TODO: get email addresses from DB
   
   var workbook = new ExcelJS.Workbook();
   var filename = "./savedFiles/TemplateGateListWc.xlsx";
@@ -252,47 +261,71 @@ function sendWcGateList(req, res) {
     fillWorksheet2(worksheet, event, staff);
 
     //Finally creating XLSX file
-    var savedFileName = "./savedFiles/GateList_WC_" + event.Title +".xlsx";
-    workbook.xlsx.writeFile(savedFileName).then(() => {
-
-      // TODO: Add if statements for email and download
-
+    var savedFilePath = "./savedFiles/GateList_WC_" + event.Title +".xlsx";
+    savedFileName = "GateList_WC_" + event.Title + ".xlsx";
+    workbook.xlsx.writeFile(savedFilePath).then(() => {
         console.log("File saved");
-        var transport = nodemailer.createTransport({
-          host: "smtp.gmail.com",
-          port: 587,
-          secure: false,
-          auth: {
-            user: "titanscfcoordinator@gmail.com",
-            pass: "fltozdphmjwdwbpw"
+
+        // send report by email
+        if(email) {
+          var transport = nodemailer.createTransport({
+            host: "smtp.gmail.com",
+            port: 587,
+            secure: false,
+            auth: {
+              // TODO: insert correct info
+              user: "titanscfcoordinator@gmail.com",
+              pass: "fltozdphmjwdwbpw"
+            }
+          });
+    
+        const mailOptions = {
+          // TODO: insert correct info
+          from: '"Amy Cook", "titanscfcoordinator@gmail.com"',
+          to: 'coo17045@byui.edu',
+          subject: "Gate List - " + event.Title,
+          html: "<h1>This is a test email.</h1>",
+          attachments: [
+            {
+              filename: savedFileName,
+              path: savedFilePath
+            }
+          ]
+          
+        };
+    
+        transport.sendMail(mailOptions, (error, info) => {
+          if(error) {
+            console.log("Error sending email. ");
+            console.log(error);
+          }
+          else {
+            console.log("Email has been sent.");
+            // download report
+            if(download) {
+              res.download(savedFilePath, savedFileName, (err) => {
+                if(err) { console.log(err); }
+                else { res.end(); }
+              });
+            }
+            // don't download report
+            else {
+              res.send(info);
+              res.end();
+            }
           }
         });
-  
-      const mailOptions = {
-        from: '"Amy Cook", "titanscfcoordinator@gmail.com"',
-        to: 'coo17045@byui.edu',
-        subject: "Gate List - " + event.Title,
-        html: "<h1>This is a test email.</h1>",
-        attachments: [
-          {
-            filename: 'GateList_' + event.Title + '.xlsx',
-            path: './savedFiles/GateList_WC_' + event.Title + '.xlsx'
-          }
-        ]
-        
-      };
-  
-      transport.sendMail(mailOptions, (error, info) => {
-        if(error) {
-          console.log("Error sending email. ");
-          console.log(error);
-        }
-        else {
-          console.log("Email has been sent.");
-          res.send(info);
-        }
-      });
+      }
 
+      // only download report; no email sent
+      else {
+        res.download(savedFilePath, savedFileName, (err) => {
+          if(err) { console.log(err); }
+          else { res.end(); }
+        });
+      }
+
+      // TODO: Delete file from here after done
 
     }).catch(e => console.log("Catch: " + e));;
   }).catch(e => console.log("Catch: " + e));

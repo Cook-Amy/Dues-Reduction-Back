@@ -2,11 +2,21 @@ const express = require('express');
 const bodyParser = require('body-parser');
 const cors = require('cors');
 const app = express();
+const pncFiles = "./savedFiles/PncFiles/";
+const wcFiles = "./savedFiles/WcFiles/";
+const cfFiles = "./savedFiles/CfFiles/";
+const adminFiles = "./savedFiles/AdminFiles/";
+const creditSummaryFiles = "./savedFiles/CreditSummaryFiles/";
 
 // Set up app
 app.use(bodyParser.json({limit: '50mb', extended: true}))
   .use(bodyParser.urlencoded({limit: '50mb', extended: true}))
-  .use(cors());
+  .use(cors())
+  .use('/filePnc', express.static(pncFiles))
+  .use('/fileCf', express.static(wcFiles))
+  .use('/fileWc', express.static(cfFiles))
+  .use('/fileAdmin', express.static(adminFiles))
+  .use('/creditSummary', express.static(creditSummaryFiles));
 
 
 // Controller pages
@@ -25,8 +35,12 @@ const gateListController = require("./controllers/gateListController");
 const reminderController = require("./controllers/reminderController");
 const creditSummaryController = require("./controllers/creditSummaryController");
 const monthReportController = require('./controllers/monthReportController');
+const fileController = require("./controllers/fileController");
 
-// Routes
+/*************************************************************
+ * GET Routes
+ *************************************************************/
+// All
 app.get('/venues', venueController.getVenues);
 app.get('/getSeasons', seasonController.getSeasons);
 app.get('/getEvents', eventController.getEvents);
@@ -34,27 +48,30 @@ app.get('/getTimesheetForEvent', eventController.getTimesheetForEvent);
 app.get('/getStaffForEvent', staffController.getStaffForEvent);
 app.get('/getAllStaff', staffController.getAllStaff);
 app.get('/getCalendarEvents', eventController.getCalendarEvents);
-
+app.get('/downloadCreditSummary', creditSummaryController.downloadCreditSummary);
+// PNC
 app.get('/getEventsPNC', eventPncController.getEvents);
 app.get('/getAllPncStaff', staffPncController.getAllPncStaff);
 app.get('/getActivePncStaff', staffPncController.getActivePncStaff);
 app.get('/getContractPnc', eventPncController.getContractPnc);
 app.get('/getPncJobs', eventPncController.getPncJobs);
-
+// WC
 app.get('/getEventsWC', eventWcController.getEvents);
 app.get('/getAllWcStaff', staffWcController.getAllWcStaff);
 app.get('/getActiveWcStaff', staffWcController.getActiveWcStaff);
 app.get('/getContractWc', eventWcController.getContractWc);
 app.get('/getWcJobs', eventWcController.getWcJobs);
-
+// CF
 app.get('/getEventsCF', eventCfController.getEvents);
 app.get('/getAllCfStaff', staffCfController.getAllCfStaff);
 app.get('/getActiveCfStaff', staffCfController.getActiveCfStaff);
 app.get('/getContractCf', eventCfController.getContractCf);
 app.get('/getCfJobs', eventCfController.getCfJobs);
 
-
-
+/*************************************************************
+ * POST Routes
+ *************************************************************/
+// All
 app.post('/login', loginController.loginUser);
 app.post('/oneVenue', venueController.getOneVenue);
 app.post('/updateOneTimesheet', eventController.updateTimesheet);
@@ -72,22 +89,36 @@ app.post('/sendWcReminderEmail', reminderController.sendWcReminder);
 app.post('/sendCfReminderEmail', reminderController.sendCfReminder);
 app.post('/generateCreditSummary', creditSummaryController.createSummary);
 app.post('/getMonthReportData', monthReportController.createReport);
-
-
+// PNC
 app.post('/setNewPncEvent', eventPncController.setNewPncEvent);
 app.post('/editPncEvent', eventPncController.editPncEvent);
 app.post('/deletePncEvent', eventPncController.deletePncEvent);
 app.post('/sendPncGateList', gateListController.sendPncGateList);
-
+// WC
 app.post('/setNewWcEvent', eventWcController.setNewWcEvent);
 app.post('/editWcEvent', eventWcController.editWcEvent);
 app.post('/deleteWcEvent', eventWcController.deleteWcEvent);
 app.post('/sendWcGateList', gateListController.sendWcGateList);
-
+// CF
 app.post('/setNewCfEvent', eventCfController.setNewCfEvent);
 app.post('/editCfEvent', eventCfController.editCfEvent);
 app.post('/deleteCfEvent', eventCfController.deleteCfEvent);
 
+/*************************************************************
+ * PUT Routes
+ *************************************************************/
+app.put('/filePnc', fileController.savePncFile);
+app.put('/fileWc', fileController.saveWcFile);
+app.put('/fileCf', fileController.saveCfFile);
+app.put('fileAdmin', fileController.saveAdminFile);
+
+/*************************************************************
+ * DELETE Routes
+ *************************************************************/
+app.delete('/filePnc', fileController.deletePncFile);
+app.delete('/fileWc', fileController.deleteWcFile);
+app.delete('/fileCf', fileController.deleteCfFile);
+app.delete('fileAdmin', fileController.deleteAdminFile);
 
 
 // Create port

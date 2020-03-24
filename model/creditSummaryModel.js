@@ -14,15 +14,35 @@ function getTuAccountFromDB(id, startDate, endDate, callback) {
     }
     else if(results.length == 0) {
       console.log("Report results not found in DB");
-      callback(null, results, results[0].accountName);
+      callback(null, results, results[0].accountName, '');
     }
     else {
-      getAllIDsFromDB(results[0].tuAccountID, results[0].accountName, startDate, endDate, callback);
+      getEmailFromDB(id, results[0].tuAccountID, results[0].accountName, startDate, endDate, callback);
     }
   });
 }
 
-function getAllIDsFromDB(tuID, accountName, startDate, endDate, callback) {
+function getEmailFromDB(id, tuID, accountName, startDate, endDate, callback) {
+  var queryDB= "SELECT email FROM person WHERE idperson = ?";
+  var params = [id];
+
+  pool.query(queryDB, params, (error, results) => {
+    if(error) {
+      console.log("Error getting report results from DB: ");
+      console.log(error);
+    }
+    else if(results.length == 0) {
+      console.log("Report results not found in DB");
+      callback(null, results, tuID, results[0].email);
+    }
+    else {
+      getAllIDsFromDB(tuID, accountName, startDate, endDate, results[0].email, callback);
+    }
+  });
+
+}
+
+function getAllIDsFromDB(tuID, accountName, startDate, endDate, email, callback) {
   var queryDB = "SELECT p.idperson " + 
                 "FROM person p, tu_account tu " +
                 "WHERE tu.idtu_account = " + tuID + " " +
@@ -35,15 +55,15 @@ function getAllIDsFromDB(tuID, accountName, startDate, endDate, callback) {
     }
     else if(results.length == 0) {
       console.log("Report results not found in DB");
-      callback(null, results, accountName);
+      callback(null, results, accountName, email);
     }
     else {
-      getReportInfoFromDB(results, accountName, startDate, endDate, callback);
+      getReportInfoFromDB(results, accountName, startDate, endDate, email, callback);
     }
   });
 }
 
-function getReportInfoFromDB(resultIDs, accountName, startDate, endDate, callback) {
+function getReportInfoFromDB(resultIDs, accountName, startDate, endDate, email, callback) {
   var queryStr = "SELECT e.title, e.eventDateTime, " +
                       "p.firstName, p.lastName, tu.accountName, " +
                       "t.timeIn, t.timeOut, t.hoursWorked, t.hourlyRate, " +
@@ -73,10 +93,10 @@ function getReportInfoFromDB(resultIDs, accountName, startDate, endDate, callbac
     }
     else if(results.length == 0) {
       console.log("Report results not found in DB");
-      callback(null, results, accountName);
+      callback(null, results, accountName, email);
     }
     else {
-      callback(null, results, accountName);
+      callback(null, results, accountName, email);
     }
   });
 }

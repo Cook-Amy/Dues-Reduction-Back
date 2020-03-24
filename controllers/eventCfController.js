@@ -121,7 +121,6 @@ function deleteCfEvent(req, res, next) {
 
 function getContractCf(req, res, next) {
   var seasonID = req.query.seasonID;
-  // console.log("seasonID: " + seasonID);
 
   eventsCfModel.getContractCfFromDB(seasonID, function contractCallback(error, result) {
     if(error) {
@@ -129,7 +128,6 @@ function getContractCf(req, res, next) {
       console.log(error);
     }
     else {
-      // console.log(json(result));
       res.status(200).json(result);
       res.end();
     }

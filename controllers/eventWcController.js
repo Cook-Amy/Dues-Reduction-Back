@@ -123,7 +123,6 @@ function deleteWcEvent(req, res, next) {
 
 function getContractWc(req, res, next) {
   var seasonID = req.query.seasonID;
-  // console.log("seasonID: " + seasonID);
 
   eventsWcModel.getContractWcFromDB(seasonID, function contractCallback(error, result) {
     if(error) {
@@ -131,7 +130,6 @@ function getContractWc(req, res, next) {
       console.log(error);
     }
     else {
-      // console.log(json(result));
       res.status(200).json(result);
       res.end();
     }
@@ -145,7 +143,6 @@ function getWcJobs(req, res, next) {
       console.log(error);
     }
     else {
-      // console.log(json(result));
       res.status(200).json(result);
       res.end();
     }

@@ -4,8 +4,11 @@ const ExcelJS = require('exceljs');
 
 function createSummary(req, res, next) {
   var specs = req.body.specs;
+  var doEmailMember = specs.email1;
+  var doEmailCoordinator = specs.email2;
+  var doDownload = specs.download;
 
-  creditSummaryModel.getTuAccountFromDB(specs.staffID, specs.start, specs.end, function reportCallback(error, result, accountName) {
+  creditSummaryModel.getTuAccountFromDB(specs.staffID, specs.start, specs.end, function reportCallback(error, result, accountName, email) {
 
     var workbook = new ExcelJS.Workbook();
     var filename = "./savedFiles/TemplateCreditSummary.xlsx";
@@ -22,44 +25,87 @@ function createSummary(req, res, next) {
         var name = accountName;
   
         //Finally creating XLSX file
-        var savedFileName = "./savedFiles/CreditSummary_" + name + ".xlsx";
-        workbook.xlsx.writeFile(savedFileName).then(() => {
+        var savedFilePath = "./savedFiles/CreditSummaryFiles/CreditSummary_" + name + ".xlsx";
+        var savedFileName = "CreditSummary_" + name + ".xlsx";
+        workbook.xlsx.writeFile(savedFilePath).then(() => {
             console.log("File saved");
-    
-          var transport = nodemailer.createTransport({
-            host: "smtp.gmail.com",
-            port: 587,
-            secure: false,
-            auth: {
-              user: "titanscfcoordinator@gmail.com",
-              pass: "fltozdphmjwdwbpw"
-            }
-          });
-    
-          const mailOptions = {
-            from: '"Amy Cook", "titanscfcoordinator@gmail.com"',
-            to: 'coo17045@byui.edu',
-            subject: "Credit Summary - " + name,
-            html: "<h1>This is a test email.</h1>",
-            attachments: [
-              {
-                filename: "CreditSummary_" + name + ".xlsx",
-                path: "./savedFiles/CreditSummary_" + name + ".xlsx"
+
+            // send files by email
+            if(doEmailMember || doEmailCoordinator) {
+              var sendTo = "";
+              var count = 0;
+              if(doEmailMember) {
+                console.log("email sent to member: " + email);
+                sendTo += email;
+                count++;
               }
-            ]
-          };
-      
-          transport.sendMail(mailOptions, (error, info) => {
-            if(error) {
-              console.log("Error sending email. ");
-              console.log(error);
+              // TODO: Get coordinators name & email from DB
+              if(doEmailCoordinator) {
+                console.log("email send to coordinator");
+                if(count > 0) {
+                  sendTo += '; ';
+                }
+                sendTo += 'coo17045@byui.edu';
+              }
+
+              var transport = nodemailer.createTransport({
+                host: "smtp.gmail.com",
+                port: 587,
+                secure: false,
+                auth: {
+                // TODO: insert correct info retrieved from DB
+                  user: "titanscfcoordinator@gmail.com",
+                  pass: "fltozdphmjwdwbpw"
+                }
+              });
+              
+              const mailOptions = {
+                // TODO: insert correct info retrieved from DB
+                from: '"Amy Cook", "titanscfcoordinator@gmail.com"',
+                // to: sendTo,
+                to: 'coo17045@byui.edu',
+                subject: "Credit Summary - " + name,
+                html: "<h1>This is a test email.</h1>",
+                attachments: [
+                  {
+                    filename: savedFileName,
+                    path: savedFilePath
+                  }
+                ]
+              };
+          
+              transport.sendMail(mailOptions, (error, info) => {
+                if(error) {
+                  console.log("Error sending email. ");
+                  console.log(error);
+                }
+                else {
+                  console.log("Email has been sent.");
+                  // download file
+                  if(doDownload) {
+                    res.download(savedFilePath, savedFileName, (err) => {
+                      if(err) {console.log(err);}
+                      else {res.end();}
+                    });
+
+                  }
+                  // don't download file
+                  else {
+                    res.send(info);
+                    res.end();
+                  }
+                }
+              });
             }
+
+            // Only download file; no emails sent
             else {
-              console.log("Email has been sent.");
-              res.send(info);
-              res.end();
+              res.download(savedFilePath, savedFileName, (err) => {
+                if(err) {console.log(err);}
+                else {res.end();}
+              });
             }
-          });
+
         }).catch(e => console.log("Catch: " + e));;
       }
   
@@ -70,44 +116,85 @@ function createSummary(req, res, next) {
         var name = accountName;
   
         //Finally creating XLSX file
-        var savedFileName = "./savedFiles/CreditSummary_" + name + ".xlsx";
-        workbook.xlsx.writeFile(savedFileName).then(() => {
+        var savedFilePath = "./savedFiles/CreditSummary_" + name + ".xlsx";
+        var savedFileName = "CreditSummary_" + name + ".xlsx";
+        workbook.xlsx.writeFile(savedFilePath).then(() => {
             console.log("File saved");
-    
-          var transport = nodemailer.createTransport({
-            host: "smtp.gmail.com",
-            port: 587,
-            secure: false,
-            auth: {
-              user: "titanscfcoordinator@gmail.com",
-              pass: "fltozdphmjwdwbpw"
-            }
-          });
-    
-          const mailOptions = {
-            from: '"Amy Cook", "titanscfcoordinator@gmail.com"',
-            to: 'coo17045@byui.edu',
-            subject: "Credit Summary - " + name,
-            html: "<h1>This is a test email.</h1>",
-            attachments: [
-              {
-                filename: "CreditSummary_" + name + ".xlsx",
-                path: "./savedFiles/CreditSummary_" + name + ".xlsx"
+
+            // send files by email
+          if(doEmailMember || doEmailCoordinator) {
+            var sendTo = "";
+              var count = 0;
+              if(doEmailMember) {
+                console.log("email sent to member: " + email);
+                sendTo += email;
+                count++;
               }
-            ]
-          };
-      
-          transport.sendMail(mailOptions, (error, info) => {
-            if(error) {
-              console.log("Error sending email. ");
-              console.log(error);
-            }
-            else {
-              console.log("Email has been sent.");
-              res.send(info);
-              res.end();
-            }
-          });
+              // TODO: Get coordinators name & email from DB
+              if(doEmailCoordinator) {
+                console.log("email send to coordinator");
+                if(count > 0) {
+                  sendTo += '; ';
+                }
+                sendTo += 'coo17045@byui.edu';
+              }
+
+              var transport = nodemailer.createTransport({
+                host: "smtp.gmail.com",
+                port: 587,
+                secure: false,
+                auth: {
+                  // TODO: insert correct info retrieved from DB
+                  user: "titanscfcoordinator@gmail.com",
+                  pass: "fltozdphmjwdwbpw"
+                }
+              });
+        
+              const mailOptions = {
+                // TODO: insert correct info retrieved from DB
+                from: '"Amy Cook", "titanscfcoordinator@gmail.com"',
+                to: 'coo17045@byui.edu',
+                subject: "Credit Summary - " + name,
+                html: "<h1>This is a test email.</h1>",
+                attachments: [
+                  {
+                    filename: savedFileName,
+                    path: savedFilePath
+                  }
+                ]
+              };
+          
+              transport.sendMail(mailOptions, (error, info) => {
+                if(error) {
+                  console.log("Error sending email. ");
+                  console.log(error);
+                }
+                else {
+                  console.log("Email has been sent.");
+                  // download file
+                  if(doDownload) {
+                    res.download(savedFilePath, savedFileName, (err) => {
+                      if(err) {console.log(err);}
+                      else {res.end();}
+                    });
+                  }
+                  // don't download file
+                  else {
+                    res.send(info);
+                    res.end();
+                  }
+                }
+              });
+          }
+    
+          // Only download file; no emails sent
+          else {
+            res.download(savedFilePath, savedFileName, (err) => {
+              if(err) {console.log(err);}
+              else {res.end();}
+            });
+          }
+
         }).catch(e => console.log("Catch: " + e));;
       }
 
@@ -268,6 +355,18 @@ function sortByDateAscending(events) {
   });
 }
 
+function downloadCreditSummary(req, res) {
+  fileName = req.query.fileName;
+
+  var filePath = "./savedFiles/CreditSummaryFiles/" + fileName;
+
+  res.download(filePath, fileName, (err) => {
+    if(err) {console.log(err);}
+    else {res.end();}
+  })
+}
+
 module.exports = {
-  createSummary: createSummary
+  createSummary: createSummary,
+  downloadCreditSummary: downloadCreditSummary
 }

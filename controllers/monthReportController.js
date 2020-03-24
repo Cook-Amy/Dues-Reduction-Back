@@ -5,7 +5,11 @@ const ExcelJS = require('exceljs');
 function createReport(req, res, next) {
   var startDate = req.body.startDate;
   var endDate = req.body.endDate;
+  var doEmailTac = req.body.email1;
+  var doEmailCoordinator = req.body.email2;
+  var doDownload = req.body.download;
 
+  // TODO: get email addresses from DB
   monthReportModel.getDataFromDB(startDate, endDate, function reportCallback(error, result) {
     if(error) {
       console.log('Error in report callback');
@@ -28,29 +32,49 @@ function createReport(req, res, next) {
     
           //Finally creating XLSX file
           var reportDate = getReportDate(startDate);
-          var savedFileName = "./savedFiles/Dues Reduction Monthly Credit Report for " + reportDate + ".xlsx";
-          workbook.xlsx.writeFile(savedFileName).then(() => {
+          var savedFilePath = "./savedFiles/Dues Reduction Monthly Credit Report for " + reportDate + ".xlsx";
+          var savedFileName = "Dues Reduction Monthly Credit Report for " + reportDate + ".xlsx";
+          workbook.xlsx.writeFile(savedFilePath).then(() => {
               console.log("File saved");
       
+          // send files by email
+          if(doEmailTac || doEmailCoordinator) {
+            var sendTo = "";
+            var count = 0;
+            if(doEmailTac) {
+              // TODO: enter correct info
+              sendTo += 'coo17045@byui.edu';
+              count++;
+            }
+            if(doEmailCoordinator) {
+              if(count > 0) {
+                sendTo += '; ';
+              }
+              // TODO: enter correct info
+              sendTo += 'coo17045@byui.edu';
+            }
+
             var transport = nodemailer.createTransport({
               host: "smtp.gmail.com",
               port: 587,
               secure: false,
               auth: {
+                  // TODO: enter correct info
                 user: "titanscfcoordinator@gmail.com",
                 pass: "fltozdphmjwdwbpw"
               }
             });
       
             const mailOptions = {
+                  // TODO: enter correct info
               from: '"Amy Cook", "titanscfcoordinator@gmail.com"',
-              to: 'coo17045@byui.edu',
+              to: sendTo,
               subject: "Dues Reduction Monthly Credit Report for " + reportDate,
               html: "<h1>This is a test email.</h1>",
               attachments: [
                 {
-                  filename: "Dues Reduction Monthly Credit Report for " + reportDate + ".xlsx",
-                  path: "./savedFiles/Dues Reduction Monthly Credit Report for " + reportDate + ".xlsx"
+                  filename: savedFileName,
+                  path:  savedFilePath
                 }
               ]
             };
@@ -62,10 +86,30 @@ function createReport(req, res, next) {
               }
               else {
                 console.log("Email has been sent.");
-                res.send(info);
-                res.end();
+                // download file
+                if(doDownload) {
+                  res.download(savedFilePath, savedFileName, (err) => {
+                    if(err) {console.log(err);}
+                    else {res.end();}
+                  });
+                }
+                // don't download file
+                else {
+                  res.send(info);
+                  res.end();
+                }
               }
             });
+          }
+           
+          // Only download file; no emails sent
+          else {
+            res.download(savedFilePath, savedFileName, (err) => {
+              if(err) {console.log(err);}
+              else {res.end();}
+            });
+          }
+
           }).catch(e => console.log("Catch: " + e));;
         }
     
@@ -76,52 +120,86 @@ function createReport(req, res, next) {
     
           //Finally creating XLSX file
           var reportDate = getReportDate(startDate);
-          var savedFileName = "./savedFiles/Dues Reduction Monthly Credit Report for " + reportDate + ".xlsx";
-          workbook.xlsx.writeFile(savedFileName).then(() => {
+          var savedFilePath = "./savedFiles/Dues Reduction Monthly Credit Report for " + reportDate + ".xlsx";
+          savedFileName = "Dues Reduction Monthly Credit Report for " + reportDate + ".xlsx";
+          workbook.xlsx.writeFile(savedFilePath).then(() => {
               console.log("File saved");
-      
-            var transport = nodemailer.createTransport({
-              host: "smtp.gmail.com",
-              port: 587,
-              secure: false,
-              auth: {
-                user: "titanscfcoordinator@gmail.com",
-                pass: "fltozdphmjwdwbpw"
-              }
-            });
-      
-            const mailOptions = {
-              from: '"Amy Cook", "titanscfcoordinator@gmail.com"',
-              to: 'coo17045@byui.edu',
-              subject: "Dues Reduction Monthly Credit Report for " + reportDate,
-              html: "<h1>This is a test email.</h1>",
-              attachments: [
-                {
-                  filename: "Dues Reduction Monthly Credit Report for " + reportDate + ".xlsx",
-                  path: "./savedFiles/Dues Reduction Monthly Credit Report for " + reportDate + ".xlsx"
+
+              // send files by email
+              if(doEmailTac || doEmailCoordinator) {
+                var sendTo = "";
+                var count = 0;
+                if(doEmailTac) {
+                  // TODO: enter correct info
+                  sendTo += 'coo17045@byui.edu';
+                  count++;
                 }
-              ]
-            };
-        
-            transport.sendMail(mailOptions, (error, info) => {
-              if(error) {
-                console.log("Error sending email. ");
-                console.log(error);
+                if(doEmailCoordinator) {
+                  if(count > 0) {
+                    sendTo += '; ';
+                  }
+                  // TODO: enter correct info
+                  sendTo += 'coo17045@byui.edu';
+                }
+
+                var transport = nodemailer.createTransport({
+                  host: "smtp.gmail.com",
+                  port: 587,
+                  secure: false,
+                  auth: {
+                  // TODO: enter correct info
+                    user: "titanscfcoordinator@gmail.com",
+                    pass: "fltozdphmjwdwbpw"
+                  }
+                });
+          
+                const mailOptions = {
+                  // TODO: enter correct info
+                  from: '"Amy Cook", "titanscfcoordinator@gmail.com"',
+                  to: sendTo,
+                  subject: "Dues Reduction Monthly Credit Report for " + reportDate,
+                  html: "<h1>This is a test email.</h1>",
+                  attachments: [
+                    {
+                      filename: savedFileName,
+                      path: savedFilePath
+                    }
+                  ]
+                };
+            
+                transport.sendMail(mailOptions, (error, info) => {
+                  if(error) {
+                    console.log("Error sending email. ");
+                    console.log(error);
+                  }
+                  else {
+                    console.log("Email has been sent.");
+                  // download file
+                  if(doDownload) {
+                    res.download(savedFilePath, savedFileName, (err) => {
+                      if(err) {console.log(err);}
+                      else {res.end();}
+                    });
+                  }
+                  // don't download file
+                  else {
+                    res.send(info);
+                    res.end();
+                  }
+                  }
+                });
               }
-              else {
-                console.log("Email has been sent.");
-                res.send(info);
-                res.end();
-              }
-            });
+      
+            // Only download file; no emails sent
+            else {
+              res.download(savedFilePath, savedFileName, (err) => {
+                if(err) {console.log(err);}
+                else {res.end();}
+              });
+            }
           }).catch(e => console.log("Catch: " + e));;
         }
-  
       }).catch(e => console.log("Catch: " + e));
-
-
-      res.status(200).json(result);
-      res.end();
     }
   });
 }

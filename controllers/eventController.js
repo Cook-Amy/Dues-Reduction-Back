@@ -2,7 +2,6 @@ const eventModel = require('../model/eventModel');
 
 function getEvents(req, res, next) {
   const seasonID = req.query.seasonID;
-  console.log("seasonID: " + seasonID);
 
   eventModel.getEventsFromDB(seasonID, function getEventCallback(error, result) {
     if(error) {
