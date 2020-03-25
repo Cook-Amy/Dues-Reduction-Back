@@ -22,7 +22,7 @@ function sendPncReminder(req, res, next) {
         var eventDate = returnDateStr(result[0].eventDateTime);
         var eventTime = returnTimeStr(result[0].scheduledArrivalTime);
 
-        var emailStr = "<div><strong>Just a quick reminder about the upcoming PNC event.</strong></div><br>" +
+        var emailStr = "<h4>Just a quick reminder about the upcoming PNC event.</h4><br>" +
         "<div>Name: " + result[0].firstName + " " + result[0].lastName +"</div>" +
         "<div>Event: " + result[0].Title + "</div>" +
         "<div>Date: " + eventDate + "</div>" +
@@ -66,7 +66,7 @@ function sendPncReminder(req, res, next) {
           var eventDate = returnDateStr(result[i][0].eventDateTime);
           var eventTime = returnTimeStr(result[i][0].scheduledArrivalTime);
   
-          var emailStr = "<div><strong>Just a quick reminder about the upcoming PNC event.</strong></div><br>" +
+          var emailStr = "<h4>Just a quick reminder about the upcoming PNC event.</h4><br>" +
           "<div>Name: " + result[i][0].firstName + " " + result[i][0].lastName +"</div>" +
           "<div>Event: " + result[i][0].Title + "</div>" +
           "<div>Date: " + eventDate + "</div>" +
@@ -130,7 +130,7 @@ function sendWcReminder(req, res, next) {
         var eventDate = returnDateStr(result[0].eventDateTime);
         var eventTime = returnTimeStr(result[0].scheduledArrivalTime);
 
-        var emailStr = "<div><strong>Just a quick reminder about the upcoming Walnut Creek event.</strong></div><br>" +
+        var emailStr = "<h4>Just a quick reminder about the upcoming Walnut Creek event.</h4><br>" +
         "<div>Name: " + result[0].firstName + " " + result[0].lastName +"</div>" +
         "<div>Event: " + result[0].Title + "</div>" +
         "<div>Date: " + eventDate + "</div>" +
@@ -174,7 +174,7 @@ function sendWcReminder(req, res, next) {
           var eventDate = returnDateStr(result[i][0].eventDateTime);
           var eventTime = returnTimeStr(result[i][0].scheduledArrivalTime);
   
-          var emailStr = "<div><strong>Just a quick reminder about the upcoming Walnut Creek event.</strong></div><br>" +
+          var emailStr = "<h4>Just a quick reminder about the upcoming Walnut Creek event.</h4><br>" +
           "<div>Name: " + result[i][0].firstName + " " + result[i][0].lastName +"</div>" +
           "<div>Event: " + result[i][0].Title + "</div>" +
           "<div>Date: " + eventDate + "</div>" +
@@ -238,7 +238,7 @@ function sendCfReminder(req, res, next) {
         var eventDate = returnDateStr(result[0].eventDateTime);
         var eventTime = returnTimeStr(result[0].scheduledArrivalTime);
 
-        var emailStr = "<div><strong>Just a quick reminder about the upcoming Carter-Finley Stadium event.</strong></div><br>" +
+        var emailStr = "<h4>Just a quick reminder about the upcoming Carter-Finley Stadium event.</h4><br>" +
         "<div>Name: " + result[0].firstName + " " + result[0].lastName +"</div>" +
         "<div>Event: " + result[0].Title + "</div>" +
         "<div>Date: " + eventDate + "</div>" +
@@ -282,7 +282,7 @@ function sendCfReminder(req, res, next) {
           var eventDate = returnDateStr(result[i][0].eventDateTime);
           var eventTime = returnTimeStr(result[i][0].scheduledArrivalTime);
   
-          var emailStr = "<div><strong>Just a quick reminder about the upcoming Carter-Finley Stadium event.</strong></div><br>" +
+          var emailStr = "<h4>Just a quick reminder about the upcoming Carter-Finley Stadium event.</h4><br>" +
           "<div>Name: " + result[i][0].firstName + " " + result[i][0].lastName +"</div>" +
           "<div>Event: " + result[i][0].Title + "</div>" +
           "<div>Date: " + eventDate + "</div>" +

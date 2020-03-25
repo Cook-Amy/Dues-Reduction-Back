@@ -65,7 +65,8 @@ function createSummary(req, res, next) {
                 // to: sendTo,
                 to: 'coo17045@byui.edu',
                 subject: "Credit Summary - " + name,
-                html: "<h1>This is a test email.</h1>",
+                html: "<h4>Titans Dues Reduction Credit Summary.</h4>" +
+                      "<div>TUAccount: " + name + "</div>",
                 attachments: [
                   {
                     filename: savedFileName,
@@ -155,7 +156,8 @@ function createSummary(req, res, next) {
                 from: '"Amy Cook", "titanscfcoordinator@gmail.com"',
                 to: 'coo17045@byui.edu',
                 subject: "Credit Summary - " + name,
-                html: "<h1>This is a test email.</h1>",
+                html: "<h4>Titans Dues Reduction Credit Summary.</h4>" +
+                      "<div>TUAccount: " + name + "</div>",
                 attachments: [
                   {
                     filename: savedFileName,

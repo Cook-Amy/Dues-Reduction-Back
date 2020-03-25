@@ -70,7 +70,8 @@ function createReport(req, res, next) {
               from: '"Amy Cook", "titanscfcoordinator@gmail.com"',
               to: sendTo,
               subject: "Dues Reduction Monthly Credit Report for " + reportDate,
-              html: "<h1>This is a test email.</h1>",
+              html: "<h4>Dues Reduction Monthyl Credit Report.</h4>" +
+                  "<div>Attached file for " + reportDate + "</div>",
               attachments: [
                 {
                   filename: savedFileName,
@@ -158,7 +159,8 @@ function createReport(req, res, next) {
                   from: '"Amy Cook", "titanscfcoordinator@gmail.com"',
                   to: sendTo,
                   subject: "Dues Reduction Monthly Credit Report for " + reportDate,
-                  html: "<h1>This is a test email.</h1>",
+                  html: "<h4>Dues Reduction Monthyl Credit Report.</h4>" +
+                  "<div>Attached file for " + reportDate + "</div>",
                   attachments: [
                     {
                       filename: savedFileName,

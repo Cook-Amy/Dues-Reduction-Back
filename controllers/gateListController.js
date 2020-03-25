@@ -50,7 +50,8 @@ function sendPncGateList(req, res) {
           from: '"Amy Cook", "titanscfcoordinator@gmail.com"',
           to: 'coo17045@byui.edu',
           subject: "Gate List - " + event.Title,
-          html: "<h1>This is a test email.</h1>",
+          html: "<h1>Gate List for TAC Titans.</h1>" +
+                "<div>Event: " + event.Title + "</div>",
           attachments: [
             {
               filename: savedFileName,
@@ -284,7 +285,8 @@ function sendWcGateList(req, res) {
           from: '"Amy Cook", "titanscfcoordinator@gmail.com"',
           to: 'coo17045@byui.edu',
           subject: "Gate List - " + event.Title,
-          html: "<h1>This is a test email.</h1>",
+          html: "<h4>Gate List for TAC Titans.</h4>" +
+                "<div>Event: " + event.Title + "</div>",
           attachments: [
             {
               filename: savedFileName,
