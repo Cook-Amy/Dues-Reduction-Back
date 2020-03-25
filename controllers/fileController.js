@@ -1,142 +1,68 @@
-const pncFiles = "../savedFiles/PncFiles/";
-const wcFiles = "../savedFiles/WcFiles/";
-const cfFiles = "../savedFiles/CfFiles/";
-const adminFiles = "../savedFiles/AdminFiles/";
-const fs = require("fs");
+const fileModel = require('../model/fileModel');
 
-/**************************************************************************
- * Save Files
-**************************************************************************/
-function savePncFile(req, res) {
-  const file = req.body;
-  const base64data = file.content.replace(/^data:.*,/, '');
-  fs.writeFile(pncFiles + file.name, base64data, 'base64', (err) => {
-    if(err) {
-      console.log(err);
-      res.sendStatus(500);
+function getFiles(req, res) {
+  var venueID = req.query.venueID;
+
+  fileModel.getFilesFromDB(venueID, (error, result) => {
+    if(error) {
+      console.log('Error in file callback');
+      console.log(error);
+    }
+    else if(result.length == 0) {
+      console.log("No file info found in DB. Returning with null.");
+      res.status(204).json(null);
+      res.end();
     }
     else {
-      res.set("Location", pncFiles + file.name);
-      res.status(200);
-      res.send(file);
+      res.status(200).json(result);
+      res.end();
     }
   });
 }
 
-function saveWcFile(req, res) {
-  const file = req.body;
-  const base64data = file.content.replace(/^data:.*,/, '');
-  fs.writeFile(wcFiles + file.name, base64data, 'base64', (err) => {
-    if(err) {
-      console.log(err);
-      res.sendStatus(500);
+function removeFile(req, res) {
+  var fileID = req.body.fileID;
+  var venueID = req.body.venueID;
+
+  fileModel.removeFileFromDB(fileID, venueID, (error, result) => {
+    if(error) {
+      console.log('Error in file callback');
+      console.log(error);
+    }
+    else if(result.length == 0) {
+      console.log("No file info found in DB. Returning with null.");
+      res.status(204).json(null);
+      res.end();
     }
     else {
-      res.set("Location", wcFiles + file.name);
-      res.status(200);
-      res.send(file);
+      res.status(200).json(result);
+      res.end();
     }
   });
 }
 
-function saveCfFile(req, res) {
-  const file = req.body;
-  const base64data = file.content.replace(/^data:.*,/, '');
-  fs.writeFile(cfFiles + file.name, base64data, 'base64', (err) => {
-    if(err) {
-      console.log(err);
-      res.sendStatus(500);
-    }
-    else {
-      res.set("Location", cfFiles + file.name);
-      res.status(200);
-      res.send(file);
-    }
-  });
-}
+function saveFile(req, res) {
+  var file = req.body.file;
 
-function saveAdminFile(req, res) {
-  const file = req.body;
-  const base64data = file.content.replace(/^data:.*,/, '');
-  fs.writeFile(adminFiles + file.name, base64data, 'base64', (err) => {
-    if(err) {
-      console.log(err);
-      res.sendStatus(500);
+  fileModel.saveFileInDB(file, (error, result) => {
+    if(error) {
+      console.log('Error in file callback');
+      console.log(error);
+    }
+    else if(result.length == 0) {
+      console.log("No file info found in DB. Returning with null.");
+      res.status(204).json(null);
+      res.end();
     }
     else {
-      res.set("Location", adminFiles + file.name);
-      res.status(200);
-      res.send(file);
-    }
-  });
-}
-
-/**************************************************************************
- * Delete Files
-**************************************************************************/
-function deletePncFile(req, res) {
-  const fileName = req.url.substring(7).replace(/%20/g, ' ');
-  fs.unlink(pncFiles + fileName, (err) => {
-    if(err) {
-      console.log(err);
-      res.sendStatus(500);
-    }
-    else {
-      res.status(200);
-      res.send({});
-    }
-  });
-}
-
-function deleteWcFile(req, res) {
-  const fileName = req.url.substring(7).replace(/%20/g, ' ');
-  fs.unlink(wcFiles + fileName, (err) => {
-    if(err) {
-      console.log(err);
-      res.sendStatus(500);
-    }
-    else {
-      res.status(200);
-      res.send({});
-    }
-  });
-}
-
-function deleteCfFile(req, res) {
-  const fileName = req.url.substring(7).replace(/%20/g, ' ');
-  fs.unlink(cfFiles + fileName, (err) => {
-    if(err) {
-      console.log(err);
-      res.sendStatus(500);
-    }
-    else {
-      res.status(200);
-      res.send({});
-    }
-  });
-}
-
-function deleteAdminFile(req, res) {
-  const fileName = req.url.substring(7).replace(/%20/g, ' ');
-  fs.unlink(adminFiles + fileName, (err) => {
-    if(err) {
-      console.log(err);
-      res.sendStatus(500);
-    }
-    else {
-      res.status(200);
-      res.send({});
+      res.status(200).json(result);
+      res.end();
     }
   });
 }
 
 module.exports = {
-  savePncFile: savePncFile,
-  saveWcFile: saveWcFile, 
-  saveCfFile: saveCfFile,
-  saveAdminFile: saveAdminFile,
-  deletePncFile: deletePncFile,
-  deleteWcFile: deleteWcFile,
-  deleteCfFile: deleteCfFile,
-  deleteAdminFile: deleteAdminFile
+  getFiles: getFiles,
+  removeFile: removeFile,
+  saveFile: saveFile
 }
