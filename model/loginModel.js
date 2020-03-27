@@ -2,7 +2,8 @@ var pool = require('../database/db');
 const bcrypt = require('bcryptjs');
 
 function getUserFromDB(email, password, callback) {
-  var query = "SELECT idsite_user AS userID, userName, password, firstName, lastName, phone, permission FROM site_user WHERE userName = ?";
+  var query = "SELECT idsite_user AS userID, userName, password, firstName, lastName, phone, permission, personalEmail, titansEmail " +
+              "FROM site_user WHERE userName = ?";
   var params = [email]
 
   pool.query(query, params, (error, results) => {
@@ -33,7 +34,9 @@ function checkPassword(password, results, callback) {
                       firstName: results[0].firstName,
                       lastName: results[0].lastName,
                       phone: results[0].phone,
-                      permission: results[0].permission}];
+                      permission: results[0].permission,
+                      titansEmail: results[0].titansEmail,
+                      personalEmail: results[0].personalEmail}];
       callback(null, userJson);
     }
     else {
