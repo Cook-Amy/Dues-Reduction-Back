@@ -2,11 +2,13 @@ const express = require('express');
 const bodyParser = require('body-parser');
 const cors = require('cors');
 const app = express();
+const path = require('path');
 
 // Set up app
 app.use(bodyParser.json({limit: '50mb', extended: true}))
   .use(bodyParser.urlencoded({limit: '50mb', extended: true}))
-  .use(cors());
+  .use(cors())
+  .use('/images', express.static(path.join(__dirname, 'images')));
 
 
 // Controller pages
