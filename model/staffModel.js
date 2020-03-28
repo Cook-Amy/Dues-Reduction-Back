@@ -36,13 +36,31 @@ function getAllStaffFromDB(callback) {
     }
     else if(results.length == 0) {
       console.log("Staff not found in DB");
-      callback(null, results);
+      callback(null, results, null);
     }
     else {
-      callback(null, results);
+      getAllTrainingFromDB(results, callback);
     }
   });
 }
+
+function getAllTrainingFromDB(allStaff, callback) {
+  var queryDB = "SELECT pt.personID, j.jobName, j.idjobs " +
+                "FROM person_training pt, jobs j " +
+                "WHERE pt.jobID = j.idjobs " +
+                "AND pt.isFullyTrained = 1";
+        
+  pool.query(queryDB, (error, results) => {
+    if(error) {
+      console.log("Error getting results from DB: ");
+      console.log(error);
+    }
+    else {
+      callback(error, allStaff, results);
+    }
+  });
+}
+
 
 /***********************************************************************
  * GET STAFF FOR EVENT
@@ -334,7 +352,66 @@ function updatePaperworkInDB(newStaff, callback) {
       console.log(error);
     }
     else {
-      callback(error, results);
+      updateJobTrainingInDB(newStaff, callback);
+    }
+  });
+}
+
+function updateJobTrainingInDB(newStaff, callback) {
+  var queryDB = "";
+  var params = [];
+  var job = [1, 2, 4, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 19];
+
+  // console.log('newStaff: ' + newStaff.length);
+  console.log('jobs: ' + job.length);
+  var isTrained = [
+    newStaff.wcStandLeader,
+    newStaff.wcMoveStockOut,
+    newStaff.pncStandLeader,
+    newStaff.pncGroupLeader,
+    newStaff.pncHeadCook,
+    newStaff.pncRegister,
+    newStaff.wcFinalStandPrep,
+    newStaff.wcSales,
+    newStaff.pncAssistantCook,
+    newStaff.wcContainerBarLead,
+    newStaff.cfLeader,
+    newStaff.cfStaff,
+    newStaff.pncBeerCart,
+    newStaff.cfAssistantLeader 
+  ];
+  
+  for(var j = 0; j < job.length; j++) {
+    queryDB += "INSERT INTO person_training (personID, jobID, trainingBeginDate, trainingLastDate, isFullyTrained) " +
+                "SELECT  ?, ?, null, null, ? " +
+                "FROM DUAL WHERE NOT EXISTS ( " +
+                  "SELECT idperson_training " +
+                  "FROM person_training " +
+                  "WHERE personID = ? AND jobID = ?); " +
+                "UPDATE person_training " +
+                "SET isFullyTrained = ? " +
+                "WHERE  personID = ? AND jobID = ?; ";
+    var personID = newStaff.idperson;
+    var jobID = job[j];
+    var isFullyTrained = isTrained[j];
+    params.push(personID);
+    params.push(jobID);
+    params.push(isFullyTrained);
+    params.push(personID);
+    params.push(jobID);
+    params.push(isFullyTrained);
+    params.push(personID);
+    params.push(jobID);
+  }
+  
+
+  pool.query(queryDB, params, (error, results) => {
+    if(error) {
+      console.log("Error getting results from DB: ");
+      console.log(error);
+    }
+    else {
+      callback(null, results);
     }
   });
 }
@@ -358,6 +435,7 @@ function removeStaffinDB(staff, callback) {
     }
   });
 }
+
 
 module.exports = {
   getAllStaffFromDB: getAllStaffFromDB,

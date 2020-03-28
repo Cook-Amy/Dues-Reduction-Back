@@ -1,18 +1,18 @@
 const staffModel = require('../model/staffModel');
 
 function getAllStaff(req, res, next) {
-  staffModel.getAllStaffFromDB(function getStaffCallback(error, result) {
+  staffModel.getAllStaffFromDB(function getStaffCallback(error, staffResult, trainingResult) {
     if(error) {
       console.log('Error in staff callback');
       console.log(error);
     }
-    else if(result.length == 0) {
+    else if(staffResult.length == 0) {
       console.log("No staff info found in DB. Returning with null.");
       res.status(204).json(null);
       res.end();
     }
     else {
-      res.status(200).json(result);
+      res.status(200).json({staffResult: staffResult, trainingResult: trainingResult});
       res.end();
     }
   });
