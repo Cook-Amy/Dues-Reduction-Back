@@ -363,7 +363,6 @@ function updateJobTrainingInDB(newStaff, callback) {
   var job = [1, 2, 4, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 19];
 
   // console.log('newStaff: ' + newStaff.length);
-  console.log('jobs: ' + job.length);
   var isTrained = [
     newStaff.wcStandLeader,
     newStaff.wcMoveStockOut,
