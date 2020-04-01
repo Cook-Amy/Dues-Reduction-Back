@@ -189,9 +189,30 @@ function addPaperworkToDB(newStaff, id, callback) {
                   "VALUES (" + id + ", ?); " +
                 "INSERT INTO person_cf_paperwork (personID, cfAlcoholTraining) " +
                   "VALUES (" + id + ", ?); ";
-  var barsDate = new Date(newStaff.pncBars);
-  var teamTraining = new Date(newStaff.wcTeamTraining);
-  var alcTraining = new Date(newStaff.cfAlcoholTraining);
+
+  var barsDate = new Date();
+  if(newStaff.pncBars == null) {
+    barsDate = null;
+  }
+  else {
+    barsDate = new Date(newStaff.pncBars);
+  }
+  var teamTraining = new Date();
+  if(newStaff.wcTeamTraining == null) {
+    teamTraining = null;
+  }
+  else {
+    teamTraining = new Date(newStaff.wcTeamTraining);
+  }
+  var alcTraining = new Date();
+  if(newStaff.cfAlcoholTraining == null) {
+    alcTraining = null;
+  }
+  else {
+    alcTraining = new Date(newStaff.cfAlcoholTraining);
+  }
+
+
   var params = [
     newStaff.pncHealthForm,
     newStaff.pncExperienced,
