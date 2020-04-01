@@ -1,5 +1,4 @@
 const eventsPncModel = require('../model/eventPncModel');
-const eventPnc = require('../formats/eventPnc');
 
 function getEvents(req, res, next) {
 

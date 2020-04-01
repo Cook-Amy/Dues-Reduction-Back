@@ -84,10 +84,24 @@ function removeStaff(req, res, next) {
   });
 }
 
+function getAllTuAccounts(req, res) {
+  staffModel.getAllTuAccountsFromDB((error, result) => {
+    if(error) {
+      console.log('Error in tuAccount callback');
+      console.log(error);
+    }
+    else {
+      res.status(200).json(result);
+      res.end();
+    }
+  });
+}
+
 module.exports = {
   getAllStaff: getAllStaff,
   getStaffForEvent: getStaffForEvent,
   addOneStaff: addOneStaff,
   updateOneStaff: updateOneStaff,
-  removeStaff: removeStaff
+  removeStaff: removeStaff,
+  getAllTuAccounts: getAllTuAccounts
 }

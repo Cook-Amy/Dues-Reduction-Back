@@ -97,8 +97,19 @@ function getStaffForEventFromDB(eventID, callback) {
  **********************************************************************/
 function addOneStaffToDB(newStaff, callback) {
   var queryDB = "INSERT INTO tu_account (accountName) " +
-                  "VALUES (?)";
-  var params = [newStaff.tuAccount];
+                "SELECT ? " +
+                "FROM DUAL WHERE NOT EXISTS (" +
+                  "SELECT idtu_account " +
+                  "FROM tu_account " +
+                  "WHERE accountName = ?); " +
+                "SELECT idtu_account AS tuAccountID " +
+                "FROM tu_account " + 
+                "WHERE accountName = ?; ";
+  var params = [
+    newStaff.tuAccount,
+    newStaff.tuAccount,
+    newStaff.tuAccount
+  ]
 
   pool.query(queryDB, params, (error, results) => {
     if(error) {
@@ -106,7 +117,7 @@ function addOneStaffToDB(newStaff, callback) {
       console.log(error);
     }
     else {
-      addStaffToDB2(newStaff, results.insertId, callback);
+      addStaffToDB2(newStaff, results[1][0].tuAccountID, callback);
     }
   });  
 }
@@ -239,15 +250,19 @@ function addPaperworkToDB(newStaff, id, callback) {
  * UPDATE STAFF
  **********************************************************************/
 function updateOneStaffInDB(newStaff, callback) {
-  var queryDB = "UPDATE tu_account " +
-                "SET accountName = ? " +
-                "WHERE tu_account.idtu_account = (" +
-                  "SELECT person.tuAccountID " +
-                  "FROM person " +
-                  "WHERE person.idperson = ?)";
+  var queryDB = "INSERT INTO tu_account (accountName) " +
+                "SELECT ? " +
+                "FROM DUAL WHERE NOT EXISTS (" +
+                  "SELECT idtu_account " +
+                  "FROM tu_account " +
+                  "WHERE accountName = ?); " +
+                "SELECT idtu_account AS tuAccountID " +
+                "FROM tu_account " + 
+                "WHERE accountName = ?; ";
   var params = [
     newStaff.tuAccount,
-    newStaff.idperson
+    newStaff.tuAccount,
+    newStaff.tuAccount
   ]
 
   pool.query(queryDB, params, (error, results) => {
@@ -256,16 +271,17 @@ function updateOneStaffInDB(newStaff, callback) {
       console.log(error);
     }
     else {
-      updateOnePersonInDB(newStaff, callback);
+      updateOnePersonInDB(newStaff, results[1][0].tuAccountID, callback);
     }
   }); 
 }
 
-function updateOnePersonInDB(newStaff, callback) {
+function updateOnePersonInDB(newStaff, resultID, callback) {
   var queryDB = "UPDATE person " +
-                "SET firstName = ?, lastName = ?, email = ?, phone = ? "+
+                "SET tuAccountID = ?, firstName = ?, lastName = ?, email = ?, phone = ? "+
                 "WHERE idperson = ?";
   var params = [
+    resultID,
     newStaff.firstName,
     newStaff.lastName,
     newStaff.Email,
@@ -383,7 +399,6 @@ function updateJobTrainingInDB(newStaff, callback) {
   var params = [];
   var job = [1, 2, 4, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 19];
 
-  // console.log('newStaff: ' + newStaff.length);
   var isTrained = [
     newStaff.wcStandLeader,
     newStaff.wcMoveStockOut,
@@ -457,10 +472,28 @@ function removeStaffinDB(staff, callback) {
 }
 
 
+/***********************************************************************
+ * TU Accounts
+ **********************************************************************/
+function getAllTuAccountsFromDB(callback) {
+  var queryDB = "SELECT accountName FROM tu_account";
+
+  pool.query(queryDB, (error, results) => {
+    if(error) {
+      console.log("Error getting results from DB: ");
+      console.log(error);
+    }
+    else {
+      callback(error, results);
+    }
+  });
+}
+
 module.exports = {
   getAllStaffFromDB: getAllStaffFromDB,
   getStaffForEventFromDB: getStaffForEventFromDB,
   addOneStaffToDB: addOneStaffToDB,
   updateOneStaffInDB: updateOneStaffInDB,
-  removeStaffinDB: removeStaffinDB
+  removeStaffinDB: removeStaffinDB,
+  getAllTuAccountsFromDB: getAllTuAccountsFromDB
 }

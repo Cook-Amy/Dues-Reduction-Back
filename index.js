@@ -43,6 +43,7 @@ app.get('/getAllStaff', staffController.getAllStaff);
 app.get('/getCalendarEvents', eventController.getCalendarEvents);
 app.get('/downloadCreditSummary', creditSummaryController.downloadCreditSummary);
 app.get('/getFiles', fileController.getFiles);
+app.get('/getAllTuAccounts', staffController.getAllTuAccounts);
 // PNC
 app.get('/getEventsPNC', eventPncController.getEvents);
 app.get('/getAllPncStaff', staffPncController.getAllPncStaff);
