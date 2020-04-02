@@ -1,3 +1,4 @@
+const gateListModel = require('../model/gateListModel');
 const nodemailer = require('nodemailer');
 const ExcelJS = require('exceljs');
 const fs = require('fs');
@@ -14,98 +15,108 @@ function sendPncGateList(req, res) {
   var email = req.body.email;
   var download = req.body.download;
 
-  //TODO: get email addresses from DB
-  
-  var workbook = new ExcelJS.Workbook();
-  var filename = "./savedFiles/Templates/TemplateGateListPnc.xlsx";
-  workbook.xlsx.readFile(filename).then(() => {
+  var userID = req.body.userID;
+  var userName = req.body.userName;
 
-    // edit worksheet
-    var worksheet = workbook.getWorksheet('Sheet1');
-
-    worksheet = fillWorksheet(worksheet, event, data);
-
-    //Finally creating XLSX file
-    var savedFilePath = "./savedFiles/GateList/GateList_PNC_" + event.Title +".xlsx";
-    var savedFileName = "GateList_PNC_" + event.Title + ".xlsx";
-    workbook.xlsx.writeFile(savedFilePath).then(() => {
-
-      // send report by email
-      if(email) {
-        var transport = nodemailer.createTransport({
-          host: "smtp.gmail.com",
-          port: 587,
-          secure: false,
-          auth: {
-            // TODO: insert correct info
-            user: "titanscfcoordinator@gmail.com",
-            pass: "fltozdphmjwdwbpw"
-          }
-        });
-  
-        const mailOptions = {
-          // TODO: insert correct info
-          from: '"Amy Cook", "titanscfcoordinator@gmail.com"',
-          to: 'coo17045@byui.edu',
-          subject: "Gate List - " + event.Title,
-          html: "<h1>Gate List for TAC Titans.</h1>" +
-                "<div>Event: " + event.Title + "</div>",
-          attachments: [
-            {
-              filename: savedFileName,
-              path: savedFilePath
-            }
-          ]
-        };
+  gateListModel.getCoordinatorInfoFromDB(userID, (error, tacEmail, emailPasscode) => {
+    if(error) {
+      console.log(error)
+    }
+    else {
+      var workbook = new ExcelJS.Workbook();
+      var filename = "./savedFiles/Templates/TemplateGateListPnc.xlsx";
+      workbook.xlsx.readFile(filename).then(() => {
     
-        transport.sendMail(mailOptions, (error, info) => {
-          if(error) {
-            console.log("Error sending email. ");
-            console.log(error);
-          }
-          else {
-            console.log("Email has been sent.");
-            // download report
-            if(download) {
-              res.download(savedFilePath, savedFileName, (err) => {
-                if(err) { console.log(err); }
-                else { 
+        // edit worksheet
+        var worksheet = workbook.getWorksheet('Sheet1');
+    
+        worksheet = fillWorksheet(worksheet, event, data);
+    
+        //Finally creating XLSX file
+        var savedFilePath = "./savedFiles/GateList/GateList_PNC_" + event.Title +".xlsx";
+        var savedFileName = "GateList_PNC_" + event.Title + ".xlsx";
+        workbook.xlsx.writeFile(savedFilePath).then(() => {
+    
+          // send report by email
+          if(email) {
+            var transport = nodemailer.createTransport({
+              host: "smtp.gmail.com",
+              port: 587,
+              secure: false,
+              auth: {
+                // TODO: insert correct info
+                user: "titanscfcoordinator@gmail.com",
+                pass: "fltozdphmjwdwbpw"
+                // user: tacEmail,
+                // pass: emailPasscode
+              }
+            });
+      
+            const mailOptions = {
+              // TODO: insert correct info
+              from: '"Amy Cook", "titanscfcoordinator@gmail.com"',
+              to: 'coo17045@byui.edu',
+              // TODO: get pnc email from DB
+              // from: userName + ", " + tacEmail,
+              // to: 'pncarenagroups@carhur.com',
+              subject: "Gate List - " + event.Title,
+              html: "<h1>Gate List for TAC Titans.</h1>" +
+                    "<div>Event: " + event.Title + "</div>",
+              attachments: [
+                {
+                  filename: savedFileName,
+                  path: savedFilePath
+                }
+              ]
+            };
+        
+            transport.sendMail(mailOptions, (error, info) => {
+              if(error) {
+                console.log("Error sending email. ");
+                console.log(error);
+              }
+              else {
+                console.log("Email has been sent.");
+                // download report
+                if(download) {
+                  res.download(savedFilePath, savedFileName, (err) => {
+                    if(err) { console.log(err); }
+                    else { 
+                      fs.unlink(savedFilePath, function (err) {
+                        if(err) {throw err;}
+                        else {res.end();}
+                      }); 
+                     }
+                  });
+                }
+                // don't download report
+                else {
+                  res.send(info);
                   fs.unlink(savedFilePath, function (err) {
                     if(err) {throw err;}
                     else {res.end();}
                   }); 
-                 }
-              });
-            }
-            // don't download report
-            else {
-              res.send(info);
-              fs.unlink(savedFilePath, function (err) {
-                if(err) {throw err;}
-                else {res.end();}
-              }); 
-            }
+                }
+              }
+            });
           }
-        });
-      }
-
-      // only download report; no email sent
-      else{
-        res.download(savedFilePath, savedFileName, (err) => {
-          if(err) { console.log(err); }
-          else {
-            fs.unlink(savedFilePath, function (err) {
-              if(err) {throw err;}
-              else {res.end();}
-            }); 
-          }
-        });
-      }
-
-      // TODO: Delete file from here after done
-      
-    }).catch(e => console.log("Catch: " + e));;
-  }).catch(e => console.log("Catch: " + e));
+    
+          // only download report; no email sent
+          else{
+            res.download(savedFilePath, savedFileName, (err) => {
+              if(err) { console.log(err); }
+              else {
+                fs.unlink(savedFilePath, function (err) {
+                  if(err) {throw err;}
+                  else {res.end();}
+                }); 
+              }
+            });
+          }        
+        }).catch(e => console.log("Catch: " + e));;
+      }).catch(e => console.log("Catch: " + e));
+    }
+  });
 }
 
 
@@ -260,99 +271,108 @@ function sendWcGateList(req, res) {
   var email = req.body.email;
   var download = req.body.download;
 
-  //TODO: get email addresses from DB
-  
-  var workbook = new ExcelJS.Workbook();
-  var filename = "./savedFiles/Templates/TemplateGateListWc.xlsx";
-  workbook.xlsx.readFile(filename).then(() => {
+  var userID = req.body.userID;
+  var userName = req.body.userName;
 
-    // edit worksheet
-    var worksheet = workbook.getWorksheet('Sheet1');
-
-    fillWorksheet2(worksheet, event, staff);
-
-    //Finally creating XLSX file
-    var savedFilePath = "./savedFiles/GateList/GateList_WC_" + event.Title +".xlsx";
-    savedFileName = "GateList_WC_" + event.Title + ".xlsx";
-    workbook.xlsx.writeFile(savedFilePath).then(() => {
-
-        // send report by email
-        if(email) {
-          var transport = nodemailer.createTransport({
-            host: "smtp.gmail.com",
-            port: 587,
-            secure: false,
-            auth: {
+  gateListModel.getCoordinatorInfoFromDB(userID, (error, tacEmail, emailPasscode) => {
+    if(error) {
+      console.log(error)
+    }
+    else {
+      var workbook = new ExcelJS.Workbook();
+      var filename = "./savedFiles/Templates/TemplateGateListWc.xlsx";
+      workbook.xlsx.readFile(filename).then(() => {
+    
+        // edit worksheet
+        var worksheet = workbook.getWorksheet('Sheet1');
+    
+        fillWorksheet2(worksheet, event, staff);
+    
+        //Finally creating XLSX file
+        var savedFilePath = "./savedFiles/GateList/GateList_WC_" + event.Title +".xlsx";
+        savedFileName = "GateList_WC_" + event.Title + ".xlsx";
+        workbook.xlsx.writeFile(savedFilePath).then(() => {
+    
+            // send report by email
+            if(email) {
+              var transport = nodemailer.createTransport({
+                host: "smtp.gmail.com",
+                port: 587,
+                secure: false,
+                auth: {
+                  // TODO: insert correct info
+                  user: "titanscfcoordinator@gmail.com",
+                  pass: "fltozdphmjwdwbpw"
+                  // user: tacEmail,
+                  // pass: emailPasscode
+                }
+              });
+        
+            const mailOptions = {
               // TODO: insert correct info
-              user: "titanscfcoordinator@gmail.com",
-              pass: "fltozdphmjwdwbpw"
-            }
-          });
-    
-        const mailOptions = {
-          // TODO: insert correct info
-          from: '"Amy Cook", "titanscfcoordinator@gmail.com"',
-          to: 'coo17045@byui.edu',
-          subject: "Gate List - " + event.Title,
-          html: "<h4>Gate List for TAC Titans.</h4>" +
-                "<div>Event: " + event.Title + "</div>",
-          attachments: [
-            {
-              filename: savedFileName,
-              path: savedFilePath
-            }
-          ]
-          
-        };
-    
-        transport.sendMail(mailOptions, (error, info) => {
-          if(error) {
-            console.log("Error sending email. ");
-            console.log(error);
-          }
-          else {
-            console.log("Email has been sent.");
-            // download report
-            if(download) {
-              res.download(savedFilePath, savedFileName, (err) => {
-                if(err) { console.log(err); }
-                else { 
+              from: '"Amy Cook", "titanscfcoordinator@gmail.com"',
+              to: 'coo17045@byui.edu',
+              // from: userName + ", " + tacEmail,
+              // to: [****** INSERT WC EMAIL ADDRESSES *******],
+              subject: "Gate List - " + event.Title,
+              html: "<h4>Gate List for TAC Titans.</h4>" +
+                    "<div>Event: " + event.Title + "</div>",
+              attachments: [
+                {
+                  filename: savedFileName,
+                  path: savedFilePath
+                }
+              ]
+              
+            };
+        
+            transport.sendMail(mailOptions, (error, info) => {
+              if(error) {
+                console.log("Error sending email. ");
+                console.log(error);
+              }
+              else {
+                console.log("Email has been sent.");
+                // download report
+                if(download) {
+                  res.download(savedFilePath, savedFileName, (err) => {
+                    if(err) { console.log(err); }
+                    else { 
+                      fs.unlink(savedFilePath, function (err) {
+                        if(err) {throw err;}
+                        else {res.end();}
+                      }); 
+                     }
+                  });
+                }
+                // don't download report
+                else {
+                  res.send(info);
                   fs.unlink(savedFilePath, function (err) {
                     if(err) {throw err;}
                     else {res.end();}
                   }); 
-                 }
-              });
-            }
-            // don't download report
-            else {
-              res.send(info);
-              fs.unlink(savedFilePath, function (err) {
-                if(err) {throw err;}
-                else {res.end();}
-              }); 
-            }
+                }
+              }
+            });
           }
-        });
-      }
-
-      // only download report; no email sent
-      else {
-        res.download(savedFilePath, savedFileName, (err) => {
-          if(err) { console.log(err); }
-          else { 
-            fs.unlink(savedFilePath, function (err) {
-              if(err) {throw err;}
-              else {res.end();}
-            }); 
-           }
-        });
-      }
-
-      // TODO: Delete file from here after done
-
-    }).catch(e => console.log("Catch: " + e));;
-  }).catch(e => console.log("Catch: " + e));
+    
+          // only download report; no email sent
+          else {
+            res.download(savedFilePath, savedFileName, (err) => {
+              if(err) { console.log(err); }
+              else { 
+                fs.unlink(savedFilePath, function (err) {
+                  if(err) {throw err;}
+                  else {res.end();}
+                }); 
+               }
+            });
+          }
+        }).catch(e => console.log("Catch: " + e));;
+      }).catch(e => console.log("Catch: " + e));
+    }
+  });
 }
 
 function fillWorksheet2(worksheet, event, staff) {

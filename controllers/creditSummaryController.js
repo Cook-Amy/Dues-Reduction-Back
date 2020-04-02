@@ -9,8 +9,10 @@ function createSummary(req, res, next) {
   var doEmailMember = specs.email1;
   var doEmailCoordinator = specs.email2;
   var doDownload = specs.download;
+  var userID = req.body.userID;
+  var userName = req.body.userName;
 
-  creditSummaryModel.getTuAccountFromDB(specs.staffID, specs.start, specs.end, function reportCallback(error, result, idCount, accountName, memberEmail) {
+  creditSummaryModel.getTuAccountFromDB(specs.staffID, specs.start, specs.end, userID, function reportCallback(error, result, idCount, accountName, memberEmail, tacEmail, emailPasscode) {
 
     var workbook = new ExcelJS.Workbook();
     var filename = "./savedFiles/Templates/TemplateCreditSummary.xlsx";
@@ -41,17 +43,16 @@ function createSummary(req, res, next) {
               var sendTo = "";
               var count = 0;
               if(doEmailMember) {
-                console.log("email sent to member: " + memberEmail);
                 sendTo += memberEmail;
                 count++;
               }
               // TODO: Get coordinators name & email from DB
               if(doEmailCoordinator) {
-                console.log("email send to coordinator");
                 if(count > 0) {
                   sendTo += '; ';
                 }
                 sendTo += 'coo17045@byui.edu';
+                // sendTo += tacEmail;
               }
 
               var transport = nodemailer.createTransport({
@@ -62,14 +63,17 @@ function createSummary(req, res, next) {
                 // TODO: insert correct info retrieved from DB
                   user: "titanscfcoordinator@gmail.com",
                   pass: "fltozdphmjwdwbpw"
+                  // user: tacEmail,
+                  // pass: emailPasscode
                 }
               });
               
               const mailOptions = {
                 // TODO: insert correct info retrieved from DB
                 from: '"Amy Cook", "titanscfcoordinator@gmail.com"',
-                // to: sendTo,
+                // from: userName + ', ' + tacEmail,
                 to: 'coo17045@byui.edu',
+                // to: sendTo,
                 subject: "Credit Summary - " + name,
                 html: "<h4>Titans Dues Reduction Credit Summary.</h4>" +
                       "<div>TUAccount: " + name + "</div>",
@@ -145,17 +149,15 @@ function createSummary(req, res, next) {
             var sendTo = "";
               var count = 0;
               if(doEmailMember) {
-                console.log("email sent to member: " + memberEmail);
                 sendTo += memberEmail;
                 count++;
               }
               // TODO: Get coordinators name & email from DB
               if(doEmailCoordinator) {
-                console.log("email send to coordinator");
                 if(count > 0) {
                   sendTo += '; ';
                 }
-                sendTo += 'coo17045@byui.edu';
+                sendTo += tacEmail;
               }
 
               var transport = nodemailer.createTransport({
@@ -166,13 +168,17 @@ function createSummary(req, res, next) {
                   // TODO: insert correct info retrieved from DB
                   user: "titanscfcoordinator@gmail.com",
                   pass: "fltozdphmjwdwbpw"
+                  // user: tacEmail,
+                  // pass: emailPasscode
                 }
               });
         
               const mailOptions = {
                 // TODO: insert correct info retrieved from DB
                 from: '"Amy Cook", "titanscfcoordinator@gmail.com"',
+                // from: userName + ', ' + tacEmail,
                 to: 'coo17045@byui.edu',
+                // to: sendTo,
                 subject: "Credit Summary - " + name,
                 html: "<h4>Titans Dues Reduction Credit Summary.</h4>" +
                       "<div>TUAccount: " + name + "</div>",

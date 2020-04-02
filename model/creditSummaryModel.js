@@ -1,6 +1,6 @@
 var pool = require('../database/db');
 
-function getTuAccountFromDB(id, startDate, endDate, callback) {
+function getTuAccountFromDB(id, startDate, endDate, userID, callback) {
   var queryDB = "SELECT p.tuAccountID, tu.accountName " +
                 "FROM person p, tu_account tu " +
                 "WHERE idperson = ? " +
@@ -14,15 +14,15 @@ function getTuAccountFromDB(id, startDate, endDate, callback) {
     }
     else if(results.length == 0) {
       console.log("Report results not found in DB");
-      callback(null, results, results[0].accountName, '');
+      callback(null, null, 0, results[0].accountName, '', '', '');
     }
     else {
-      getEmailFromDB(id, results[0].tuAccountID, results[0].accountName, startDate, endDate, callback);
+      getEmailFromDB(id, results[0].tuAccountID, results[0].accountName, startDate, endDate, userID, callback);
     }
   });
 }
 
-function getEmailFromDB(id, tuID, accountName, startDate, endDate, callback) {
+function getEmailFromDB(id, tuID, accountName, startDate, endDate, userID, callback) {
   var queryDB= "SELECT email FROM person WHERE idperson = ?";
   var params = [id];
 
@@ -33,16 +33,16 @@ function getEmailFromDB(id, tuID, accountName, startDate, endDate, callback) {
     }
     else if(results.length == 0) {
       console.log("Report results not found in DB");
-      callback(null, results, tuID, results[0].email);
+      callback(null, null, 0, accountName, results[0].email, '', '');
     }
     else {
-      getAllIDsFromDB(tuID, accountName, startDate, endDate, results[0].email, callback);
+      getAllIDsFromDB(tuID, accountName, startDate, endDate, results[0].email, userID, callback);
     }
   });
 
 }
 
-function getAllIDsFromDB(tuID, accountName, startDate, endDate, email, callback) {
+function getAllIDsFromDB(tuID, accountName, startDate, endDate, email, userID, callback) {
   var queryDB = "SELECT p.idperson " + 
                 "FROM person p, tu_account tu " +
                 "WHERE tu.idtu_account = " + tuID + " " +
@@ -55,15 +55,15 @@ function getAllIDsFromDB(tuID, accountName, startDate, endDate, email, callback)
     }
     else if(results.length == 0) {
       console.log("Report results not found in DB");
-      callback(null, results, accountName, email);
+      callback(null, null, 0, accountName, email, '', '');
     }
     else {
-      getReportInfoFromDB(results, accountName, startDate, endDate, email, callback);
+      getReportInfoFromDB(results, accountName, startDate, endDate, email, userID, callback);
     }
   });
 }
 
-function getReportInfoFromDB(resultIDs, accountName, startDate, endDate, email, callback) {
+function getReportInfoFromDB(resultIDs, accountName, startDate, endDate, email, userID, callback) {
   var queryStr = "SELECT e.title, e.eventDateTime, " +
                       "p.firstName, p.lastName, tu.accountName, " +
                       "t.timeIn, t.timeOut, t.hoursWorked, t.hourlyRate, " +
@@ -95,12 +95,34 @@ function getReportInfoFromDB(resultIDs, accountName, startDate, endDate, email, 
     }
     else if(results.length == 0) {
       console.log("Report results not found in DB");
-      callback(null, results, idCount, accountName, email);
+      callback(null, null, idCount, accountName, email, '', '');
     }
     else {
-      callback(null, results, idCount, accountName, email);
+      getCoordinatorInfoFromDB(results, idCount, accountName, email, userID, callback);
     }
   });
+}
+
+function getCoordinatorInfoFromDB(report, idCount, accountName, email, userID, callback) {
+  queryDB = "SELECT titansEmail, gmailPasscode " +
+            "FROM site_user " + 
+            "WHERE idsite_user = ? ";
+  params = [userID];
+
+  pool.query(queryDB, params, (error, results) => {
+    if(error) {
+      console.log("Error getting report results from DB: ");
+      console.log(error);
+    }
+    else if(results.length == 0) {
+      console.log("Report results not found in DB");
+      callback(null, report, idCount, accountName, email, '', '');
+    }
+    else {
+      callback(null, report, idCount, accountName, email, results[0].titansEmail, results[0].gmailPasscode);
+    }
+  });
+
 }
 
 module.exports = {

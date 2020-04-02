@@ -10,9 +10,11 @@ function createReport(req, res, next) {
   var doEmailTac = req.body.email1;
   var doEmailCoordinator = req.body.email2;
   var doDownload = req.body.download;
+  var userID = req.body.userID;
+  var userName = req.body.userName;
 
   // TODO: get email addresses from DB
-  monthReportModel.getDataFromDB(startDate, endDate, function reportCallback(error, result) {
+  monthReportModel.getDataFromDB(startDate, endDate, userID, function reportCallback(error, result, tacEmail, emailPasscode) {
     if(error) {
       console.log('Error in report callback');
       console.log(error);
@@ -42,8 +44,9 @@ function createReport(req, res, next) {
             var sendTo = "";
             var count = 0;
             if(doEmailTac) {
-              // TODO: enter correct info
-              sendTo += 'coo17045@byui.edu';
+              // TODO: get this email from DB
+              sendTo += '';
+              // sendTo += 'tholland@triangleaquatics.org';
               count++;
             }
             if(doEmailCoordinator) {
@@ -52,6 +55,7 @@ function createReport(req, res, next) {
               }
               // TODO: enter correct info
               sendTo += 'coo17045@byui.edu';
+              // sendTo += tacEmail;
             }
 
             var transport = nodemailer.createTransport({
@@ -62,12 +66,15 @@ function createReport(req, res, next) {
                   // TODO: enter correct info
                 user: "titanscfcoordinator@gmail.com",
                 pass: "fltozdphmjwdwbpw"
+                // user: tacEmail,
+                // pass: emailPasscode
               }
             });
       
             const mailOptions = {
                   // TODO: enter correct info
               from: '"Amy Cook", "titanscfcoordinator@gmail.com"',
+              from: userName + ', ' + tacEmail,
               to: sendTo,
               subject: "Dues Reduction Monthly Credit Report for " + reportDate,
               html: "<h4>Dues Reduction Monthyl Credit Report.</h4>" +
@@ -144,7 +151,8 @@ function createReport(req, res, next) {
                 var count = 0;
                 if(doEmailTac) {
                   // TODO: enter correct info
-                  sendTo += 'coo17045@byui.edu';
+                  sendTo += '';
+              // sendTo += 'tholland@triangleaquatics.org';
                   count++;
                 }
                 if(doEmailCoordinator) {
@@ -153,6 +161,7 @@ function createReport(req, res, next) {
                   }
                   // TODO: enter correct info
                   sendTo += 'coo17045@byui.edu';
+                  // sendTo += tacEmail;
                 }
 
                 var transport = nodemailer.createTransport({
@@ -163,12 +172,15 @@ function createReport(req, res, next) {
                   // TODO: enter correct info
                     user: "titanscfcoordinator@gmail.com",
                     pass: "fltozdphmjwdwbpw"
+                    // user: tacEmail,
+                    // pass: emailPasscode
                   }
                 });
           
                 const mailOptions = {
                   // TODO: enter correct info
                   from: '"Amy Cook", "titanscfcoordinator@gmail.com"',
+                  // from: userName + ', ' + tacEmail,
                   to: sendTo,
                   subject: "Dues Reduction Monthly Credit Report for " + reportDate,
                   html: "<h4>Dues Reduction Monthyl Credit Report.</h4>" +
@@ -293,6 +305,7 @@ function fillWorksheet(worksheet, data, startDate) {
     tuAccountCell2.value = data[i][0].accountName;
     var totalAccountCell = worksheet.getCell('F' + dataCellRow);
     totalAccountCell.value = totalAccountCredit;
+    // TODO: get cell fill working
           // worksheet.getCell('E6').fill = {
           //   type: "pattern",
           //   pattern: "solid",
