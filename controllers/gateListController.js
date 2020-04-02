@@ -17,9 +17,8 @@ function sendPncGateList(req, res) {
   //TODO: get email addresses from DB
   
   var workbook = new ExcelJS.Workbook();
-  var filename = "./savedFiles/TemplateGateListPnc.xlsx";
+  var filename = "./savedFiles/Templates/TemplateGateListPnc.xlsx";
   workbook.xlsx.readFile(filename).then(() => {
-    console.log("File read");
 
     // edit worksheet
     var worksheet = workbook.getWorksheet('Sheet1');
@@ -27,10 +26,9 @@ function sendPncGateList(req, res) {
     worksheet = fillWorksheet(worksheet, event, data);
 
     //Finally creating XLSX file
-    var savedFilePath = "./savedFiles/GateList_PNC_" + event.Title +".xlsx";
+    var savedFilePath = "./savedFiles/GateList/GateList_PNC_" + event.Title +".xlsx";
     var savedFileName = "GateList_PNC_" + event.Title + ".xlsx";
     workbook.xlsx.writeFile(savedFilePath).then(() => {
-        console.log("File saved");
 
       // send report by email
       if(email) {
@@ -71,13 +69,21 @@ function sendPncGateList(req, res) {
             if(download) {
               res.download(savedFilePath, savedFileName, (err) => {
                 if(err) { console.log(err); }
-                else { res.end(); }
+                else { 
+                  fs.unlink(savedFilePath, function (err) {
+                    if(err) {throw err;}
+                    else {res.end();}
+                  }); 
+                 }
               });
             }
             // don't download report
             else {
               res.send(info);
-              res.end();
+              fs.unlink(savedFilePath, function (err) {
+                if(err) {throw err;}
+                else {res.end();}
+              }); 
             }
           }
         });
@@ -87,7 +93,12 @@ function sendPncGateList(req, res) {
       else{
         res.download(savedFilePath, savedFileName, (err) => {
           if(err) { console.log(err); }
-          else { res.end(); }
+          else {
+            fs.unlink(savedFilePath, function (err) {
+              if(err) {throw err;}
+              else {res.end();}
+            }); 
+          }
         });
       }
 
@@ -252,9 +263,8 @@ function sendWcGateList(req, res) {
   //TODO: get email addresses from DB
   
   var workbook = new ExcelJS.Workbook();
-  var filename = "./savedFiles/TemplateGateListWc.xlsx";
+  var filename = "./savedFiles/Templates/TemplateGateListWc.xlsx";
   workbook.xlsx.readFile(filename).then(() => {
-    console.log("File read");
 
     // edit worksheet
     var worksheet = workbook.getWorksheet('Sheet1');
@@ -262,10 +272,9 @@ function sendWcGateList(req, res) {
     fillWorksheet2(worksheet, event, staff);
 
     //Finally creating XLSX file
-    var savedFilePath = "./savedFiles/GateList_WC_" + event.Title +".xlsx";
+    var savedFilePath = "./savedFiles/GateList/GateList_WC_" + event.Title +".xlsx";
     savedFileName = "GateList_WC_" + event.Title + ".xlsx";
     workbook.xlsx.writeFile(savedFilePath).then(() => {
-        console.log("File saved");
 
         // send report by email
         if(email) {
@@ -307,13 +316,21 @@ function sendWcGateList(req, res) {
             if(download) {
               res.download(savedFilePath, savedFileName, (err) => {
                 if(err) { console.log(err); }
-                else { res.end(); }
+                else { 
+                  fs.unlink(savedFilePath, function (err) {
+                    if(err) {throw err;}
+                    else {res.end();}
+                  }); 
+                 }
               });
             }
             // don't download report
             else {
               res.send(info);
-              res.end();
+              fs.unlink(savedFilePath, function (err) {
+                if(err) {throw err;}
+                else {res.end();}
+              }); 
             }
           }
         });
@@ -323,7 +340,12 @@ function sendWcGateList(req, res) {
       else {
         res.download(savedFilePath, savedFileName, (err) => {
           if(err) { console.log(err); }
-          else { res.end(); }
+          else { 
+            fs.unlink(savedFilePath, function (err) {
+              if(err) {throw err;}
+              else {res.end();}
+            }); 
+           }
         });
       }
 

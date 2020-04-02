@@ -10,7 +10,7 @@ function getAllCfEventsFromDB(seasonID, callback) {
     var queryDB = "SELECT e.idevent, e.eventDateTime AS Date, e.Title, e.compensated, e.location, " + 
                   "e.venueBonus, e.estimatedCheck, e.estimatedProfit, e.actualCheck, e.payout, " + 
                   "e.discrepancy, e.actualProfit, e.tacPct, e.tacCut, e.drCut, e.eventNotes, " +  
-                  "e.closed, e.eventcol, c.shuttleBonusBool, c.shuttleBonusAmount, c.shuttleLocation, " + 
+                  "e.closed, e.eventcol, c.shuttleBonusAmount, c.shuttleLocation, " + 
                   "c.totalSales, c.coordinatorAdminAmt " +
                   "FROM event_all e, event_cf c " + 
                   "WHERE e.idevent = c.eventID ";
@@ -20,7 +20,7 @@ function getAllCfEventsFromDB(seasonID, callback) {
     var queryDB = "SELECT e.idevent, e.eventDateTime AS Date, e.Title, e.compensated, e.location, " + 
                   "e.venueBonus, e.estimatedCheck, e.estimatedProfit, e.actualCheck, e.payout, " + 
                   "e.discrepancy, e.actualProfit, e.tacPct, e.tacCut, e.drCut, e.eventNotes, " +  
-                  "e.closed, e.eventcol, c.shuttleBonusBool, c.shuttleBonusAmount, c.shuttleLocation, " + 
+                  "e.closed, e.eventcol, c.shuttleBonusAmount, c.shuttleLocation, " + 
                   "c.totalSales, c.coordinatorAdminAmt " +
                   "FROM event_all e, event_cf c " + 
                   "WHERE e.idevent = c.eventID " +
@@ -88,11 +88,10 @@ function setNewEventInDB(newEvent, callback) {
 }
 
 function setNewCfEventInDB(id, newEvent, callback) {
-  var queryDB = " INSERT INTO event_cf (eventID, shuttleBonusBool, shuttleBonusAmount, shuttleLocation, " +
+  var queryDB = " INSERT INTO event_cf (eventID, shuttleBonusAmount, shuttleLocation, " +
                                         "totalSales, coordinatorAdminAmt) " +
-                        "VALUES (" + id + ", ?, ?, '', ?, ? )";
+                        "VALUES (" + id + ", ?, '', ?, ? )";
   var params = [
-    newEvent.shuttleBonusBool,
     newEvent.shuttleBonusAmount,
     newEvent.totalSales,
     newEvent.coordinatorAdminAmt
@@ -155,11 +154,10 @@ function editEventinDB(editEvent, callback) {
 
 function editCfEventinDB(editEvent, callback) {
   var queryDB = "UPDATE event_cf " +
-                "SET shuttleBonusBool = ?, shuttleBonusAmount = ?, shuttleLocation = '', " +
+                "SET shuttleBonusAmount = ?, shuttleLocation = '', " +
                     "totalSales = ?, coordinatorAdminAmt = ? " +
                 "WHERE eventID = ?";
   var params = [
-    editEvent.shuttleBonusBool,
     editEvent.shuttleBonusAmount,
     editEvent.totalSales,
     editEvent.coordinatorAdminAmt,

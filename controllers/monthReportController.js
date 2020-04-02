@@ -1,6 +1,8 @@
 const monthReportModel = require("../model/monthReportModel");
 const nodemailer = require('nodemailer');
 const ExcelJS = require('exceljs');
+const fs = require('fs');
+
 
 function createReport(req, res, next) {
   var startDate = req.body.startDate;
@@ -19,9 +21,8 @@ function createReport(req, res, next) {
       var data = createNewArray(result);
 
       var workbook = new ExcelJS.Workbook();
-      var filename = "./savedFiles/TemplateMonthlyReport.xlsx";
+      var filename = "./savedFiles/Templates/TemplateMonthlyReport.xlsx";
       workbook.xlsx.readFile(filename).then(() => {
-        console.log("File read");
     
         // edit worksheet
         var worksheet = workbook.getWorksheet('Sheet1');
@@ -32,10 +33,9 @@ function createReport(req, res, next) {
     
           //Finally creating XLSX file
           var reportDate = getReportDate(startDate);
-          var savedFilePath = "./savedFiles/Dues Reduction Monthly Credit Report for " + reportDate + ".xlsx";
+          var savedFilePath = "./savedFiles/MontlyReport/Dues Reduction Monthly Credit Report for " + reportDate + ".xlsx";
           var savedFileName = "Dues Reduction Monthly Credit Report for " + reportDate + ".xlsx";
           workbook.xlsx.writeFile(savedFilePath).then(() => {
-              console.log("File saved");
       
           // send files by email
           if(doEmailTac || doEmailCoordinator) {
@@ -91,13 +91,21 @@ function createReport(req, res, next) {
                 if(doDownload) {
                   res.download(savedFilePath, savedFileName, (err) => {
                     if(err) {console.log(err);}
-                    else {res.end();}
+                    else {
+                      fs.unlink(savedFilePath, function (err) {
+                        if(err) {throw err;}
+                        else {res.end();}
+                      }); 
+                    }
                   });
                 }
                 // don't download file
                 else {
                   res.send(info);
-                  res.end();
+                  fs.unlink(savedFilePath, function (err) {
+                    if(err) {throw err;}
+                    else {res.end();}
+                  }); 
                 }
               }
             });
@@ -107,7 +115,12 @@ function createReport(req, res, next) {
           else {
             res.download(savedFilePath, savedFileName, (err) => {
               if(err) {console.log(err);}
-              else {res.end();}
+              else {
+                fs.unlink(savedFilePath, function (err) {
+                  if(err) {throw err;}
+                  else {res.end();}
+                }); 
+              }
             });
           }
 
@@ -121,10 +134,9 @@ function createReport(req, res, next) {
     
           //Finally creating XLSX file
           var reportDate = getReportDate(startDate);
-          var savedFilePath = "./savedFiles/Dues Reduction Monthly Credit Report for " + reportDate + ".xlsx";
+          var savedFilePath = "./savedFiles/MontlyReport/Dues Reduction Monthly Credit Report for " + reportDate + ".xlsx";
           savedFileName = "Dues Reduction Monthly Credit Report for " + reportDate + ".xlsx";
           workbook.xlsx.writeFile(savedFilePath).then(() => {
-              console.log("File saved");
 
               // send files by email
               if(doEmailTac || doEmailCoordinator) {
@@ -180,13 +192,21 @@ function createReport(req, res, next) {
                   if(doDownload) {
                     res.download(savedFilePath, savedFileName, (err) => {
                       if(err) {console.log(err);}
-                      else {res.end();}
+                      else {
+                        fs.unlink(savedFilePath, function (err) {
+                          if(err) {throw err;}
+                          else {res.end();}
+                        }); 
+                      }
                     });
                   }
                   // don't download file
                   else {
                     res.send(info);
-                    res.end();
+                    fs.unlink(savedFilePath, function (err) {
+                      if(err) {throw err;}
+                      else {res.end();}
+                    }); 
                   }
                   }
                 });
@@ -196,7 +216,12 @@ function createReport(req, res, next) {
             else {
               res.download(savedFilePath, savedFileName, (err) => {
                 if(err) {console.log(err);}
-                else {res.end();}
+                else {
+                  fs.unlink(savedFilePath, function (err) {
+                    if(err) {throw err;}
+                    else {res.end();}
+                  }); 
+                }
               });
             }
           }).catch(e => console.log("Catch: " + e));;

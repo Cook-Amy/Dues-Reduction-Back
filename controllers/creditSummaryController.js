@@ -1,6 +1,8 @@
 const creditSummaryModel = require('../model/creditSummaryModel');
 const nodemailer = require('nodemailer');
 const ExcelJS = require('exceljs');
+const fs = require('fs');
+
 
 function createSummary(req, res, next) {
   var specs = req.body.specs;
@@ -8,12 +10,11 @@ function createSummary(req, res, next) {
   var doEmailCoordinator = specs.email2;
   var doDownload = specs.download;
 
-  creditSummaryModel.getTuAccountFromDB(specs.staffID, specs.start, specs.end, function reportCallback(error, result, accountName, email) {
+  creditSummaryModel.getTuAccountFromDB(specs.staffID, specs.start, specs.end, function reportCallback(error, result, accountName, memberEmail) {
 
     var workbook = new ExcelJS.Workbook();
-    var filename = "./savedFiles/TemplateCreditSummary.xlsx";
+    var filename = "./savedFiles/Templates/TemplateCreditSummary.xlsx";
     workbook.xlsx.readFile(filename).then(() => {
-      console.log("File read");
   
       // edit worksheet
       var worksheet = workbook.getWorksheet('Sheet1');
@@ -25,18 +26,17 @@ function createSummary(req, res, next) {
         var name = accountName;
   
         //Finally creating XLSX file
-        var savedFilePath = "./savedFiles/CreditSummaryFiles/CreditSummary_" + name + ".xlsx";
+        var savedFilePath = "./savedFiles/CreditSummary/CreditSummary_" + name + ".xlsx";
         var savedFileName = "CreditSummary_" + name + ".xlsx";
         workbook.xlsx.writeFile(savedFilePath).then(() => {
-            console.log("File saved");
 
             // send files by email
             if(doEmailMember || doEmailCoordinator) {
               var sendTo = "";
               var count = 0;
               if(doEmailMember) {
-                console.log("email sent to member: " + email);
-                sendTo += email;
+                console.log("email sent to member: " + memberEmail);
+                sendTo += memberEmail;
                 count++;
               }
               // TODO: Get coordinators name & email from DB
@@ -86,14 +86,22 @@ function createSummary(req, res, next) {
                   if(doDownload) {
                     res.download(savedFilePath, savedFileName, (err) => {
                       if(err) {console.log(err);}
-                      else {res.end();}
+                      else {
+                        fs.unlink(savedFilePath, function (err) {
+                          if(err) {throw err;}
+                          else {res.end();}
+                        });  
+                      }
                     });
 
                   }
                   // don't download file
                   else {
                     res.send(info);
-                    res.end();
+                    fs.unlink(savedFilePath, function (err) {
+                      if(err) {throw err;}
+                      else {res.end();}
+                    }); 
                   }
                 }
               });
@@ -103,7 +111,12 @@ function createSummary(req, res, next) {
             else {
               res.download(savedFilePath, savedFileName, (err) => {
                 if(err) {console.log(err);}
-                else {res.end();}
+                else {
+                  fs.unlink(savedFilePath, function (err) {
+                    if(err) {throw err;}
+                    else {res.end();}
+                  }); 
+                }
               });
             }
 
@@ -117,18 +130,17 @@ function createSummary(req, res, next) {
         var name = accountName;
   
         //Finally creating XLSX file
-        var savedFilePath = "./savedFiles/CreditSummary_" + name + ".xlsx";
+        var savedFilePath = "./savedFiles/CreditSummary/CreditSummary_" + name + ".xlsx";
         var savedFileName = "CreditSummary_" + name + ".xlsx";
         workbook.xlsx.writeFile(savedFilePath).then(() => {
-            console.log("File saved");
 
             // send files by email
           if(doEmailMember || doEmailCoordinator) {
             var sendTo = "";
               var count = 0;
               if(doEmailMember) {
-                console.log("email sent to member: " + email);
-                sendTo += email;
+                console.log("email sent to member: " + memberEmail);
+                sendTo += memberEmail;
                 count++;
               }
               // TODO: Get coordinators name & email from DB
@@ -177,13 +189,21 @@ function createSummary(req, res, next) {
                   if(doDownload) {
                     res.download(savedFilePath, savedFileName, (err) => {
                       if(err) {console.log(err);}
-                      else {res.end();}
+                      else {
+                        fs.unlink(savedFilePath, function (err) {
+                          if(err) {throw err;}
+                          else {res.end();}
+                        }); 
+                      }
                     });
                   }
                   // don't download file
                   else {
                     res.send(info);
-                    res.end();
+                    fs.unlink(savedFilePath, function (err) {
+                      if(err) {throw err;}
+                      else {res.end();}
+                    }); 
                   }
                 }
               });
@@ -193,7 +213,12 @@ function createSummary(req, res, next) {
           else {
             res.download(savedFilePath, savedFileName, (err) => {
               if(err) {console.log(err);}
-              else {res.end();}
+              else {
+                fs.unlink(savedFilePath, function (err) {
+                  if(err) {throw err;}
+                  else {res.end();}
+                }); 
+              }
             });
           }
 
