@@ -35,7 +35,7 @@ function createReport(req, res, next) {
     
           //Finally creating XLSX file
           var reportDate = getReportDate(startDate);
-          var savedFilePath = "./savedFiles/MontlyReport/Dues Reduction Monthly Credit Report for " + reportDate + ".xlsx";
+          var savedFilePath = "./savedFiles/MonthlyReport/Dues Reduction Monthly Credit Report for " + reportDate + ".xlsx";
           var savedFileName = "Dues Reduction Monthly Credit Report for " + reportDate + ".xlsx";
           workbook.xlsx.writeFile(savedFilePath).then(() => {
       
