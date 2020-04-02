@@ -10,7 +10,7 @@ function createSummary(req, res, next) {
   var doEmailCoordinator = specs.email2;
   var doDownload = specs.download;
 
-  creditSummaryModel.getTuAccountFromDB(specs.staffID, specs.start, specs.end, function reportCallback(error, result, accountName, memberEmail) {
+  creditSummaryModel.getTuAccountFromDB(specs.staffID, specs.start, specs.end, function reportCallback(error, result, idCount, accountName, memberEmail) {
 
     var workbook = new ExcelJS.Workbook();
     var filename = "./savedFiles/Templates/TemplateCreditSummary.xlsx";
@@ -18,7 +18,13 @@ function createSummary(req, res, next) {
   
       // edit worksheet
       var worksheet = workbook.getWorksheet('Sheet1');
-      var arr = assembleResults(result);
+      var arr = [];
+      if(idCount > 1) {
+        arr = assembleResults(result);
+      }
+      else {
+        arr = result;
+      }
 
       // if events found in DB
       if(arr.length > 0) {

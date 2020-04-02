@@ -78,12 +78,14 @@ function getReportInfoFromDB(resultIDs, accountName, startDate, endDate, email, 
 
   var queryDB = "";
   var params = [];
+  var idCount = 0;
 
   for(var i = 0; i < resultIDs.length; i++) {
     queryDB += queryStr;
     params.push(resultIDs[i].idperson);
     params.push(endDate);
     params.push(startDate);
+    idCount++;
   }
 
   pool.query(queryDB, params, (error, results) => {
@@ -93,10 +95,10 @@ function getReportInfoFromDB(resultIDs, accountName, startDate, endDate, email, 
     }
     else if(results.length == 0) {
       console.log("Report results not found in DB");
-      callback(null, results, accountName, email);
+      callback(null, results, idCount, accountName, email);
     }
     else {
-      callback(null, results, accountName, email);
+      callback(null, results, idCount, accountName, email);
     }
   });
 }
