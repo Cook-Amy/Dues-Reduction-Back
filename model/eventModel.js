@@ -376,7 +376,7 @@ function setNewVenueEventInDB(id, newEvent, callback) {
       console.log(error);
     }
     else {
-      callback(null, results);
+      callback(null, id);
     }
   });
 }
