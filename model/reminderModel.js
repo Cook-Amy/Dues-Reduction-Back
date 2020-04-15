@@ -24,6 +24,34 @@ function getEmailforReminder(emailList, eventID, userID, callback) {
       console.log(error);
     }
     else {
+      updateReminderDateInDB(emailList, results, userID, callback);
+    }
+  });
+}
+
+function updateReminderDateInDB(emailList, jobList, userID, callback) {
+  var queryStr = "UPDATE timesheet " +
+                "SET lastReminder = ? " +
+                "WHERE idtimesheet = ?; ";
+  var queryDB = "";
+  var params = [];
+  var date = new Date();
+  console.log("date: " + date);
+
+  for(var i = 0; i < emailList.length; i++) {
+    queryDB += queryStr;
+    params.push(date);
+    params.push(emailList[i].id);
+  }
+
+  console.log("params: " + JSON.stringify(params));
+
+  pool.query(queryDB, params, (error, results) => {
+    if(error) {
+      console.log("Error getting results from DB: ");
+      console.log(error);
+    }
+    else {
       getCoordinatorInfoFromDB(results, userID, callback);
     }
   });

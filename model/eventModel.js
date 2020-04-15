@@ -388,7 +388,7 @@ function setNewVenueEventInDB(id, newEvent, callback) {
  * 
  ********************************************************/
 function getTimesheetForEventFromDB (eventID, callback) {
-  var queryDB = "SELECT t.idtimesheet, p.firstName, p.lastName, t.personID, j.jobName, t.jobID, t.scheduledArrivalTime, t.hourlyRate, t.timeIn, t.timeOut, t.hoursWorked, t.shuttleBonus, t.eventBonus, t.hourlyBonus, t.creditCardTips, t.creditAmount, j.isGuarantee, j.venuePay " +
+  var queryDB = "SELECT t.idtimesheet, p.firstName, p.lastName, t.personID, j.jobName, t.jobID, t.scheduledArrivalTime, t.hourlyRate, t.timeIn, t.timeOut, t.hoursWorked, t.shuttleBonus, t.eventBonus, t.hourlyBonus, t.creditCardTips, t.creditAmount, j.isGuarantee, j.venuePay, t.lastReminder " +
                 "FROM timesheet t, person p, jobs j " +
                 "WHERE t.eventID = ? " +
                 "AND t.personID = p.idperson " +
@@ -458,8 +458,8 @@ function addTimesheetInDB(timesheet, eventID, callback) {
                   "(eventID, personID, jobID, " +
                   "scheduledArrivalTime, hourlyRate, timeIn, timeOut, " +
                   "hoursWorked, shuttleBonus, eventBonus, hourlyBonus, " +
-                  "creditCardTips, creditAmount) " +
-                "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+                  "creditCardTips, creditAmount, lastReminder) " +
+                "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, null)";
   var date = new Date(timesheet.scheduledArrivalTime);
   var timeIn = null;
   var timeOut = null;
