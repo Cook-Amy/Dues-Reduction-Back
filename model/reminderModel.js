@@ -52,7 +52,7 @@ function updateReminderDateInDB(emailList, jobList, userID, callback) {
       console.log(error);
     }
     else {
-      getCoordinatorInfoFromDB(results, userID, callback);
+      getCoordinatorInfoFromDB(jobList, userID, callback);
     }
   });
 }
