@@ -348,7 +348,7 @@ function setNewVenueEventInDB(id, newEvent, callback) {
       shuttleAmount = newEvent.shuttleBonusAmountWc;
     }
     queryDB = " INSERT INTO event_wc (eventID, shuttleBonusAmount, creditCardTips, maxCreditCardTipAmount, coordinatorAdminAmt) " +
-              "VALUES (" + id + ", ?, ?, ?, ?, ? )";
+              "VALUES (" + id + ", ?, ?, ?, ? )";
 
     params.push(shuttleAmount);
     params.push(newEvent.creditCardTips);

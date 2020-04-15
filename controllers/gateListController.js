@@ -44,20 +44,15 @@ function sendPncGateList(req, res) {
               port: 587,
               secure: false,
               auth: {
-                // TODO: insert correct info
-                user: "titanscfcoordinator@gmail.com",
-                pass: "fltozdphmjwdwbpw"
-                // user: tacEmail,
-                // pass: emailPasscode
+                user: tacEmail,
+                pass: emailPasscode
               }
             });
       
             const mailOptions = {
-              // TODO: insert correct info
-              from: '"Amy Cook", "titanscfcoordinator@gmail.com"',
-              to: 'coo17045@byui.edu',
+              from: userName + ", " + tacEmail,
+              to: tacEmail,
               // TODO: get pnc email from DB
-              // from: userName + ", " + tacEmail,
               // to: 'pncarenagroups@carhur.com',
               subject: "Gate List - " + event.Title,
               html: "<h1>Gate List for TAC Titans.</h1>" +
@@ -300,19 +295,15 @@ function sendWcGateList(req, res) {
                 port: 587,
                 secure: false,
                 auth: {
-                  // TODO: insert correct info
-                  user: "titanscfcoordinator@gmail.com",
-                  pass: "fltozdphmjwdwbpw"
-                  // user: tacEmail,
-                  // pass: emailPasscode
+                  user: tacEmail,
+                  pass: emailPasscode
                 }
               });
         
             const mailOptions = {
               // TODO: insert correct info
-              from: '"Amy Cook", "titanscfcoordinator@gmail.com"',
-              to: 'coo17045@byui.edu',
-              // from: userName + ", " + tacEmail,
+              from: userName + ", " + tacEmail,
+              to: tacEmail,
               // to: [****** INSERT WC EMAIL ADDRESSES *******],
               subject: "Gate List - " + event.Title,
               html: "<h4>Gate List for TAC Titans.</h4>" +

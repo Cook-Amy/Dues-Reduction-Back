@@ -13,7 +13,6 @@ function createReport(req, res, next) {
   var userID = req.body.userID;
   var userName = req.body.userName;
 
-  // TODO: get email addresses from DB
   monthReportModel.getDataFromDB(startDate, endDate, userID, function reportCallback(error, result, tacEmail, emailPasscode) {
     if(error) {
       console.log('Error in report callback');
@@ -53,9 +52,7 @@ function createReport(req, res, next) {
               if(count > 0) {
                 sendTo += '; ';
               }
-              // TODO: enter correct info
-              sendTo += 'coo17045@byui.edu';
-              // sendTo += tacEmail;
+              sendTo += tacEmail;
             }
 
             var transport = nodemailer.createTransport({
@@ -63,17 +60,12 @@ function createReport(req, res, next) {
               port: 587,
               secure: false,
               auth: {
-                  // TODO: enter correct info
-                user: "titanscfcoordinator@gmail.com",
-                pass: "fltozdphmjwdwbpw"
-                // user: tacEmail,
-                // pass: emailPasscode
+                user: tacEmail,
+                pass: emailPasscode
               }
             });
       
             const mailOptions = {
-                  // TODO: enter correct info
-              from: '"Amy Cook", "titanscfcoordinator@gmail.com"',
               from: userName + ', ' + tacEmail,
               to: sendTo,
               subject: "Dues Reduction Monthly Credit Report for " + reportDate,
@@ -159,9 +151,7 @@ function createReport(req, res, next) {
                   if(count > 0) {
                     sendTo += '; ';
                   }
-                  // TODO: enter correct info
-                  sendTo += 'coo17045@byui.edu';
-                  // sendTo += tacEmail;
+                  sendTo += tacEmail;
                 }
 
                 var transport = nodemailer.createTransport({
@@ -169,18 +159,13 @@ function createReport(req, res, next) {
                   port: 587,
                   secure: false,
                   auth: {
-                  // TODO: enter correct info
-                    user: "titanscfcoordinator@gmail.com",
-                    pass: "fltozdphmjwdwbpw"
-                    // user: tacEmail,
-                    // pass: emailPasscode
+                    user: tacEmail,
+                    pass: emailPasscode
                   }
                 });
           
                 const mailOptions = {
-                  // TODO: enter correct info
-                  from: '"Amy Cook", "titanscfcoordinator@gmail.com"',
-                  // from: userName + ', ' + tacEmail,
+                  from: userName + ', ' + tacEmail,
                   to: sendTo,
                   subject: "Dues Reduction Monthly Credit Report for " + reportDate,
                   html: "<h4>Dues Reduction Monthyl Credit Report.</h4>" +

@@ -7,9 +7,11 @@ const nodemailer = require('nodemailer');
 *****************************************************************************/
 function sendPncReminder(req, res, next) {
   var list = req.body.list;
-  var eventID = req.body.eventID
+  var eventID = req.body.eventID;
+  var userID = req.body.userID;
+  var userName = req.body.userName;
 
-  reminderModel.getEmailforReminder(list, eventID, function emailCallback(error, result) {
+  reminderModel.getEmailforReminder(list, eventID, userID, function emailCallback(error, result, tacEmail, emailPasscode) {
     if(error) {
       console.log('Error in email callback');
       console.log(error);
@@ -38,14 +40,14 @@ function sendPncReminder(req, res, next) {
           port: 587,
           secure: false,
           auth: {
-            user: "titanscfcoordinator@gmail.com",
-            pass: "fltozdphmjwdwbpw"
+            user: tacEmail,
+            pass: emailPasscode
           }
         });
   
         const mailOptions = {
-          from: '"Amy Cook", "titanscfcoordinator@gmail.com"',
-          to: 'coo17045@byui.edu',
+          from: userName + ', ' + tacEmail,
+          to: result[0].email,
           subject: "Event Reminder for " +  result[0].Title + " - " + eventDate,
           html: emailStr,
         };
@@ -82,14 +84,14 @@ function sendPncReminder(req, res, next) {
             port: 587,
             secure: false,
             auth: {
-              user: "titanscfcoordinator@gmail.com",
-              pass: "fltozdphmjwdwbpw"
+              user: tacEmail,
+              pass: emailPasscode
             }
           });
     
           const mailOptions = {
-            from: '"Amy Cook", "titanscfcoordinator@gmail.com"',
-            to: 'coo17045@byui.edu',
+            from: userName + ', ' + tacEmail,
+            to: result[i][0].email,
             subject: "Event Reminder for " +  result[i][0].Title + " - " + eventDate,
             html: emailStr,
           };
@@ -117,9 +119,11 @@ function sendPncReminder(req, res, next) {
 *****************************************************************************/
 function sendWcReminder(req, res, next) {
   var list = req.body.list;
-  var eventID = req.body.eventID
+  var eventID = req.body.eventID;
+  var userID = req.body.userID;
+  var userName = req.body.userName;
 
-  reminderModel.getEmailforReminder(list, eventID, function emailCallback(error, result) {
+  reminderModel.getEmailforReminder(list, eventID, userID, function emailCallback(error, result, tacEmail, emailPasscode) {
     if(error) {
       console.log('Error in email callback');
       console.log(error);
@@ -146,14 +150,14 @@ function sendWcReminder(req, res, next) {
           port: 587,
           secure: false,
           auth: {
-            user: "titanscfcoordinator@gmail.com",
-            pass: "fltozdphmjwdwbpw"
+            user: tacEmail,
+            pass: emailPasscode
           }
         });
   
         const mailOptions = {
-          from: '"Amy Cook", "titanscfcoordinator@gmail.com"',
-          to: 'coo17045@byui.edu',
+          from: userName + ', ' + tacEmail,
+          to: result[0].email,
           subject: "Event Reminder for " +  result[0].Title + " - " + eventDate,
           html: emailStr,
         };
@@ -190,14 +194,14 @@ function sendWcReminder(req, res, next) {
             port: 587,
             secure: false,
             auth: {
-              user: "titanscfcoordinator@gmail.com",
-              pass: "fltozdphmjwdwbpw"
+              user: tacEmail,
+              pass: emailPasscode
             }
           });
     
           const mailOptions = {
-            from: '"Amy Cook", "titanscfcoordinator@gmail.com"',
-            to: 'coo17045@byui.edu',
+            from: userName + ', ' + tacEmail,
+            to: result[i][0].email,
             subject: "Event Reminder for " +  result[i][0].Title + " - " + eventDate,
             html: emailStr,
           };
@@ -225,9 +229,11 @@ function sendWcReminder(req, res, next) {
 *****************************************************************************/
 function sendCfReminder(req, res, next) {
   var list = req.body.list;
-  var eventID = req.body.eventID
+  var eventID = req.body.eventID;
+  var userID = req.body.userID;
+  var userName = req.body.userName;
 
-  reminderModel.getEmailforReminder(list, eventID, function emailCallback(error, result) {
+  reminderModel.getEmailforReminder(list, eventID, userID, function emailCallback(error, result, tacEmail, emailPasscode) {
     if(error) {
       console.log('Error in email callback');
       console.log(error);
@@ -254,14 +260,14 @@ function sendCfReminder(req, res, next) {
           port: 587,
           secure: false,
           auth: {
-            user: "titanscfcoordinator@gmail.com",
-            pass: "fltozdphmjwdwbpw"
+            user: tacEmail,
+            pass: emailPasscode
           }
         });
   
         const mailOptions = {
-          from: '"Amy Cook", "titanscfcoordinator@gmail.com"',
-          to: 'coo17045@byui.edu',
+          from: userName + ', ' + tacEmail,
+          to: result[0].email,
           subject: "Event Reminder for " +  result[0].Title + " - " + eventDate,
           html: emailStr,
         };
@@ -298,14 +304,14 @@ function sendCfReminder(req, res, next) {
             port: 587,
             secure: false,
             auth: {
-              user: "titanscfcoordinator@gmail.com",
-              pass: "fltozdphmjwdwbpw"
+              user: tacEmail,
+              pass: emailPasscode
             }
           });
     
           const mailOptions = {
-            from: '"Amy Cook", "titanscfcoordinator@gmail.com"',
-            to: 'coo17045@byui.edu',
+            from: userName + ', ' + tacEmail,
+            to: result[i][0].email,
             subject: "Event Reminder for " +  result[i][0].Title + " - " + eventDate,
             html: emailStr,
           };

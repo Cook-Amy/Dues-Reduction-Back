@@ -46,13 +46,13 @@ function createSummary(req, res, next) {
                 sendTo += memberEmail;
                 count++;
               }
-              // TODO: Get coordinators name & email from DB
+              
               if(doEmailCoordinator) {
                 if(count > 0) {
                   sendTo += '; ';
                 }
-                sendTo += 'coo17045@byui.edu';
-                // sendTo += tacEmail;
+                // sendTo += 'coo17045@byui.edu';
+                sendTo += tacEmail;
               }
 
               var transport = nodemailer.createTransport({
@@ -60,20 +60,18 @@ function createSummary(req, res, next) {
                 port: 587,
                 secure: false,
                 auth: {
-                // TODO: insert correct info retrieved from DB
-                  user: "titanscfcoordinator@gmail.com",
-                  pass: "fltozdphmjwdwbpw"
-                  // user: tacEmail,
-                  // pass: emailPasscode
+                  // user: "titanscfcoordinator@gmail.com",
+                  // pass: "fltozdphmjwdwbpw"
+                  user: tacEmail,
+                  pass: emailPasscode
                 }
               });
               
               const mailOptions = {
-                // TODO: insert correct info retrieved from DB
-                from: '"Amy Cook", "titanscfcoordinator@gmail.com"',
-                // from: userName + ', ' + tacEmail,
-                to: 'coo17045@byui.edu',
-                // to: sendTo,
+                // from: '"Amy Cook", "titanscfcoordinator@gmail.com"',
+                from: userName + ', ' + tacEmail,
+                // to: 'coo17045@byui.edu',
+                to: sendTo,
                 subject: "Credit Summary - " + name,
                 html: "<h4>Titans Dues Reduction Credit Summary.</h4>" +
                       "<div>TUAccount: " + name + "</div>",
@@ -165,20 +163,18 @@ function createSummary(req, res, next) {
                 port: 587,
                 secure: false,
                 auth: {
-                  // TODO: insert correct info retrieved from DB
-                  user: "titanscfcoordinator@gmail.com",
-                  pass: "fltozdphmjwdwbpw"
-                  // user: tacEmail,
-                  // pass: emailPasscode
+                  // user: "titanscfcoordinator@gmail.com",
+                  // pass: "fltozdphmjwdwbpw"
+                  user: tacEmail,
+                  pass: emailPasscode
                 }
               });
         
               const mailOptions = {
-                // TODO: insert correct info retrieved from DB
-                from: '"Amy Cook", "titanscfcoordinator@gmail.com"',
-                // from: userName + ', ' + tacEmail,
-                to: 'coo17045@byui.edu',
-                // to: sendTo,
+                // from: '"Amy Cook", "titanscfcoordinator@gmail.com"',
+                from: userName + ', ' + tacEmail,
+                // to: 'coo17045@byui.edu',
+                to: sendTo,
                 subject: "Credit Summary - " + name,
                 html: "<h4>Titans Dues Reduction Credit Summary.</h4>" +
                       "<div>TUAccount: " + name + "</div>",

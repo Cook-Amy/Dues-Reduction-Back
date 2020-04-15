@@ -1,6 +1,6 @@
 var pool = require('../database/db');
 
-function getEmailforReminder(emailList, eventID, callback) {
+function getEmailforReminder(emailList, eventID, userID, callback) {
   var queryStr = "SELECT p.firstName, p.lastName, p.email, e.Title, e.eventDateTime, e.location, j.jobName, t.scheduledArrivalTime " +
                 "FROM person p, timesheet t, event_all e, jobs j " +
                 "WHERE p.idperson = t.personID " +
@@ -24,7 +24,24 @@ function getEmailforReminder(emailList, eventID, callback) {
       console.log(error);
     }
     else {
-      callback(null, results);
+      getCoordinatorInfoFromDB(results, userID, callback);
+    }
+  });
+}
+
+function getCoordinatorInfoFromDB(jobList, userID, callback) {
+  queryDB = "SELECT titansEmail, gmailPasscode " +
+            "FROM site_user " + 
+            "WHERE idsite_user = ? ";
+  params = [userID];
+
+  pool.query(queryDB, params, (error, results) => {
+    if(error) {
+      console.log("Error getting results from DB: ");
+      console.log(error);
+    }
+    else {
+      callback(null, jobList, results[0].titansEmail, results[0].gmailPasscode);
     }
   });
 }

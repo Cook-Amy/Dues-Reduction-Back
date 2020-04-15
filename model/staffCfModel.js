@@ -48,7 +48,7 @@ function getActiveCfStaffFromDB(callback) {
                     "WHERE per.isTeamMember = 1 " +
                     "AND idtu_account = per.tuAccountID " +
                     "AND perpar.personID = per.idperson " +
-                    "AND perpar.venueID = 1 " +
+                    "AND perpar.venueID = 3 " +
                     "AND percf.personID = per.idperson " + 
                     "AND perpar.participationID = 1";
                     
