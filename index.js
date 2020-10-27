@@ -29,6 +29,7 @@ const creditSummaryController = require("./controllers/creditSummaryController")
 const monthReportController = require('./controllers/monthReportController');
 const fileController = require("./controllers/fileController");
 const userController = require("./controllers/userController");
+const adminReportController = require("./controllers/adminReportController");
 
 /*************************************************************
  * GET Routes
@@ -87,6 +88,7 @@ app.post('/getMonthReportData', monthReportController.createReport);
 app.post('/removeFile', fileController.removeFile);
 app.post('/saveFile', fileController.saveFile);
 app.post('/changeSettings', userController.changeSettings);
+app.post('/generateAdminReport1', adminReportController.createReport1);
 // PNC
 app.post('/setNewPncEvent', eventPncController.setNewPncEvent);
 app.post('/editPncEvent', eventPncController.editPncEvent);

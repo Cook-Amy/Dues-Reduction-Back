@@ -17,8 +17,6 @@ function getUserFromDB(email, password, callback) {
       callback(null, results);
     }
     else {
-      // console.log("Results back from DB:");
-      // console.log(results);
       checkPassword(password, results, callback);
     }
   });
@@ -28,7 +26,6 @@ function checkPassword(password, results, callback) {
   var pwd = results[0].password;
   bcrypt.compare(password, pwd, function(err, res) {
     if(res == true) {
-      console.log("passwords match");
       var userJson = [{userID: results[0].userID, 
                       userName: results[0].userName, 
                       firstName: results[0].firstName,
