@@ -7,9 +7,17 @@ const nodemailer = require('nodemailer');
 *****************************************************************************/
 function sendPncReminder(req, res, next) {
   var list = req.body.list;
+  var emailText = req.body.emailText;
   var eventID = req.body.eventID;
   var userID = req.body.userID;
   var userName = req.body.userName;
+
+  var additionalNotes = 'None';
+  if(emailText != '' && emailText != null) {
+    additionalNotes = emailText;
+  }
+  var msgSplit = additionalNotes.split('\n');
+  additionalNotes = msgSplit.join('<br>');
 
   reminderModel.getEmailforReminder(list, eventID, userID, function emailCallback(error, result, tacEmail, emailPasscode) {
     if(error) {
@@ -29,6 +37,7 @@ function sendPncReminder(req, res, next) {
         "<div>Location: " + result[0].location +  "</div><br>"+
         "<div>Position: " + result[0].jobName + "</div>" + 
         "<div>Arrival Time: " + eventTime + "</div><br>" +
+        "<div>Additional Notes: <br>" + additionalNotes + "</div><br>" +
         "<div>Thank you, </div>" +
         "<div>Manit Suphavadeprasit </div>"+
         "<div>919-345-2615</div>";
@@ -73,6 +82,7 @@ function sendPncReminder(req, res, next) {
           "<div>Location: " + result[i][0].location +  "</div><br>"+
           "<div>Position: " + result[i][0].jobName + "</div>" + 
           "<div>Arrival Time: " + eventTime + "</div><br>" +
+          "<div>Additional Notes: <br>" + additionalNotes + "</div><br>" +
           "<div>Thank you, </div>" +
           "<div>Manit Suphavadeprasit </div>"+
           "<div>919-345-2615</div>";
@@ -117,9 +127,17 @@ function sendPncReminder(req, res, next) {
 *****************************************************************************/
 function sendWcReminder(req, res, next) {
   var list = req.body.list;
+  var emailText = req.body.emailText;
   var eventID = req.body.eventID;
   var userID = req.body.userID;
   var userName = req.body.userName;
+
+  var additionalNotes = 'None';
+  if(emailText != '' && emailText != null) {
+    additionalNotes = emailText;
+  }
+  var msgSplit = additionalNotes.split('\n');
+  additionalNotes = msgSplit.join('<br>');
 
   reminderModel.getEmailforReminder(list, eventID, userID, function emailCallback(error, result, tacEmail, emailPasscode) {
     if(error) {
@@ -139,6 +157,7 @@ function sendWcReminder(req, res, next) {
         "<div>Location: " + result[0].location +  "</div><br>"+
         "<div>Position: " + result[0].jobName + "</div>" + 
         "<div>Arrival Time: " + eventTime + "</div><br>" +
+        "<div>Additional Notes: <br>" + additionalNotes + "</div><br>" +
         "<div>Thank you, </div>" +
         "<div>Sarah Alexander </div>"+
         "<div>919-219-5750</div>";
@@ -183,6 +202,7 @@ function sendWcReminder(req, res, next) {
           "<div>Location: " + result[i][0].location +  "</div><br>"+
           "<div>Position: " + result[i][0].jobName + "</div>" + 
           "<div>Arrival Time: " + eventTime + "</div><br>" +
+          "<div>Additional Notes: <br>" + additionalNotes + "</div><br>" +
           "<div>Thank you, </div>" +
           "<div>Sarah Alexander </div>"+
           "<div>919-219-5750</div>";
@@ -227,9 +247,17 @@ function sendWcReminder(req, res, next) {
 *****************************************************************************/
 function sendCfReminder(req, res, next) {
   var list = req.body.list;
+  var emailText = req.body.emailText;
   var eventID = req.body.eventID;
   var userID = req.body.userID;
   var userName = req.body.userName;
+
+  var additionalNotes = 'None';
+  if(emailText != '' && emailText != null) {
+    additionalNotes = emailText;
+  }
+  var msgSplit = additionalNotes.split('\n');
+  additionalNotes = msgSplit.join('<br>');
 
   reminderModel.getEmailforReminder(list, eventID, userID, function emailCallback(error, result, tacEmail, emailPasscode) {
     if(error) {
@@ -248,6 +276,7 @@ function sendCfReminder(req, res, next) {
         "<div>Location: " + result[0].location +  "</div><br>"+
         "<div>Position: " + result[0].jobName + "</div>" + 
         "<div>Arrival Time: " + eventTime + "</div><br>" +
+        "<div>Additional Notes: <br>" + additionalNotes + "</div><br>" +
         "<div>Thank you, </div>" +
         "<div>Amy Cook </div>"+
         "<div>919-280-1828</div>";
@@ -292,6 +321,7 @@ function sendCfReminder(req, res, next) {
           "<div>Location: " + result[i][0].location +  "</div><br>"+
           "<div>Position: " + result[i][0].jobName + "</div>" + 
           "<div>Arrival Time: " + eventTime + "</div><br>" +
+          "<div>Additional Notes: <br>" + additionalNotes + "</div><br>" +
           "<div>Thank you, </div>" +
           "<div>Amy Cook </div>"+
           "<div>919-280-1828</div>";
