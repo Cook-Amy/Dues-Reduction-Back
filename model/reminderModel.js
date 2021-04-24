@@ -35,16 +35,13 @@ function updateReminderDateInDB(emailList, jobList, userID, callback) {
                 "WHERE idtimesheet = ?; ";
   var queryDB = "";
   var params = [];
-  var date = new Date();
-  console.log("date: " + date);
+  var date = new Date().toISOString();
 
   for(var i = 0; i < emailList.length; i++) {
     queryDB += queryStr;
     params.push(date);
     params.push(emailList[i].id);
   }
-
-  console.log("params: " + JSON.stringify(params));
 
   pool.query(queryDB, params, (error, results) => {
     if(error) {

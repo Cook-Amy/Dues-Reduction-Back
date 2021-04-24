@@ -9,7 +9,8 @@ var pool = mysql.createPool({
   user: 'admin',
   password: 'drwebhost2020',
   database: 'dues_red',
-  multipleStatements: true
+  multipleStatements: true,
+  timezone: "+00:00"
 
         // local connection
   // connectionLimit: 5,

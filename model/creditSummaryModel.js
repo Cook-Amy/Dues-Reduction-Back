@@ -125,3 +125,6 @@ function getCoordinatorInfoFromDB(report, idCount, accountName, email, userID, c
 
 }
 
+module.exports = {
+  getTuAccountFromDB: getTuAccountFromDB
+}

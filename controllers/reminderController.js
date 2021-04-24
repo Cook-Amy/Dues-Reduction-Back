@@ -17,9 +17,7 @@ function sendPncReminder(req, res, next) {
       console.log(error);
     }
     else {
-
       // TODO: send reminders to correct email addresses
-      
       if(result.length == 1) {
         var eventDate = returnDateStr(result[0].eventDateTime);
         var eventTime = returnTimeStr(result[0].scheduledArrivalTime);
@@ -239,7 +237,6 @@ function sendCfReminder(req, res, next) {
       console.log(error);
     }
     else {
-
       if(result.length == 1) {
         var eventDate = returnDateStr(result[0].eventDateTime);
         var eventTime = returnTimeStr(result[0].scheduledArrivalTime);
@@ -334,8 +331,10 @@ function sendCfReminder(req, res, next) {
 }
 
 function returnDateStr(date) {
-  var newDate = new Date(date);
-  var day = newDate.getDay();
+  var newDate = new Date(date).toLocaleString('en-US', { timeZone: 'America/New_York' });
+  var tzDate = new Date(newDate);
+
+  var day = tzDate.getDay();
   var dayOfWeek = "";
   if(day == 0) { dayOfWeek = "Sunday"; }
   if(day == 1) { dayOfWeek = "Monday"; }
@@ -345,7 +344,7 @@ function returnDateStr(date) {
   if(day == 5) { dayOfWeek = "Friday"; }
   if(day == 6) { dayOfWeek = "Saturday"; }
 
-  var month = newDate.getMonth();
+  var month = tzDate.getMonth();
   var monthStr = "";
   if(month == 0) { monthStr = "January"; }
   if(month == 1) { monthStr = "February"; }
@@ -360,19 +359,20 @@ function returnDateStr(date) {
   if(month == 10) { monthStr = "November"; }
   if(month == 11) { monthStr = "December"; }
 
-  return dayOfWeek + ", " + monthStr + " " + newDate.getDate();
+  return dayOfWeek + ", " + monthStr + " " + tzDate.getDate();
 }
 
 function returnTimeStr(time) {
-  var newTime = new Date(time);
-  var hrs = newTime.getHours();
+  var newTime = new Date(time).toLocaleString('en-US', { timeZone: 'America/New_York' });
+  var tzTime = new Date(newTime);
+
+  var hrs = tzTime.getHours();
   var ending = "AM";
   if(hrs >= 12) { ending = "PM"; }
   if(hrs > 12) { hrs -= 12; }
   else if(hrs == 0) { hrs == 12; }
 
-  var min =(newTime.getMinutes() < 10 ? '0' : '') + newTime.getMinutes();
-
+  var min =(tzTime.getMinutes() < 10 ? '0' : '') + tzTime.getMinutes();
 
   return hrs + ":" + min + " " + ending;
 }

@@ -9,7 +9,7 @@ function loginUser(req, res, next) {
   const email = req.body.email;
   const password = req.body.password;
 
-  // getHashedPassword(password);
+  getHashedPassword(password);
 
   loginModel.getUserFromDB(email, password, function callback(error, result) {
     if(error) {

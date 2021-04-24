@@ -186,7 +186,7 @@ function editOneEventinDB(event, eventID, callback) {
                     "tacCut = ?, drCut = ?, eventNotes = ?, closed = ?, coordinatorAdminAmt = ? " +
                 "WHERE idevent = ?";
 
-  var newDate = new Date(event.Date);
+  var newDate = new Date(event.Date).toISOString();
 
   var params = [
     newDate,
@@ -292,7 +292,8 @@ function setNewEventInDB(newEvent, callback) {
                                     "tacCut, drCut, eventNotes, closed, coordinatorAdminAmt) " +
                         "VALUES   (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
   
-  var newDate = new Date(newEvent.Date);
+  var newDate = new Date(newEvent.Date).toISOString();
+
    var params = [
     newEvent.seasonID,
     newEvent.venueID,
@@ -417,15 +418,15 @@ function updateTimesheetInDB(timesheet, callback) {
                     "shuttleBonus = ?, eventBonus = ?, hourlyBonus = ?, "+
                     "creditCardTips = ?, creditAmount = ? " +
                 "WHERE idtimesheet = ?";
-  var date = new Date(timesheet.scheduledArrivalTime);
+  var date = new Date(timesheet.scheduledArrivalTime).toISOString();
 
   var timeIn = null;
   var timeOut = null;
   if(timesheet.timeIn){
-    timeIn = new Date(timesheet.timeIn);
+    timeIn = new Date(timesheet.timeIn).toISOString();
   }
   if(timesheet.timeOut) {
-    timeOut = new Date(timesheet.timeOut);
+    timeOut = new Date(timesheet.timeOut).toISOString();
   }
   var params = [
     timesheet.jobID,
@@ -460,14 +461,14 @@ function addTimesheetInDB(timesheet, eventID, callback) {
                   "hoursWorked, shuttleBonus, eventBonus, hourlyBonus, " +
                   "creditCardTips, creditAmount, lastReminder) " +
                 "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, null)";
-  var date = new Date(timesheet.scheduledArrivalTime);
+  var date = new Date(timesheet.scheduledArrivalTime).toISOString();
   var timeIn = null;
   var timeOut = null;
   if(timesheet.timeIn){
-    timeIn = new Date(timesheet.timeIn);
+    timeIn = new Date(timesheet.timeIn).toISOString();
   }
   if(timesheet.timeOut) {
-    timeOut = new Date(timesheet.timeOut);
+    timeOut = new Date(timesheet.timeOut).toISOString();
   }
   var params = [
     eventID,
@@ -507,14 +508,14 @@ function updateAllTimesheetsInDB(timesheets, callback) {
                     "shuttleBonus = ?, eventBonus = ?, hourlyBonus = ?, "+
                     "creditCardTips = ?, creditAmount = ? " +
                 "WHERE idtimesheet = ?; ";
-    var date = new Date(ts.scheduledArrivalTime);
+    var date = new Date(ts.scheduledArrivalTime).toISOString();
     var timeIn = null;
     var timeOut = null;
     if(ts.timeIn){
-      timeIn = new Date(ts.timeIn);
+      timeIn = new Date(ts.timeIn).toISOString();
     }
     if(ts.timeOut) {
-      timeOut = new Date(ts.timeOut);
+      timeOut = new Date(ts.timeOut).toISOString();
     }
     params.push(
       ts.jobID,

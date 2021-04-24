@@ -48,12 +48,12 @@ function sendPncGateList(req, res) {
                 pass: emailPasscode
               }
             });
-      
+
+      // TODO: get pnc email from DB
             const mailOptions = {
               from: userName + ", " + tacEmail,
-              to: tacEmail,
-              // TODO: get pnc email from DB
-              // to: 'pncarenagroups@carhur.com',
+              to: 'pncarenagroups@carhur.com',
+              bcc: tacEmail,
               subject: "Gate List - " + event.Title,
               html: "<h1>Gate List for TAC Titans.</h1>" +
                     "<div>Event: " + event.Title + "</div>",
@@ -139,14 +139,15 @@ function setDataPnc(staff) {
 }
 
 function getTime(time) {
-  var newTime = new Date(time);
-  var hour = newTime.getHours();
+  var newTime = new Date(time).toLocaleString('en-US', { timeZone: 'America/New_York' });
+  var tzTime = new Date(newTime);
+  var hour = tzTime.getHours();
   var night = "AM";
   if(hour > 12) {
     hour -= 12;
     night = "PM";
   }
-  var min = (newTime.getMinutes() < 10 ? '0' : '') + newTime.getMinutes();
+  var min = (tzTime.getMinutes() < 10 ? '0' : '') + tzTime.getMinutes();
 
   var str = hour + ':' + min + " " + night;
   return str;
@@ -198,10 +199,11 @@ function getRefresher2(ref) {
 }
 
 function getDate(date) {
-  var newDate = new Date(date);
-  var month = newDate.getMonth() + 1;
-  var day = newDate.getDate();
-  var year = newDate.getFullYear();
+  var newDate = new Date(date).toLocaleString('en-US', { timeZone: 'America/New_York' });
+  var tzDate = new Date(newDate);
+  var month = tzDate.getMonth() + 1;
+  var day = tzDate.getDate();
+  var year = tzDate.getFullYear();
   return month + "-" + day + "-" + year;
 }
 

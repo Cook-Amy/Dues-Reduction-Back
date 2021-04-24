@@ -201,26 +201,26 @@ function addPaperworkToDB(newStaff, id, callback) {
                 "INSERT INTO person_cf_paperwork (personID, cfAlcoholTraining) " +
                   "VALUES (" + id + ", ?); ";
 
-  var barsDate = new Date();
+  var barsDate = new Date().toISOString();
   if(newStaff.pncBars == null) {
     barsDate = null;
   }
   else {
-    barsDate = new Date(newStaff.pncBars);
+    barsDate = new Date(newStaff.pncBars).toISOString();
   }
-  var teamTraining = new Date();
+  var teamTraining = new Date().toISOString();
   if(newStaff.wcTeamTraining == null) {
     teamTraining = null;
   }
   else {
-    teamTraining = new Date(newStaff.wcTeamTraining);
+    teamTraining = new Date(newStaff.wcTeamTraining).toISOString();
   }
-  var alcTraining = new Date();
+  var alcTraining = new Date().toISOString();
   if(newStaff.cfAlcoholTraining == null) {
     alcTraining = null;
   }
   else {
-    alcTraining = new Date(newStaff.cfAlcoholTraining);
+    alcTraining = new Date(newStaff.cfAlcoholTraining).toISOString();
   }
 
 
@@ -367,9 +367,9 @@ function updatePaperworkInDB(newStaff, callback) {
                 "UPDATE person_cf_paperwork " + 
                 "SET cfAlcoholTraining = ? " +
                 "WHERE personID = ?; ";
-  var barsDate = new Date(newStaff.pncBars);
-  var teamTraining = new Date(newStaff.wcTeamTraining);
-  var alcTraining = new Date(newStaff.cfAlcoholTraining);
+  var barsDate = new Date(newStaff.pncBars).toISOString();
+  var teamTraining = new Date(newStaff.wcTeamTraining).toISOString();
+  var alcTraining = new Date(newStaff.cfAlcoholTraining).toISOString();
   var params = [
     newStaff.pncHealthForm,
     newStaff.pncExperienced,
