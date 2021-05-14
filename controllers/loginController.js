@@ -33,6 +33,13 @@ function loginUser(req, res, next) {
   });
 }
 
+function resetPassword(req, res) {
+  if(!req.body.email) {
+    return res.status(500).json({ message: "Email is required" });
+  }
+
+  // Get user from database
+}
 
 
 /*******************************************************
