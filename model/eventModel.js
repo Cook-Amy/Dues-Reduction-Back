@@ -366,7 +366,7 @@ function setNewVenueEventInDB(id, newEvent, callback) {
                           "alcSales, eventCountsTowardsTotal, coordinatorAdminAmt, totalDiscounts, " +
                           "itemSales1, alcSales1, discounts1, itemSales2, alcSales2, discounts2, " +
                           "itemSales3, alcSales3, discounts3, itemSales4, alcSales4, discounts4, " +
-                          "itemSales5, alcSales5, discounts5, itemsSales6, alcSales6, discounts6) " +
+                          "itemSales5, alcSales5, discounts5, itemSales6, alcSales6, discounts6) " +
                 "VALUES (" + id + ", ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ? )";
 
     params.push(newEvent.metCommissionBonus);
@@ -376,22 +376,22 @@ function setNewVenueEventInDB(id, newEvent, callback) {
     params.push(newEvent.eventCountsTowardsTotal);
     params.push(newEvent.coordinatorAdminAmt);
     params.push(newEvent.totalDiscounts);
-    params.push(newEvent.itemsSales1);
+    params.push(newEvent.itemSales1);
     params.push(newEvent.alcSales1);
     params.push(newEvent.discounts1);
-    params.push(newEvent.itemsSales2);
+    params.push(newEvent.itemSales2);
     params.push(newEvent.alcSales2);
     params.push(newEvent.discounts2);
-    params.push(newEvent.itemsSales3);
+    params.push(newEvent.itemSales3);
     params.push(newEvent.alcSales3);
     params.push(newEvent.discounts3);
-    params.push(newEvent.itemsSales4);
+    params.push(newEvent.itemSales4);
     params.push(newEvent.alcSales4);
     params.push(newEvent.discounts4);
-    params.push(newEvent.itemsSales5);
+    params.push(newEvent.itemSales5);
     params.push(newEvent.alcSales5);
     params.push(newEvent.discounts5);
-    params.push(newEvent.itemsSales6);
+    params.push(newEvent.itemSales6);
     params.push(newEvent.alcSales6);
     params.push(newEvent.discounts6);
   }
