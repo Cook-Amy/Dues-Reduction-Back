@@ -17,7 +17,7 @@ function getEventsFromDB (seasonID, callback) {
                     "p.totalSales AS totalSalesPnc, p.metCommissionBonus, p.guarantee, p.alcSales, p.totalDiscounts, p.eventCountsTowardsTotal, " +
                     "p.itemSales1, p.alcSales1, p.discounts1, p.itemSales2, p.alcSales2, p.discounts2, " +
                     "p.itemSales3, p.alcSales3, p.discounts3, p.itemSales4, p.alcSales4, p.discounts4, " +
-                    "p.itemSales5, p.alcSales5, p.discounts5, p.itemSales6, p.alcSales6, p.discounts6 " +
+                    "p.itemSales5, p.alcSales5, p.discounts5, p.itemSales6, p.alcSales6, p.discounts6, p.ccTips " +
                   "FROM event_all e, event_pnc p " + 
                   "WHERE e.idevent = p.eventID ";
   }
@@ -29,7 +29,7 @@ function getEventsFromDB (seasonID, callback) {
                     "p.totalSales AS totalSalesPnc, p.metCommissionBonus, p.guarantee, p.alcSales, p.totalDiscounts, p.eventCountsTowardsTotal, " +
                     "p.itemSales1, p.alcSales1, p.discounts1, p.itemSales2, p.alcSales2, p.discounts2, " +
                     "p.itemSales3, p.alcSales3, p.discounts3, p.itemSales4, p.alcSales4, p.discounts4, " +
-                    "p.itemSales5, p.alcSales5, p.discounts5, p.itemSales6, p.alcSales6, p.discounts6 " +
+                    "p.itemSales5, p.alcSales5, p.discounts5, p.itemSales6, p.alcSales6, p.discounts6, p.ccTips " +
                   "FROM event_all e, event_pnc p " + 
                   "WHERE e.idevent = p.eventID " +
                   "AND e.seasonID = ?";
@@ -239,7 +239,7 @@ function editVenueEventinDB(event, eventID, callback) {
                      "itemSales3 = ?, alcSales3 = ?, discounts3 = ?, " +
                      "itemSales4 = ?, alcSales4 = ?, discounts4 = ?, " +
                      "itemSales5 = ?, alcSales5 = ?, discounts5 = ?, " +
-                     "itemSales6 = ?, alcSales6 = ?, discounts6 = ? " +
+                     "itemSales6 = ?, alcSales6 = ?, discounts6 = ?, ccTips = ? " +
                 "WHERE eventID = ? ";
   
     params.push(event.totalSalesPnc),
@@ -266,6 +266,7 @@ function editVenueEventinDB(event, eventID, callback) {
     params.push(event.itemSales6),
     params.push(event.alcSales6),
     params.push(event.discounts6),
+    params.push(event.ccTips),
     params.push(event.idevent)
   }
   else if(eventID == 2) {
@@ -366,8 +367,8 @@ function setNewVenueEventInDB(id, newEvent, callback) {
                           "alcSales, eventCountsTowardsTotal, coordinatorAdminAmt, totalDiscounts, " +
                           "itemSales1, alcSales1, discounts1, itemSales2, alcSales2, discounts2, " +
                           "itemSales3, alcSales3, discounts3, itemSales4, alcSales4, discounts4, " +
-                          "itemSales5, alcSales5, discounts5, itemSales6, alcSales6, discounts6) " +
-                "VALUES (" + id + ", ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ? )";
+                          "itemSales5, alcSales5, discounts5, itemSales6, alcSales6, discounts6, ccTips) " +
+                "VALUES (" + id + ", ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ? )";
 
     params.push(newEvent.metCommissionBonus);
     params.push(newEvent.guarantee);
@@ -394,6 +395,7 @@ function setNewVenueEventInDB(id, newEvent, callback) {
     params.push(newEvent.itemSales6);
     params.push(newEvent.alcSales6);
     params.push(newEvent.discounts6);
+    params.push(newEvent.ccTips);
   }
 
   else if(newEvent.venueID == 2) {
