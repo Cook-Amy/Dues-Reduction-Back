@@ -4,22 +4,22 @@ var pool = mysql.createPool({
   // TODO: save login credentials in .env folder
 
         // deploy connection
-  // connectionLimit: 5,
-  // host: 'drdatabase-1.clp3eqbbr1hl.us-east-2.rds.amazonaws.com',
-  // user: 'admin',
-  // password: 'drwebhost2020',
-  // database: 'dues_red',
-  // multipleStatements: true,
-  // timezone: "+00:00"
-
-        // local connection
   connectionLimit: 5,
-  host: 'localhost',
-  user: 'root',
-  password: 'root',
+  host: 'drdatabase-1.clp3eqbbr1hl.us-east-2.rds.amazonaws.com',
+  user: 'admin',
+  password: 'drwebhost2020',
   database: 'dues_red',
   multipleStatements: true,
   timezone: "+00:00"
+
+        // local connection
+  // connectionLimit: 5,
+  // host: 'localhost',
+  // user: 'root',
+  // password: 'root',
+  // database: 'dues_red',
+  // multipleStatements: true,
+  // timezone: "+00:00"
 });
 
 pool.getConnection((err, connection) => {
