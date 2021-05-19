@@ -55,7 +55,7 @@ function updateReminderDateInDB(emailList, jobList, userID, callback) {
 }
 
 function getCoordinatorInfoFromDB(jobList, userID, callback) {
-  queryDB = "SELECT titansEmail, gmailPasscode " +
+  queryDB = "SELECT firstName, lastName, phone, titansEmail, gmailPasscode " +
             "FROM site_user " + 
             "WHERE idsite_user = ? ";
   params = [userID];
@@ -66,7 +66,7 @@ function getCoordinatorInfoFromDB(jobList, userID, callback) {
       console.log(error);
     }
     else {
-      callback(null, jobList, results[0].titansEmail, results[0].gmailPasscode);
+      callback(null, jobList, results[0]);
     }
   });
 }
