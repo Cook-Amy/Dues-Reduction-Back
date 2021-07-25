@@ -140,7 +140,6 @@ function fillWorksheet(worksheet, specs, report) {
       worksheet.duplicateRow(resultCellRow, 1, true);
       addRow++;
     }
-
     // fill event venue
     var venueCell = worksheet.getCell('A' + resultCellRow);
     venueCell.value = res["Venue"];
@@ -203,7 +202,7 @@ function fillWorksheet(worksheet, specs, report) {
      }
 
      // fill event Discrepancy
-    if(specs.eventDate){
+    if(specs.eventDiscrepancy){
       var headerCell = worksheet.getCell(resultCellColumn + 6);
       headerCell.value = "Discrepancy";
        var dateCell = worksheet.getCell(resultCellColumn + resultCellRow);

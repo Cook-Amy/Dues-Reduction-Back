@@ -90,11 +90,11 @@ function sendPncReminder(req, res, next) {
           var emailStr = "";
           if(!removeReminderText) {
             emailStr += "<h4>Just a quick reminder about the upcoming PNC event.</h4><br>" +
-            "<div><strong>Name:</strong> " + result[0].firstName + " " + result[0].lastName +"</div>" +
-            "<div><strong>Event:</strong> " + result[0].Title + "</div>" +
+            "<div><strong>Name:</strong> " + result[i][0].firstName + " " + result[i][0].lastName +"</div>" +
+            "<div><strong>Event:</strong> " + result[i][0].Title + "</div>" +
             "<div><strong>Date:</strong> " + eventDate + "</div>" +
-            "<div><strong>Location:</strong> " + result[0].location +  "</div><br>"+
-            "<div><strong>Position:</strong> " + result[0].jobName + "</div>" + 
+            "<div><strong>Location:</strong> " + result[i][0].location +  "</div><br>"+
+            "<div><strong>Position:</strong> " + result[i][0].jobName + "</div>" + 
             "<div><strong>Arrival Time:</strong> " + eventTime + "</div><br>" +
             "<div><strong>Additional Notes:</strong> <br>" + additionalNotes + "</div><br>";
           }
@@ -229,11 +229,11 @@ function sendWcReminder(req, res, next) {
           var emailStr = "";
           if(!removeReminderText) {
             emailStr += "<h4>Just a quick reminder about the upcoming Walnut Creek event.</h4><br>" +
-           "<div><strong>Name:</strong> " + result[0].firstName + " " + result[0].lastName +"</div>" +
-           "<div><strong>Event:</strong> " + result[0].Title + "</div>" +
+           "<div><strong>Name:</strong> " + result[i][0].firstName + " " + result[i][0].lastName +"</div>" +
+           "<div><strong>Event:</strong> " + result[i][0].Title + "</div>" +
            "<div><strong>Date:</strong> " + eventDate + "</div>" +
-           "<div><strong>Location:</strong> " + result[0].location +  "</div><br>"+
-           "<div><strong>Position:</strong> " + result[0].jobName + "</div>" + 
+           "<div><strong>Location:</strong> " + result[i][0].location +  "</div><br>"+
+           "<div><strong>Position:</strong> " + result[i][0].jobName + "</div>" + 
            "<div><strong>Arrival Time:</strong> " + eventTime + "</div><br>" +
            "<div><strong>Additional Notes:</strong> <br>" + additionalNotes + "</div><br>";
          }
@@ -368,11 +368,11 @@ function sendCfReminder(req, res, next) {
           var emailStr = "";
           if(!removeReminderText) {
             emailStr += "<h4>Just a quick reminder about the upcoming Carter-Finley Stadium event.</h4><br>" +
-            "<div><strong>Name:</strong> " + result[0].firstName + " " + result[0].lastName +"</div>" +
-            "<div><strong>Event:</strong> " + result[0].Title + "</div>" +
+            "<div><strong>Name:</strong> " + result[i][0].firstName + " " + result[i][0].lastName +"</div>" +
+            "<div><strong>Event:</strong> " + result[i][0].Title + "</div>" +
             "<div><strong>Date:</strong> " + eventDate + "</div>" +
-            "<div><strong>Location:</strong> " + result[0].location +  "</div><br>"+
-            "<div><strong>Position:</strong> " + result[0].jobName + "</div>" + 
+            "<div><strong>Location:</strong> " + result[i][0].location +  "</div><br>"+
+            "<div><strong>Position:</strong> " + result[i][0].jobName + "</div>" + 
             "<div><strong>Arrival Time:</strong> " + eventTime + "</div><br>" +
             "<div><strong>Additional Notes:</strong> <br>" + additionalNotes + "</div><br>";
           }
