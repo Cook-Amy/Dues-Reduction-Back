@@ -11,7 +11,7 @@ function getAllCfEventsFromDB(seasonID, callback) {
                   "e.venueBonus, e.estimatedCheck, e.estimatedProfit, e.actualCheck, e.payout, " + 
                   "e.discrepancy, e.actualProfit, e.tacPct, e.tacCut, e.drCut, e.eventNotes, " +  
                   "e.closed, e.eventcol, c.shuttleBonusAmount, c.shuttleLocation, " + 
-                  "c.totalSales, c.coordinatorAdminAmt " +
+                  "c.totalSales, c.creditCardTipsCf, c.maxCreditCardTipAmountCf, c.coordinatorAdminAmt " +
                   "FROM event_all e, event_cf c " + 
                   "WHERE e.idevent = c.eventID ";
     var params = [];
@@ -21,7 +21,7 @@ function getAllCfEventsFromDB(seasonID, callback) {
                   "e.venueBonus, e.estimatedCheck, e.estimatedProfit, e.actualCheck, e.payout, " + 
                   "e.discrepancy, e.actualProfit, e.tacPct, e.tacCut, e.drCut, e.eventNotes, " +  
                   "e.closed, e.eventcol, c.shuttleBonusAmount, c.shuttleLocation, " + 
-                  "c.totalSales, c.coordinatorAdminAmt " +
+                  "c.totalSales, c.creditCardTipsCf, c.maxCreditCardTipAmountCf, c.coordinatorAdminAmt " +
                   "FROM event_all e, event_cf c " + 
                   "WHERE e.idevent = c.eventID " +
                   "AND e.seasonID = ?";
@@ -89,11 +89,13 @@ function setNewEventInDB(newEvent, callback) {
 
 function setNewCfEventInDB(id, newEvent, callback) {
   var queryDB = " INSERT INTO event_cf (eventID, shuttleBonusAmount, shuttleLocation, " +
-                                        "totalSales, coordinatorAdminAmt) " +
-                        "VALUES (" + id + ", ?, '', ?, ? )";
+                                        "totalSales, creditCardTipsCf, maxCreditCardTipAmountCf, coordinatorAdminAmt) " +
+                        "VALUES (" + id + ", ?, '', ?, ?, ?, ? )";
   var params = [
     newEvent.shuttleBonusAmount,
     newEvent.totalSales,
+    newEvent.creditCardTipsCf,
+    newEvent.maxCreditCardTipAmountCf,
     newEvent.coordinatorAdminAmt
   ];
 
@@ -155,11 +157,13 @@ function editEventinDB(editEvent, callback) {
 function editCfEventinDB(editEvent, callback) {
   var queryDB = "UPDATE event_cf " +
                 "SET shuttleBonusAmount = ?, shuttleLocation = '', " +
-                    "totalSales = ?, coordinatorAdminAmt = ? " +
+                    "totalSales = ?, creditCardTipsCf = ?, maxCreditCardTipAmountCf = ?, coordinatorAdminAmt = ? " +
                 "WHERE eventID = ?";
   var params = [
     editEvent.shuttleBonusAmount,
     editEvent.totalSales,
+    editEvent.creditCardTipsCf,
+    editvent.maxCreditCardTipAmountCf,
     editEvent.coordinatorAdminAmt,
     editEvent.idevent
   ];

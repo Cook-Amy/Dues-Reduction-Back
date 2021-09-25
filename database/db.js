@@ -15,7 +15,7 @@ var pool = mysql.createPool({
         // local connection
   // connectionLimit: 5,
   // host: 'localhost',
-  // user: 'root',
+  // user: 'tacdev',
   // password: 'root',
   // database: 'dues_red',
   // multipleStatements: true,

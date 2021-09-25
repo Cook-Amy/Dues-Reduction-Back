@@ -10,7 +10,7 @@ function getAllWcEventsFromDB(seasonID, callback) {
     var queryDB = "SELECT e.idevent, e.eventDateTime AS Date, e.Title, e.compensated, e.location, " +
                   "e.venueBonus, e.estimatedCheck, e.estimatedProfit, e.actualCheck, e.payout, " +
                   "e.discrepancy, e.actualProfit, e.tacPct, e.tacCut, e.drCut, e.eventNotes, " +
-                  "e.closed, e.eventcol, w.shuttleBonusAmount, w.creditCardTips,  " +
+                  "e.closed, e.eventcol, w.shuttleBonusAmount, w.creditCardTips, w.totalSales, " +
                   "w.maxCreditCardTipAmount, w.coordinatorAdminAmt " +
                   "FROM event_all e, event_wc w " +
                   "WHERE e.idevent = w.eventID ";
@@ -20,7 +20,7 @@ function getAllWcEventsFromDB(seasonID, callback) {
     var queryDB = "SELECT e.idevent, e.eventDateTime AS Date, e.Title, e.compensated, e.location, " +
                   "e.venueBonus, e.estimatedCheck, e.estimatedProfit, e.actualCheck, e.payout, " +
                   "e.discrepancy, e.actualProfit, e.tacPct, e.tacCut, e.drCut, e.eventNotes, " +
-                  "e.closed, e.eventcol, w.shuttleBonusAmount, w.creditCardTips,  " +
+                  "e.closed, e.eventcol, w.shuttleBonusAmount, w.creditCardTips, w.totalSales, " +
                   "w.maxCreditCardTipAmount, w.coordinatorAdminAmt " +
                   "FROM event_all e, event_wc w " +
                   "WHERE e.idevent = w.eventID " +
@@ -88,16 +88,17 @@ function setNewEventInDB(newEvent, callback) {
 }
 
 function setNewWcEventInDB(id, newEvent, callback) {
-  var queryDB = " INSERT INTO event_wc (eventID, shuttleBonusAmount, creditCardTips, " +
+  var queryDB = " INSERT INTO event_wc (eventID, shuttleBonusAmount, creditCardTips, totalSales, " +
                                         "maxCreditCardTipAmount, coordinatorAdminAmt) " +
-                        "VALUES (" + id + ", ?, ?, ?, ? )";
+                        "VALUES (" + id + ", ?, ?, ?, ?, ? )";
 
   console.log("queryDB: " + queryDB);
   var params = [
     newEvent.shuttleBonusAmount,
     newEvent.creditCardTips,
     newEvent.maxCreditCardTipAmount,
-    newEvent.coordinatorAdminAmt
+    newEvent.coordinatorAdminAmt,
+    newEvent.totalSalesWc
   ];
 
   pool.query(queryDB, params, (error, results) => {
@@ -157,13 +158,14 @@ function editEventinDB(editEvent, callback) {
 
 function editWcEventinDB(editEvent, callback) {
   var queryDB = "UPDATE event_wc " +
-                "SET shuttleBonusAmount = ?, creditCardTips = ?, " +
+                "SET shuttleBonusAmount = ?, creditCardTips = ?, totalSales = ?, " +
                     "maxCreditCardTipAmount = ?, coordinatorAdminAmt = ? " +
                 "WHERE eventID = ?";
   var params = [
     editEvent.shuttleBonusAmount,
     editEvent.creditCardTips,
     editEvent.maxCreditCardTipAmount,
+    editEvent.totalSalesWc,
     editEvent.coordinatorAdminAmt,
     editEvent.idevent
   ];

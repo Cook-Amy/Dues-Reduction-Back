@@ -202,21 +202,21 @@ function addPaperworkToDB(newStaff, id, callback) {
                   "VALUES (" + id + ", ?); ";
 
   var barsDate = new Date().toISOString();
-  if(newStaff.pncBars == null) {
+  if(newStaff.pncBars == null || newStaff.pncBars == '') {
     barsDate = null;
   }
   else {
     barsDate = new Date(newStaff.pncBars).toISOString();
   }
   var teamTraining = new Date().toISOString();
-  if(newStaff.wcTeamTraining == null) {
+  if(newStaff.wcTeamTraining == null || newStaff.wcTeamTraining == '') {
     teamTraining = null;
   }
   else {
     teamTraining = new Date(newStaff.wcTeamTraining).toISOString();
   }
   var alcTraining = new Date().toISOString();
-  if(newStaff.cfAlcoholTraining == null) {
+  if(newStaff.cfAlcoholTraining == null || newStaff.cfAlcoholTraining == '') {
     alcTraining = null;
   }
   else {

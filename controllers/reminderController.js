@@ -291,6 +291,9 @@ function sendCfReminder(req, res, next) {
   var userID = req.body.userID;
   var userName = req.body.userName;
 
+  userID = 9;
+  console.log("reminder body: " + JSON.stringify(req.body));
+
   var additionalNotes = 'None';
   if(emailText != '' && emailText != null) {
     additionalNotes = emailText;
@@ -308,6 +311,7 @@ function sendCfReminder(req, res, next) {
       var coordPhone = coordinator.phone;
       var coordEmail = coordinator.titansEmail;
       var coordPasscode = coordinator.gmailPasscode;
+      console.log("coordinator: " + JSON.stringify(coordinator));
 
       if(result.length == 1) {
         var eventDate = returnDateStr(result[0].eventDateTime);
