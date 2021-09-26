@@ -321,6 +321,9 @@ function updateParticipationInDB(newStaff, callback) {
   else if(newStaff.pncInterested) {
     params.push(3);
   }
+  else {
+    params.push(2);
+  }
   params.push(newStaff.idperson);
 
   if(newStaff.wcActive) {
@@ -332,6 +335,9 @@ function updateParticipationInDB(newStaff, callback) {
   else if(newStaff.wcInterested) {
     params.push(3);
   }
+  else {
+    params.push(2);
+  }
   params.push(newStaff.idperson);
 
   if(newStaff.cfActive) {
@@ -342,6 +348,9 @@ function updateParticipationInDB(newStaff, callback) {
   }
   else if(newStaff.cfInterested) {
     params.push(3);
+  }
+  else {
+    params.push(2);
   }
   params.push(newStaff.idperson);
 
@@ -367,6 +376,7 @@ function updatePaperworkInDB(newStaff, callback) {
                 "UPDATE person_cf_paperwork " + 
                 "SET cfAlcoholTraining = ? " +
                 "WHERE personID = ?; ";
+  console.log(new Date() + "\tupdatePaperworkInDB pncBars date: " + newStaff.pncBars);
   var barsDate = new Date(newStaff.pncBars).toISOString();
   var teamTraining = new Date(newStaff.wcTeamTraining).toISOString();
   var alcTraining = new Date(newStaff.cfAlcoholTraining).toISOString();

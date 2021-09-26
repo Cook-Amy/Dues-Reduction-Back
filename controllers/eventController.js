@@ -29,7 +29,7 @@ function getTimesheetForEvent(req, res, next) {
       console.log(error);
     }
     else if(result.length == 0) {
-      console.log("No staff info found in DB. Returning with null.");
+      console.log("getTimesheetForEvent(): No staff info found in DB. Returning with null.");
       res.status(204).json(null);
       res.end();
     }

@@ -38,7 +38,7 @@ pool.getConnection((err, connection) => {
   }
 
   if(connection) {
-    console.log('DB connected successfully');
+    console.log(new Date() + '\tDB connected successfully');
     connection.release();
   }
   return;
